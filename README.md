@@ -1,16 +1,112 @@
-# React + Vite
+# Rhynox Technologies Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive website for Rhynox Technologies built with React, Vite, Tailwind CSS, and Framer Motion.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ✨ Modern UI/UX with smooth animations
+- 🎨 Tailwind CSS for styling
+- 🚀 Framer Motion for animations
+- 📱 Fully responsive design
+- 🎯 Interactive navigation dock
+- 💼 Portfolio showcase with modal details
+- 📧 Contact form with email integration
+- 🎭 Service cards and pricing plans
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Before you begin, ensure you have the following installed:
+- Node.js (v18 or higher)
+- npm or yarn package manager
+- Git
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Clone the repository:
+```bash
+git clone <your-repo-url>
+cd rhynox-website
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+## Dependencies
+
+This project uses the following main dependencies:
+
+### Core Dependencies
+- `react` (^19.2.0) - UI library
+- `react-dom` (^19.2.0) - React DOM rendering
+- `framer-motion` (^12.23.26) - Animation library
+- `lucide-react` (^0.562.0) - Icon library
+
+### Development Dependencies
+- `vite` (^7.2.4) - Build tool
+- `@vitejs/plugin-react` (^5.1.1) - Vite React plugin
+- `tailwindcss` (^3.4.17) - CSS framework
+- `@tailwindcss/postcss` (^4.1.18) - PostCSS plugin for Tailwind
+- `postcss` (^8.5.6) - CSS processor
+- `autoprefixer` (^10.4.23) - CSS autoprefixer
+- `eslint` (^9.39.1) - Linting tool
+
+## Development
+
+To start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173/`
+
+## Building for Production
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+To preview the production build:
+
+```bash
+npm run preview
+```
+
+## Project Structure
+
+```
+rhynox-website/
+├── public/          # Static assets
+├── src/
+│   ├── assets/      # Images and other assets
+│   ├── App.jsx      # Main application component
+│   ├── App.css      # Component styles
+│   ├── index.css    # Global styles with Tailwind directives
+│   └── main.jsx     # Application entry point
+├── index.html       # HTML template
+├── tailwind.config.js   # Tailwind configuration
+├── postcss.config.js    # PostCSS configuration
+├── vite.config.js       # Vite configuration
+└── package.json         # Project dependencies
+```
+
+## Configuration Files
+
+- **tailwind.config.js** - Tailwind CSS configuration
+- **postcss.config.js** - PostCSS plugins configuration
+- **vite.config.js** - Vite build tool configuration
+- **eslint.config.js** - ESLint rules
+
+## Contact
+
+For inquiries, reach out to:
+- Email: rhynoxtechnologies@gmail.com
+- Phone: +91 79043 09363, +91 63740 08719
+
+## License
+
+© 2024 Rhynox Technologies. All rights reserved.
