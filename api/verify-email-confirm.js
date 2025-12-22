@@ -3,8 +3,20 @@ import EmailVerification from './models/EmailVerification.js';
 
 export default async function handler(req, res) {
   // Enable CORS
+  const allowedOrigins = [
+    'https://www.rhynoxtechnologies.dev',
+    'https://rhynoxtechnologies.dev',
+    'https://rhynox-technologies.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin) || !origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  }
+  
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
   res.setHeader(
     'Access-Control-Allow-Headers',

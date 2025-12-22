@@ -1,8 +1,18 @@
 // API Configuration
+const isProduction = import.meta.env.MODE === 'production' || 
+                     import.meta.env.PROD || 
+                     (typeof window !== 'undefined' && window.location.hostname !== 'localhost');
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
-                     (import.meta.env.MODE === 'production' 
-                       ? '/api' 
-                       : 'http://localhost:5000/api');
+                     (isProduction ? '/api' : 'http://localhost:5000/api');
+
+// Debug logging (will be removed in production build by Vite)
+if (import.meta.env.DEV) {
+  console.log('🔧 API Configuration:');
+  console.log('  Mode:', import.meta.env.MODE);
+  console.log('  Is Production:', isProduction);
+  console.log('  API Base URL:', API_BASE_URL);
+}
 
 export const API_ENDPOINTS = {
   BASE_URL: API_BASE_URL,
