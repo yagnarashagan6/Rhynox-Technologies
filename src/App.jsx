@@ -30,7 +30,9 @@ import {
   Award,
   Briefcase,
   CreditCard,
-  Info
+  Info,
+  Sparkles,
+  PartyPopper
 } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
@@ -1052,21 +1054,209 @@ const Contact = () => {
     service: 'Website Development',
     message: ''
   });
+  
+  const [emailVerification, setEmailVerification] = useState({
+    isVerified: false,
+    codeSent: false,
+    verificationCode: '',
+    loading: false,
+    error: '',
+    success: ''
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Reset verification if email changes
+    if (e.target.name === 'email' && emailVerification.isVerified) {
+      setEmailVerification({
+        isVerified: false,
+        codeSent: false,
+        verificationCode: '',
+        loading: false,
+        error: '',
+        success: ''
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const sendVerificationCode = async () => {
+    // Validate Gmail format with regex
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(formData.email)) {
+      setEmailVerification(prev => ({
+        ...prev,
+        error: 'Please enter a valid @gmail.com email address',
+        success: ''
+      }));
+      return;
+    }
+
+    setEmailVerification(prev => ({ ...prev, loading: true, error: '', success: '' }));
+
+    try {
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/verify-email/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setEmailVerification(prev => ({
+          ...prev,
+          codeSent: true,
+          loading: false,
+          success: 'Verification code sent! Please check your email.',
+          error: ''
+        }));
+      } else {
+        setEmailVerification(prev => ({
+          ...prev,
+          loading: false,
+          error: data.error || 'Failed to send verification code',
+          success: ''
+        }));
+      }
+    } catch (error) {
+      setEmailVerification(prev => ({
+        ...prev,
+        loading: false,
+        error: 'Network error. Please try again.',
+        success: ''
+      }));
+    }
+  };
+
+  const verifyCode = async () => {
+    if (!emailVerification.verificationCode || emailVerification.verificationCode.length !== 6) {
+      setEmailVerification(prev => ({
+        ...prev,
+        error: 'Please enter a valid 6-digit code',
+        success: ''
+      }));
+      return;
+    }
+
+    setEmailVerification(prev => ({ ...prev, loading: true, error: '', success: '' }));
+
+    try {
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/verify-email/confirm`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: formData.email, 
+          code: emailVerification.verificationCode 
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setEmailVerification(prev => ({
+          ...prev,
+          isVerified: true,
+          loading: false,
+          success: 'Email verified successfully! ✓',
+          error: ''
+        }));
+      } else {
+        setEmailVerification(prev => ({
+          ...prev,
+          loading: false,
+          error: data.error || 'Invalid verification code',
+          success: ''
+        }));
+      }
+    } catch (error) {
+      setEmailVerification(prev => ({
+        ...prev,
+        loading: false,
+        error: 'Network error. Please try again.',
+        success: ''
+      }));
+    }
+  };
+
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const getServiceIcon = (service) => {
+    const iconMap = {
+      'Website Development': <Code size={40} />,
+      'App Development': <Smartphone size={40} />,
+      'Graphic Design': <Palette size={40} />,
+      'YouTube Ads': <Megaphone size={40} />,
+      'Video Editing': <Video size={40} />
+    };
+    return iconMap[service] || <Sparkles size={40} />;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`New Quote Request: ${formData.service} from ${formData.name}`);
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\n` +
-      `Email: ${formData.email}\n` +
-      `Service: ${formData.service}\n` +
-      `Message: ${formData.message}`
-    );
-    window.location.href = `mailto:rhynoxtechnologies@gmail.com?subject=${subject}&body=${body}`;
+    
+    if (!emailVerification.isVerified) {
+      setEmailVerification(prev => ({
+        ...prev,
+        error: 'Please verify your email address first',
+        success: ''
+      }));
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_ENDPOINTS.BASE_URL}/contact/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Show success notification
+        setShowSuccessNotification(true);
+        
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          service: 'Website Development',
+          message: ''
+        });
+        
+        setEmailVerification({
+          codeSent: false,
+          verificationCode: '',
+          isVerified: false,
+          loading: false,
+          error: '',
+          success: ''
+        });
+
+        // Hide notification after 5 seconds
+        setTimeout(() => {
+          setShowSuccessNotification(false);
+        }, 5000);
+      } else {
+        setEmailVerification(prev => ({
+          ...prev,
+          error: data.error || 'Failed to send message. Please try again.',
+          success: ''
+        }));
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setEmailVerification(prev => ({
+        ...prev,
+        error: 'Network error. Please try again.',
+        success: ''
+      }));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -1120,6 +1310,7 @@ const Contact = () => {
           >
             <form className="bg-gray-800 p-8 md:p-10 rounded-3xl shadow-xl border border-gray-700 relative overflow-hidden" onSubmit={handleSubmit}>
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 relative z-10">
                 <div>
                   <label className="block text-gray-400 font-medium mb-2">Your Name</label>
@@ -1134,18 +1325,140 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-400 font-medium mb-2">Your Email</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 text-white focus:border-blue-500 focus:bg-gray-900 focus:ring-2 focus:ring-blue-900 outline-none transition-all placeholder-gray-600" 
-                    placeholder="john@example.com" 
-                  />
+                  <label className="block text-gray-400 font-medium mb-2">
+                    Your Gmail Address
+                    {emailVerification.isVerified && (
+                      <span className="ml-2 text-green-400 text-sm">✓ Verified</span>
+                    )}
+                  </label>
+                  <div className="relative">
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      disabled={emailVerification.isVerified}
+                      className={`w-full px-4 py-3 rounded-lg bg-gray-900 border ${
+                        emailVerification.isVerified 
+                          ? 'border-green-500 bg-green-900/10' 
+                          : 'border-gray-700'
+                      } text-white focus:border-blue-500 focus:bg-gray-900 focus:ring-2 focus:ring-blue-900 outline-none transition-all placeholder-gray-600 disabled:opacity-70`} 
+                      placeholder="john@gmail.com" 
+                    />
+                    {emailVerification.isVerified && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 text-green-400">
+                        <CheckCircle size={20} />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {/* Email Verification Section */}
+              {!emailVerification.isVerified && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="mb-6 p-6 bg-blue-900/10 border border-blue-800/30 rounded-xl relative z-10"
+                >
+                  <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
+                    <Mail size={18} className="text-blue-400" />
+                    Email Verification Required
+                  </h4>
+                  <p className="text-gray-400 text-sm mb-4">
+                    To ensure genuine communication, please verify your Gmail address by entering the code we'll send to your inbox.
+                  </p>
+                  
+                  {!emailVerification.codeSent ? (
+                    <button
+                      type="button"
+                      onClick={sendVerificationCode}
+                      disabled={emailVerification.loading || !formData.email}
+                      className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {emailVerification.loading ? (
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                          />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Mail size={18} />
+                          Send Verification Code
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-gray-300 font-medium mb-2 text-sm">
+                          Enter 6-Digit Verification Code
+                        </label>
+                        <div className="flex gap-3">
+                          <input
+                            type="text"
+                            maxLength="6"
+                            value={emailVerification.verificationCode}
+                            onChange={(e) => setEmailVerification(prev => ({
+                              ...prev,
+                              verificationCode: e.target.value.replace(/\D/g, '')
+                            }))}
+                            className="flex-1 px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 text-white text-center text-2xl font-bold tracking-widest focus:border-blue-500 focus:ring-2 focus:ring-blue-900 outline-none transition-all"
+                            placeholder="000000"
+                          />
+                          <button
+                            type="button"
+                            onClick={verifyCode}
+                            disabled={emailVerification.loading || emailVerification.verificationCode.length !== 6}
+                            className="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {emailVerification.loading ? 'Verifying...' : 'Verify'}
+                          </button>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={sendVerificationCode}
+                        disabled={emailVerification.loading}
+                        className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
+                      >
+                        Didn't receive code? Resend
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Status Messages */}
+                  <AnimatePresence>
+                    {emailVerification.error && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="mt-4 p-3 bg-red-900/20 border border-red-800/30 rounded-lg text-red-400 text-sm flex items-center gap-2"
+                      >
+                        <X size={16} />
+                        {emailVerification.error}
+                      </motion.div>
+                    )}
+                    {emailVerification.success && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="mt-4 p-3 bg-green-900/20 border border-green-800/30 rounded-lg text-green-400 text-sm flex items-center gap-2"
+                      >
+                        <CheckCircle size={16} />
+                        {emailVerification.success}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )}
               
               <div className="mb-6 relative z-10">
                 <label className="block text-gray-400 font-medium mb-2">Service Interested In</label>
@@ -1177,17 +1490,165 @@ const Contact = () => {
               </div>
               
               <motion.button 
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: emailVerification.isVerified && !isSubmitting ? 1.02 : 1 }}
+                whileTap={{ scale: emailVerification.isVerified && !isSubmitting ? 0.98 : 1 }}
                 type="submit"
-                className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-colors relative z-10"
+                disabled={!emailVerification.isVerified || isSubmitting}
+                className={`w-full font-bold py-4 rounded-xl shadow-lg transition-all relative z-10 flex items-center justify-center gap-2 ${
+                  emailVerification.isVerified && !isSubmitting
+                    ? 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
+                    : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                }`}
               >
-                Send Message
+                {isSubmitting ? (
+                  <>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                    />
+                    Sending...
+                  </>
+                ) : emailVerification.isVerified ? (
+                  <>
+                    <Mail size={20} />
+                    Send Message
+                  </>
+                ) : (
+                  'Verify Email to Continue'
+                )}
               </motion.button>
             </form>
           </motion.div>
         </div>
       </div>
+
+      {/* Success Notification */}
+      <AnimatePresence>
+        {showSuccessNotification && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowSuccessNotification(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="bg-gradient-to-br from-green-900 to-emerald-900 p-8 rounded-3xl shadow-2xl border-2 border-green-500/30 max-w-md w-full relative overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Animated Background Particles */}
+              {[...Array(12)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
+                  animate={{
+                    scale: [0, 1, 0],
+                    x: [0, (Math.random() - 0.5) * 300],
+                    y: [0, (Math.random() - 0.5) * 300],
+                    opacity: [1, 1, 0]
+                  }}
+                  transition={{
+                    duration: 2,
+                    delay: i * 0.1,
+                    repeat: Infinity,
+                    repeatDelay: 1
+                  }}
+                  className="absolute top-1/2 left-1/2 w-2 h-2 bg-yellow-400 rounded-full"
+                />
+              ))}
+
+              {/* Blast Icons */}
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(8)].map((_, i) => {
+                  const angle = (i * 360) / 8;
+                  const radius = 150;
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ scale: 0, x: 0, y: 0, opacity: 0 }}
+                      animate={{
+                        scale: [0, 1.2, 0.8],
+                        x: [0, Math.cos((angle * Math.PI) / 180) * radius],
+                        y: [0, Math.sin((angle * Math.PI) / 180) * radius],
+                        opacity: [0, 1, 0],
+                        rotate: [0, 360]
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        delay: i * 0.1,
+                        ease: "easeOut"
+                      }}
+                      className="absolute top-1/2 left-1/2 text-green-400"
+                    >
+                      {getServiceIcon(formData.service)}
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Success Icon */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", delay: 0.2, duration: 0.6 }}
+                className="w-20 h-20 mx-auto mb-6 bg-green-500 rounded-full flex items-center justify-center relative z-10"
+              >
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <CheckCircle size={48} className="text-white" />
+                </motion.div>
+              </motion.div>
+
+              {/* Success Message */}
+              <div className="text-center relative z-10">
+                <motion.h3
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-3xl font-bold text-white mb-3"
+                >
+                  Thank You! 🎉
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-green-100 text-lg mb-2"
+                >
+                  Thanks for contacting us!
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-green-200 text-sm"
+                >
+                  We'll call you shortly to discuss your <strong>{formData.service}</strong> project.
+                </motion.p>
+
+                {/* Close Button */}
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.6 }}
+                  onClick={() => setShowSuccessNotification(false)}
+                  className="mt-6 px-6 py-3 bg-white text-green-900 rounded-full font-bold hover:bg-green-50 transition-colors shadow-lg"
+                >
+                  Got it!
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
