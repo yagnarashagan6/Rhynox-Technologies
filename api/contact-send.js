@@ -3,13 +3,21 @@ import connectDB from './db.js';
 import EmailVerification from './models/EmailVerification.js';
 
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  // Validate environment variables
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
+    throw new Error('Email configuration missing. Please set EMAIL_USER and EMAIL_APP_PASSWORD environment variables.');
+  }
+
+  // Create transporter with nodemailer v6.9.8
+  const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_APP_PASSWORD
     }
   });
+
+  return transporter;
 };
 
 export default async function handler(req, res) {
@@ -146,8 +154,23 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error('Error sending contact email:', err);
+    console.error('Error details:', {
+      message: err.message,
+      stack: err.stack,
+      name: err.name
+    });
+    
+    // Provide more specific error message
+    let errorMessage = 'Failed to send message. Please try again.';
+    if (err.message && err.message.includes('Email configuration')) {
+      errorMessage = 'Email service is not configured properly. Please contact support.';
+    } else if (err.message && err.message.includes('createTransport')) {
+      errorMessage = 'Email service initialization failed. Please contact support.';
+    }
+    
     res.status(500).json({ 
-      error: 'Failed to send message. Please try again.' 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
   }
 }
