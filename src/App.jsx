@@ -32,6 +32,9 @@ import {
   CreditCard,
   Info
 } from 'lucide-react';
+import AdminLogin from './AdminLogin';
+import AdminDashboard from './AdminDashboard';
+import { API_ENDPOINTS } from './config';
 
 /* --- COMPONENT ARCHITECTURE & DATA --- */
 
@@ -83,9 +86,9 @@ const SERVICES = [
 const PRICING_PLANS = [
   {
     title: "Starter",
-    price: "$499",
+    price: "₹499",
     period: "starting price",
-    description: "Essential digital presence for startups and small businesses.",
+    description: "Essential digital presence for startups, small businesses, and freelancers.",
     features: [
       "Responsive Website (5 Pages)",
       "Basic SEO Optimization",
@@ -99,9 +102,9 @@ const PRICING_PLANS = [
   },
   {
     title: "Business",
-    price: "$1,499",
+    price: "₹999",
     period: "starting price",
-    description: "Advanced solutions for growing companies needing dynamic features.",
+    description: "Advanced solutions for growing companies, freelance agencies, and dynamic features.",
     features: [
       "Dynamic React Application",
       "CMS / Admin Dashboard",
@@ -237,7 +240,12 @@ const scaleOnHover = {
 // --- SUB-COMPONENTS ---
 
 const ProjectModal = ({ project, onClose }) => {
+  const [activeImage, setActiveImage] = useState(project.images?.[0] || project.image);
+  const [showScreenshots, setShowScreenshots] = useState(false);
+  
   if (!project) return null;
+
+  const allImages = project.images && project.images.length > 0 ? project.images : [project.image];
 
   return (
     <motion.div 
@@ -251,17 +259,24 @@ const ProjectModal = ({ project, onClose }) => {
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0, transition: { type: "spring", duration: 0.5 } }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
-        className="bg-gray-900 w-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl border border-gray-700 max-h-[90vh] flex flex-col"
+        className={`bg-gray-900 w-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl border border-gray-700 ${showScreenshots ? 'h-[90vh]' : 'max-h-[90vh]'} flex flex-col transition-all duration-300`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mock Screenshot Display Area */}
-        <div className={`h-64 md:h-80 w-full relative flex-shrink-0 group overflow-hidden`}>
+        <div className={`${showScreenshots ? 'flex-1' : 'h-64 md:h-80'} w-full relative flex-shrink-0 group overflow-hidden bg-black/40`}>
             {/* Background Image */}
-            <img 
-              src={project.image} 
-              alt={project.title} 
-              className="absolute inset-0 w-full h-full object-cover"
-            />
+            <AnimatePresence mode="wait">
+              <motion.img 
+                key={activeImage}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                src={activeImage} 
+                alt={project.title} 
+                className="absolute inset-0 w-full h-full object-contain z-10"
+              />
+            </AnimatePresence>
+            
             <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-50 mix-blend-multiply`}></div>
 
             <button 
@@ -270,90 +285,107 @@ const ProjectModal = ({ project, onClose }) => {
             >
                 <X size={24} />
             </button>
-            
-            {/* Visual placeholder for content */}
-            <div className="absolute inset-0 flex items-center justify-center z-10">
-              <Maximize2 size={64} className="text-white/80 drop-shadow-lg" />
-            </div>
 
-            {/* Thumbnail Mockups */}
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3 px-4 z-10">
-               {[1, 2, 3].map((i) => (
-                 <div key={i} className={`w-24 h-16 rounded-lg border-2 ${i === 1 ? 'border-white bg-white/20' : 'border-white/20 bg-black/20'} backdrop-blur-sm cursor-pointer hover:border-white/50 transition-colors`}></div>
-               ))}
-            </div>
+            {showScreenshots && (
+              <button 
+                onClick={() => setShowScreenshots(false)}
+                className="absolute top-4 left-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors z-20 backdrop-blur-sm font-bold text-xs uppercase tracking-widest"
+              >
+                Back to Details
+              </button>
+            )}
         </div>
 
-        {/* Content */}
-        <div className="p-8 overflow-y-auto custom-scrollbar">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
-                <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-xs font-bold uppercase tracking-wider border border-blue-500/20">
-                        {project.category}
-                      </span>
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-1">{project.title}</h2>
-                    <p className="text-xl text-gray-400">{project.subtitle}</p>
-                </div>
-                <div className="flex gap-3">
-                  <button className="flex items-center gap-2 px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-colors font-medium border border-gray-700">
-                      <Layers size={18} /> Screenshots
-                  </button>
-                  <button className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium shadow-lg shadow-blue-900/20">
-                      <ExternalLink size={18} /> Live Demo
-                  </button>
-                </div>
-            </div>
+        {/* Thumbnail Mockups - Only shown when showScreenshots is true */}
+        {showScreenshots && (
+          <div className="flex justify-center gap-3 py-4 bg-gray-900 border-b border-gray-800 overflow-x-auto px-4 no-scrollbar shrink-0">
+             {allImages.map((img, idx) => (
+               <div 
+                 key={idx} 
+                 onClick={() => setActiveImage(img)}
+                 className={`w-20 h-14 md:w-24 md:h-16 rounded-lg border-2 flex-shrink-0 ${activeImage === img ? 'border-blue-500 bg-blue-500/10' : 'border-gray-700 bg-gray-800/50'} cursor-pointer hover:border-blue-400/50 transition-all shadow-lg overflow-hidden`}
+               >
+                 <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
+               </div>
+             ))}
+          </div>
+        )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="md:col-span-2 space-y-6">
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Project Overview</h4>
-                  <p className="text-gray-300 leading-relaxed text-lg">
-                      {project.description}
-                  </p>
-                </div>
-                <div>
-                  <h4 className="text-lg font-semibold text-white mb-2">Key Challenges & Solutions</h4>
-                  <p className="text-gray-400 leading-relaxed">
-                    We focused on creating a user-centric design that maximizes engagement. By leveraging modern caching techniques, we reduced load times by 40%, ensuring a smooth experience even on slower connections.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700 h-fit">
-                  <h4 className="text-white font-bold mb-4 flex items-center gap-2">
-                    <Code size={18} className="text-blue-400"/> Technologies
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                      {project.tags.map((tech) => (
-                          <span key={tech} className="px-3 py-1.5 bg-gray-900 text-gray-300 rounded-lg text-sm border border-gray-700 font-medium">
-                              {tech}
-                          </span>
-                      ))}
+        {/* Content - Hidden when showScreenshots is true */}
+        {!showScreenshots && (
+          <div className="p-8 overflow-y-auto custom-scrollbar">
+              <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+                  <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-xs font-bold uppercase tracking-wider border border-blue-500/20">
+                          {project.category}
+                        </span>
+                      </div>
+                      <h2 className="text-3xl md:text-4xl font-bold text-white mb-1">{project.title}</h2>
+                      <p className="text-xl text-gray-400">{project.subtitle}</p>
                   </div>
-                  
-                  <div className="mt-6 pt-6 border-t border-gray-700">
-                    <h4 className="text-white font-bold mb-3">Project Details</h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between text-gray-400">
-                        <span>Client</span>
-                        <span className="text-gray-200">Confidential</span>
-                      </div>
-                      <div className="flex justify-between text-gray-400">
-                        <span>Timeline</span>
-                        <span className="text-gray-200">6 Weeks</span>
-                      </div>
-                      <div className="flex justify-between text-gray-400">
-                        <span>Role</span>
-                        <span className="text-gray-200">Full Stack & Design</span>
-                      </div>
-                    </div>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => setShowScreenshots(true)}
+                      className="flex items-center gap-2 px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-colors font-medium border border-gray-700"
+                    >
+                        <Layers size={18} /> Screenshots
+                    </button>
+                    <button className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-medium shadow-lg shadow-blue-900/20">
+                        <ExternalLink size={18} /> Live Demo
+                    </button>
                   </div>
               </div>
-            </div>
-        </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="md:col-span-2 space-y-6">
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">Project Overview</h4>
+                    <p className="text-gray-300 leading-relaxed text-lg">
+                        {project.description}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">Key Challenges & Solutions</h4>
+                    <p className="text-gray-400 leading-relaxed">
+                      We focused on creating a user-centric design that maximizes engagement. By leveraging modern caching techniques, we reduced load times by 40%, ensuring a smooth experience even on slower connections.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700 h-fit">
+                    <h4 className="text-white font-bold mb-4 flex items-center gap-2">
+                      <Code size={18} className="text-blue-400"/> Technologies
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                        {project.tags.map((tech) => (
+                            <span key={tech} className="px-3 py-1.5 bg-gray-900 text-gray-300 rounded-lg text-sm border border-gray-700 font-medium">
+                                {tech}
+                            </span>
+                        ))}
+                    </div>
+                    
+                    <div className="mt-6 pt-6 border-t border-gray-700">
+                      <h4 className="text-white font-bold mb-3">Project Details</h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between text-gray-400">
+                          <span>Client</span>
+                          <span className="text-gray-200">Confidential</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400">
+                          <span>Timeline</span>
+                          <span className="text-gray-200">{project.timeline || 'N/A'}</span>
+                        </div>
+                        <div className="flex justify-between text-gray-400">
+                          <span>Role</span>
+                          <span className="text-gray-200">{project.role || 'N/A'}</span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+        )}
       </motion.div>
     </motion.div>
   );
@@ -512,7 +544,7 @@ const Dock = () => {
 
 const Hero = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gray-950">
+    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gray-950 snap-start">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-950 to-black"></div>
       
@@ -601,7 +633,7 @@ const ServiceCard = ({ service }) => {
 
 const Services = () => {
   return (
-    <section id="services" className="py-24 bg-gray-900 relative overflow-hidden">
+    <section id="services" className="pt-4 pb-24 bg-gray-900 relative overflow-hidden snap-start min-h-screen flex flex-col justify-center">
       {/* Dynamic Background */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px]" />
@@ -648,21 +680,28 @@ const Services = () => {
 };
 
 const WhyUs = () => {
+  const stats = [
+    { number: "50+", label: "Projects Completed", gradient: "from-blue-600 to-indigo-700", icon: <Briefcase size={28} /> },
+    { number: "98%", label: "Client Satisfaction", gradient: "from-purple-600 to-pink-600", icon: <Award size={28} /> },
+    { number: "3+", label: "Years Experience", gradient: "from-teal-600 to-emerald-600", icon: <Clock size={28} /> },
+    { number: "10+", label: "Team Members", gradient: "from-orange-600 to-red-600", icon: <Users size={28} /> }
+  ];
+
   return (
-    <section id="why-us" className="py-24 bg-gray-950 relative overflow-hidden">
+    <section id="why-us" className="py-24 bg-gray-950 relative overflow-hidden snap-start min-h-screen flex items-center">
       {/* Subtle Grid Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 50, damping: 20 }}
-            className="lg:w-1/2"
+            className="lg:w-1/2 w-full"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">Why Choose <span className="text-blue-500">Rhynox?</span></h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Why Choose <span className="text-blue-500">Rhynox?</span></h2>
             <p className="text-lg text-gray-400 mb-8 leading-relaxed">
               We don't just deliver projects; we build partnerships. Our unique blend of creative design and technical robustness ensures your business stands out in a crowded digital landscape.
             </p>
@@ -676,44 +715,89 @@ const WhyUs = () => {
                   transition={{ delay: idx * 0.1, type: "spring" }}
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
-                  className="flex flex-col p-4 bg-gray-900 rounded-xl shadow-sm border border-gray-800 hover:border-gray-700 transition-colors hover:shadow-lg hover:shadow-blue-900/10"
+                  className="flex flex-col p-5 bg-gray-900 rounded-xl shadow-sm border border-gray-800 hover:border-gray-700 transition-colors hover:shadow-lg hover:shadow-blue-900/10"
                 >
-                  <div className="mb-3 text-blue-400 bg-blue-900/20 w-10 h-10 rounded-full flex items-center justify-center">
+                  <div className="mb-3 text-blue-400 bg-blue-900/20 w-12 h-12 rounded-full flex items-center justify-center">
                     {feature.icon}
                   </div>
-                  <h4 className="font-bold text-gray-100 mb-1">{feature.title}</h4>
-                  <p className="text-sm text-gray-500">{feature.desc}</p>
+                  <h4 className="font-bold text-gray-100 mb-2 text-base">{feature.title}</h4>
+                  <p className="text-sm text-gray-500 leading-relaxed">{feature.desc}</p>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
+          {/* Stats Grid - Hidden on mobile, shown on lg+ */}
           <motion.div 
              initial={{ opacity: 0, scale: 0.9 }}
              whileInView={{ opacity: 1, scale: 1 }}
              viewport={{ once: true }}
              transition={{ type: "spring", stiffness: 50, damping: 20 }}
-             className="lg:w-1/2 grid grid-cols-2 gap-4"
+             className="hidden lg:grid lg:w-1/2 grid-cols-2 gap-4"
           >
-            <div className="space-y-4 mt-8">
-              <motion.div 
-                whileHover={{ y: -5 }} 
-                className="bg-gradient-to-br from-blue-600 to-indigo-700 h-48 rounded-2xl shadow-lg opacity-80 backdrop-blur-sm"
-              ></motion.div>
-              <motion.div 
-                whileHover={{ y: -5 }} 
-                className="bg-gray-800/80 backdrop-blur-md h-32 rounded-2xl shadow-lg border border-gray-700"
-              ></motion.div>
-            </div>
-            <div className="space-y-4">
-              <motion.div 
-                whileHover={{ y: -5 }} 
-                className="bg-gray-800/80 backdrop-blur-md h-32 rounded-2xl shadow-lg border border-gray-700"
-              ></motion.div>
-              <motion.div 
-                whileHover={{ y: -5 }} 
-                className="bg-gradient-to-br from-purple-600 to-pink-600 h-48 rounded-2xl shadow-lg opacity-80 backdrop-blur-sm"
-              ></motion.div>
+            {stats.map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.15, type: "spring" }}
+                viewport={{ once: true }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                className={`bg-gradient-to-br ${stat.gradient} p-6 rounded-2xl shadow-xl backdrop-blur-sm relative overflow-hidden group ${idx % 2 === 0 ? 'mt-8' : ''}`}
+              >
+                {/* Animated background effect */}
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div className="relative z-10">
+                  <div className="text-white/80 mb-3">
+                    {stat.icon}
+                  </div>
+                  <div className="text-4xl font-bold text-white mb-2">
+                    {stat.number}
+                  </div>
+                  <div className="text-white/90 font-medium text-sm">
+                    {stat.label}
+                  </div>
+                </div>
+
+                {/* Decorative corner element */}
+                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Mobile Stats - Shown only on mobile as a horizontal scroll */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+            className="lg:hidden w-full overflow-x-auto pb-4 -mx-6 px-6"
+          >
+            <div className="flex gap-4 min-w-max">
+              {stats.map((stat, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1, type: "spring" }}
+                  viewport={{ once: true }}
+                  className={`bg-gradient-to-br ${stat.gradient} p-6 rounded-2xl shadow-xl backdrop-blur-sm relative overflow-hidden min-w-[160px]`}
+                >
+                  <div className="relative z-10">
+                    <div className="text-white/80 mb-2">
+                      {stat.icon}
+                    </div>
+                    <div className="text-3xl font-bold text-white mb-1">
+                      {stat.number}
+                    </div>
+                    <div className="text-white/90 font-medium text-xs">
+                      {stat.label}
+                    </div>
+                  </div>
+                  <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/5 rounded-full blur-2xl"></div>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -725,9 +809,42 @@ const WhyUs = () => {
 const Portfolio = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [projects, setProjects] = useState(PORTFOLIO);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch(API_ENDPOINTS.PROJECTS);
+        if (response.ok) {
+          const data = await response.json();
+          const formattedData = data.map(p => ({
+            id: p._id,
+            category: p.category,
+            title: p.title,
+            subtitle: p.subtitle,
+            description: p.description,
+            tags: p.tags,
+            gradient: p.gradient || "from-blue-600 to-indigo-600",
+            image: p.images?.[0] || p.image,
+            images: p.images || [p.image],
+            client: p.client,
+            timeline: p.timeline,
+            role: p.role
+          }));
+          setProjects([...PORTFOLIO, ...formattedData]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch projects", error);
+      }
+    };
+
+    fetchProjects();
+    const interval = setInterval(fetchProjects, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <section id="portfolio" className="py-24 bg-gray-900 overflow-hidden relative">
+    <section id="portfolio" className="pt-10 pb-40 bg-gray-900 overflow-hidden relative snap-start min-h-screen flex flex-col justify-center">
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-white mb-4">Featured Work</h2>
@@ -740,29 +857,20 @@ const Portfolio = () => {
       {/* Marquee Container */}
       <div 
         className="relative w-full"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Gradients to fade edges */}
         <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-gray-900 to-transparent z-20 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-gray-900 to-transparent z-20 pointer-events-none" />
 
         <div className="flex overflow-hidden">
-          <motion.div 
-            className="flex gap-8 px-4"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ 
-              repeat: Infinity, 
-              ease: "linear", 
-              duration: 40, // Adjust for speed
-            }}
+          <div 
+            className="flex gap-8 px-4 animate-marquee pause-on-hover"
             style={{ 
               width: "fit-content",
-              animationPlayState: isHovered ? 'paused' : 'running' 
             }}
           >
             {/* Double the array to create seamless loop */}
-            {[...PORTFOLIO, ...PORTFOLIO].map((item, index) => (
+            {[...projects, ...projects].map((item, index) => (
               <motion.div 
                 key={`${item.id}-${index}`}
                 onClick={() => setSelectedProject(item)}
@@ -776,26 +884,33 @@ const Portfolio = () => {
                     alt={item.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-80 group-hover:opacity-60 transition-opacity duration-300 mix-blend-multiply`}></div>
+                  <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-300`}></div>
                 </div>
                 
                 {/* Content Overlay */}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                   <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      <span className="inline-block px-3 py-1 bg-black/30 backdrop-blur-sm rounded-full text-xs font-bold text-white/90 mb-3 border border-white/10">
-                        {item.category}
-                      </span>
-                      <h3 className="text-2xl font-bold text-white mb-1 drop-shadow-md">{item.title}</h3>
-                      <p className="text-gray-200 text-sm mb-4 drop-shadow-sm line-clamp-2">{item.description}</p>
+                   <div className="translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="px-3 py-1 bg-blue-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest">
+                          {item.category}
+                        </span>
+                        {item.subtitle && (
+                          <span className="text-white/60 text-[10px] font-bold uppercase tracking-widest">
+                            • {item.subtitle}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-2xl md:text-3xl font-black text-white mb-2 drop-shadow-lg uppercase tracking-tight">{item.title}</h3>
+                      <p className="text-gray-300 text-sm mb-5 drop-shadow-sm line-clamp-2 font-medium leading-relaxed max-w-sm">{item.description}</p>
                       
-                      <div className="flex items-center text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                        View Details <ArrowRight size={18} className="ml-2" />
+                      <div className="flex items-center text-blue-400 font-bold text-sm uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                        View Project <ArrowRight size={16} className="ml-2" />
                       </div>
                    </div>
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -810,7 +925,7 @@ const Portfolio = () => {
 
 const Pricing = () => {
   return (
-    <section id="pricing" className="py-24 bg-gray-950 relative">
+    <section id="pricing" className="pt-4 pb-24 bg-gray-950 relative snap-start min-h-screen flex flex-col justify-center">
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <motion.h2 
@@ -834,7 +949,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto -mt-8">
           {PRICING_PLANS.map((plan, index) => (
             <motion.div
               key={index}
@@ -892,7 +1007,7 @@ const Pricing = () => {
 
 const About = () => {
   return (
-    <section id="about" className="py-24 bg-gradient-to-b from-gray-900 to-black">
+    <section id="about" className="py-24 bg-gradient-to-b from-gray-900 to-black snap-start min-h-screen flex items-center">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
@@ -955,7 +1070,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-gray-900 relative overflow-hidden">
+    <section id="contact" className="py-24 bg-gray-900 relative overflow-hidden snap-start min-h-screen flex items-center">
       {/* Background Shape */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
       <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-900/5 skew-x-12 translate-x-32 z-0 pointer-events-none" />
@@ -1077,9 +1192,27 @@ const Contact = () => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ onAdminTrigger }) => {
+  // Triple tap detection for admin page
+  const clickCountRef = useRef(0);
+  const timerRef = useRef(null);
+
+  const handleFooterClick = () => {
+    clickCountRef.current += 1;
+    if (clickCountRef.current === 3) {
+      if (onAdminTrigger) onAdminTrigger();
+      clickCountRef.current = 0;
+      clearTimeout(timerRef.current);
+    } else {
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        clickCountRef.current = 0;
+      }, 2000); // reset after 2 seconds
+    }
+  };
+
   return (
-    <footer className="bg-black text-white pt-20 pb-32 border-t border-gray-900">
+    <footer className="bg-black text-white pt-20 pb-32 border-t border-gray-900 snap-start" onClick={handleFooterClick}>
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div>
@@ -1139,19 +1272,22 @@ const Footer = () => {
     </footer>
   );
 };
-
-// --- MAIN APP COMPONENT ---
-
 const App = () => {
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
   return (
     <div className="font-sans text-white bg-gray-900 selection:bg-blue-500/30 selection:text-blue-200">
       <style>
         {`
-          html { scroll-behavior: smooth; }
+          html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
           ::-webkit-scrollbar { width: 8px; }
           ::-webkit-scrollbar-track { background: #111827; }
           ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
           ::-webkit-scrollbar-thumb:hover { background: #4B5563; }
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         `}
       </style>
       <ScrollToTop />
@@ -1166,7 +1302,17 @@ const App = () => {
         <About />
         <Contact />
       </main>
-      <Footer />
+        {showAdmin && (
+          adminAuthenticated ? (
+            <AdminDashboard user={currentUser} />
+          ) : (
+            <AdminLogin onSuccess={(user) => {
+              setAdminAuthenticated(true);
+              setCurrentUser(user);
+            }} />
+          )
+        )}
+      <Footer onAdminTrigger={() => setShowAdmin(true)} />
     </div>
   );
 };
