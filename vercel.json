@@ -3,8 +3,20 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/projects/:path*",
       "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/verify-email/send",
+      "destination": "/api/verify-email-send.js"
+    },
+    {
+      "source": "/api/verify-email/confirm",
+      "destination": "/api/verify-email-confirm.js"
+    },
+    {
+      "source": "/api/contact/send",
+      "destination": "/api/contact-send.js"
     }
   ]
 }
