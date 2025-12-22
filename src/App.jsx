@@ -247,6 +247,17 @@ const ProjectModal = ({ project, onClose }) => {
   
   if (!project) return null;
 
+  // Debug: Log project data to see if challenges and solutions are present
+  console.log('ProjectModal - Project data:', {
+    title: project.title,
+    hasChallenges: !!project.challenges,
+    challengesLength: project.challenges?.length,
+    challenges: project.challenges,
+    hasSolutions: !!project.solutions,
+    solutionsLength: project.solutions?.length,
+    solutions: project.solutions
+  });
+
   const allImages = project.images && project.images.length > 0 ? project.images : [project.image];
 
   return (
@@ -349,9 +360,32 @@ const ProjectModal = ({ project, onClose }) => {
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-white mb-2">Key Challenges & Solutions</h4>
-                    <p className="text-gray-400 leading-relaxed">
-                      We focused on creating a user-centric design that maximizes engagement. By leveraging modern caching techniques, we reduced load times by 40%, ensuring a smooth experience even on slower connections.
-                    </p>
+                    {project.challenges && project.challenges.length > 0 ? (
+                      <div className="space-y-4">
+                        <div>
+                          <h5 className="text-md font-semibold text-blue-400 mb-2">Challenges</h5>
+                          <ul className="list-disc list-inside text-gray-300 leading-relaxed space-y-1">
+                            {project.challenges.map((challenge, idx) => (
+                              <li key={idx}>{challenge}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        {project.solutions && project.solutions.length > 0 && (
+                          <div>
+                            <h5 className="text-md font-semibold text-green-400 mb-2">Solutions</h5>
+                            <ul className="list-disc list-inside text-gray-300 leading-relaxed space-y-1">
+                              {project.solutions.map((solution, idx) => (
+                                <li key={idx}>{solution}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-gray-400 leading-relaxed">
+                        We focused on creating a user-centric design that maximizes engagement. By leveraging modern caching techniques, we reduced load times by 40%, ensuring a smooth experience even on slower connections.
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -831,7 +865,9 @@ const Portfolio = () => {
             images: p.images || [p.image],
             client: p.client,
             timeline: p.timeline,
-            role: p.role
+            role: p.role,
+            challenges: p.challenges || [],
+            solutions: p.solutions || []
           }));
           setProjects([...PORTFOLIO, ...formattedData]);
         }
@@ -1286,7 +1322,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Email Us</div>
-                  <div className="font-semibold">rhynoxtechnologies@gmail.com</div>
+                  <a href="mailto:rhynoxtechnologies@gmail.com" className="font-semibold hover:text-blue-400 transition-colors cursor-pointer">rhynoxtechnologies@gmail.com</a>
                 </div>
               </div>
               <div className="flex items-center gap-4 text-gray-300">
@@ -1295,7 +1331,11 @@ const Contact = () => {
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Call Us</div>
-                  <div className="font-semibold">+91 79043 09363, +91 63740 08719</div>
+                  <div className="font-semibold">
+                    <a href="tel:+917904309363" className="hover:text-purple-400 transition-colors cursor-pointer">+91 79043 09363</a>
+                    <span>, </span>
+                    <a href="tel:+916374008719" className="hover:text-purple-400 transition-colors cursor-pointer">+91 63740 08719</a>
+                  </div>
                 </div>
               </div>
             </div>

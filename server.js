@@ -71,7 +71,9 @@ const projectSchema = new mongoose.Schema({
   client: String,
   timeline: String,
   role: String,
-  uploadedBy: String
+  uploadedBy: String,
+  challenges: [String],
+  solutions: [String]
 });
 
 const Project = mongoose.model('Project', projectSchema);
@@ -122,7 +124,7 @@ app.post('/api/projects', (req, res, next) => {
 }, async (req, res) => {
   try {
     console.log("Creating new project...");
-    const { title, subtitle, category, description, tags, gradient, client, timeline, role, uploadedBy, imageStructure } = req.body;
+    const { title, subtitle, category, description, tags, gradient, client, timeline, role, uploadedBy, imageStructure, challenges, solutions } = req.body;
     
     let imageUrls = [];
     if (imageStructure) {
@@ -157,6 +159,22 @@ app.post('/api/projects', (req, res, next) => {
         parsedTags = tags;
     }
 
+    // Parse challenges if it's a string
+    let parsedChallenges = [];
+    if (typeof challenges === 'string') {
+        parsedChallenges = challenges.split(',').map(c => c.trim()).filter(c => c.length > 0);
+    } else if (Array.isArray(challenges)) {
+        parsedChallenges = challenges;
+    }
+
+    // Parse solutions if it's a string
+    let parsedSolutions = [];
+    if (typeof solutions === 'string') {
+        parsedSolutions = solutions.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    } else if (Array.isArray(solutions)) {
+        parsedSolutions = solutions;
+    }
+
     const newProject = new Project({
       title,
       subtitle,
@@ -168,7 +186,9 @@ app.post('/api/projects', (req, res, next) => {
       client,
       timeline,
       role,
-      uploadedBy
+      uploadedBy,
+      challenges: parsedChallenges,
+      solutions: parsedSolutions
     });
     await newProject.save();
     console.log("New project created successfully.");
@@ -222,7 +242,7 @@ app.put('/api/projects/:id', (req, res, next) => {
     const { id } = req.params;
     console.log(`Updating project ${id}...`);
     
-    const { title, subtitle, category, description, tags, gradient, client, timeline, role, imageStructure } = req.body;
+    const { title, subtitle, category, description, tags, gradient, client, timeline, role, imageStructure, challenges, solutions } = req.body;
     
     const project = await Project.findById(id);
     if (!project) {
@@ -245,6 +265,24 @@ app.put('/api/projects/:id', (req, res, next) => {
             project.tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
         } else if (Array.isArray(tags)) {
             project.tags = tags;
+        }
+    }
+
+    // Update challenges
+    if (challenges !== undefined) {
+        if (typeof challenges === 'string') {
+            project.challenges = challenges.split(',').map(c => c.trim()).filter(c => c.length > 0);
+        } else if (Array.isArray(challenges)) {
+            project.challenges = challenges;
+        }
+    }
+
+    // Update solutions
+    if (solutions !== undefined) {
+        if (typeof solutions === 'string') {
+            project.solutions = solutions.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        } else if (Array.isArray(solutions)) {
+            project.solutions = solutions;
         }
     }
 

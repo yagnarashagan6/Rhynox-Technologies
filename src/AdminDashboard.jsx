@@ -25,7 +25,9 @@ const AdminDashboard = ({ user }) => {
     tags: '',
     client: '',
     timeline: '',
-    role: ''
+    role: '',
+    challenges: '',
+    solutions: ''
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -109,7 +111,9 @@ const AdminDashboard = ({ user }) => {
       tags: Array.isArray(project.tags) ? project.tags.join(', ') : project.tags,
       client: project.client || '',
       timeline: project.timeline || '',
-      role: project.role || ''
+      role: project.role || '',
+      challenges: Array.isArray(project.challenges) ? project.challenges.join(', ') : (project.challenges || ''),
+      solutions: Array.isArray(project.solutions) ? project.solutions.join(', ') : (project.solutions || '')
     });
     setActiveSection('upload');
     setMessage('');
@@ -126,7 +130,9 @@ const AdminDashboard = ({ user }) => {
       tags: '',
       client: '',
       timeline: '',
-      role: ''
+      role: '',
+      challenges: '',
+      solutions: ''
     });
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -150,6 +156,8 @@ const AdminDashboard = ({ user }) => {
       data.append('client', formData.client);
       data.append('timeline', formData.timeline);
       data.append('role', formData.role);
+      data.append('challenges', formData.challenges);
+      data.append('solutions', formData.solutions);
       
       if (!editingProject) {
         data.append('uploadedBy', user?.username || 'Admin');
@@ -204,7 +212,9 @@ const AdminDashboard = ({ user }) => {
               tags: '',
               client: '',
               timeline: '',
-              role: ''
+              role: '',
+              challenges: '',
+              solutions: ''
             });
         }
         fetchProjects();
@@ -521,6 +531,26 @@ const AdminDashboard = ({ user }) => {
                     className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none"
                     placeholder="React, Node.js, Design"
                   />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-gray-400 text-sm">Key Challenges (comma separated)</label>
+                  <textarea 
+                    name="challenges" 
+                    value={formData.challenges} 
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none h-24"
+                    placeholder="Challenge 1, Challenge 2, Challenge 3"
+                  ></textarea>
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-gray-400 text-sm">Solutions (comma separated)</label>
+                  <textarea 
+                    name="solutions" 
+                    value={formData.solutions} 
+                    onChange={handleInputChange}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none h-24"
+                    placeholder="Solution 1, Solution 2, Solution 3"
+                  ></textarea>
                 </div>
                 <div className="md:col-span-2">
                   <button 

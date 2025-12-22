@@ -12,7 +12,9 @@ const projectSchema = new mongoose.Schema({
   client: String,
   timeline: String,
   role: String,
-  uploadedBy: String
+  uploadedBy: String,
+  challenges: [String],
+  solutions: [String]
 });
 
 export default mongoose.models.Project || mongoose.model('Project', projectSchema);

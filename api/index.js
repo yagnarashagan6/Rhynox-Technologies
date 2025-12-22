@@ -85,6 +85,8 @@ export default async function handler(req, res) {
       const role = fields.role?.[0];
       const uploadedBy = fields.uploadedBy?.[0];
       const imageStructure = fields.imageStructure?.[0];
+      const challenges = fields.challenges?.[0];
+      const solutions = fields.solutions?.[0];
 
       let imageUrls = [];
       
@@ -113,6 +115,14 @@ export default async function handler(req, res) {
         ? tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
         : [];
 
+      const parsedChallenges = typeof challenges === 'string'
+        ? challenges.split(',').map(c => c.trim()).filter(c => c.length > 0)
+        : [];
+
+      const parsedSolutions = typeof solutions === 'string'
+        ? solutions.split(',').map(s => s.trim()).filter(s => s.length > 0)
+        : [];
+
       const newProject = new Project({
         title,
         subtitle,
@@ -124,7 +134,9 @@ export default async function handler(req, res) {
         client,
         timeline,
         role,
-        uploadedBy
+        uploadedBy,
+        challenges: parsedChallenges,
+        solutions: parsedSolutions
       });
 
       await newProject.save();
@@ -168,6 +180,22 @@ export default async function handler(req, res) {
         const tags = fields.tags[0];
         project.tags = typeof tags === 'string'
           ? tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0)
+          : [];
+      }
+
+      // Update challenges
+      if (fields.challenges?.[0]) {
+        const challenges = fields.challenges[0];
+        project.challenges = typeof challenges === 'string'
+          ? challenges.split(',').map(c => c.trim()).filter(c => c.length > 0)
+          : [];
+      }
+
+      // Update solutions
+      if (fields.solutions?.[0]) {
+        const solutions = fields.solutions[0];
+        project.solutions = typeof solutions === 'string'
+          ? solutions.split(',').map(s => s.trim()).filter(s => s.length > 0)
           : [];
       }
 
