@@ -37,6 +37,7 @@ import {
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
 import { API_ENDPOINTS } from './config';
+import { getSafeImageUrl } from './utils/imageUtils';
 
 /* --- COMPONENT ARCHITECTURE & DATA --- */
 
@@ -861,8 +862,8 @@ const Portfolio = () => {
             description: p.description,
             tags: p.tags,
             gradient: p.gradient || "from-blue-600 to-indigo-600",
-            image: p.images?.[0] || p.image,
-            images: p.images || [p.image],
+            image: getSafeImageUrl(p.images?.[0] || p.image),
+            images: (p.images || [p.image]).map(getSafeImageUrl),
             client: p.client,
             timeline: p.timeline,
             role: p.role,

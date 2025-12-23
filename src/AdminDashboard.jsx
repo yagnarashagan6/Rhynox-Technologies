@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Users, DollarSign, Activity, BarChart2, Settings, LogOut, Upload, Folder, User, Trash2, Edit2, Calendar, Plus, X } from 'lucide-react';
 import { API_ENDPOINTS } from './config';
+import { getSafeImageUrl } from './utils/imageUtils';
 
 const AdminDashboard = ({ user }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -43,7 +44,12 @@ const AdminDashboard = ({ user }) => {
       const res = await fetch(API_ENDPOINTS.PROJECTS);
       if (res.ok) {
         const data = await res.json();
-        setUploadedProjects(data);
+        const sanitizedData = data.map(project => ({
+          ...project,
+          image: getSafeImageUrl(project.image),
+          images: project.images?.map(getSafeImageUrl) || []
+        }));
+        setUploadedProjects(sanitizedData);
       }
     } catch (err) {
       console.error("Failed to fetch projects", err);
