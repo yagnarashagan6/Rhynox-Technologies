@@ -6,7 +6,11 @@
   },
   "rewrites": [
     {
-      "source": "/api/projects/:path*",
+      "source": "/api/projects/:id",
+      "destination": "/api/index.js?id=:id"
+    },
+    {
+      "source": "/api/projects",
       "destination": "/api/index.js"
     },
     {
