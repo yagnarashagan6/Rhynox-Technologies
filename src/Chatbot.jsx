@@ -11,10 +11,11 @@ import {
   DollarSign,
   HelpCircle,
   CheckCircle,
-  ArrowLeft
+  ArrowLeft,
+  Check
 } from 'lucide-react';
 
-const Chatbot = () => {
+const Chatbot = ({ openWithPlan }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
@@ -35,6 +36,7 @@ const Chatbot = () => {
     phone: '',
     details: ''
   });
+  const [termsAccepted, setTermsAccepted] = useState(false);
   
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -92,6 +94,27 @@ const Chatbot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Handle opening chatbot with a specific plan
+  useEffect(() => {
+    if (openWithPlan) {
+      setIsOpen(true);
+      setShowQuickActions(false);
+      
+      const initializeOrder = () => {
+        addMessage(
+          `Great choice! You're interested in our ${openWithPlan} plan. Let me help you get started with placing an order.`,
+          'bot'
+        );
+        setTimeout(() => {
+          startOrderFlow();
+        }, 500);
+      };
+      
+      simulateTyping(initializeOrder);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openWithPlan]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -272,10 +295,41 @@ const Chatbot = () => {
     
     if (currentFlow === 'order-details') {
       setOrderData(prev => ({ ...prev, details: message }));
-      setCurrentFlow(null);
+      setCurrentFlow('order-terms');
+      setTermsAccepted(false);
       simulateTyping(() => {
-        submitOrder({ ...orderData, details: message });
-      }, 1500);
+        addMessage(
+          "📋 **TERMS AND CONDITIONS**\n\n" +
+          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+          "📌 **Payment Terms:**\n" +
+          "   • 50% advance payment required\n" +
+          "   • 50% on project delivery\n" +
+          "   • Accepted via UPI, Bank Transfer, or Cards\n\n" +
+          "⏰ **Delivery Timeline:**\n" +
+          "   • As per agreed project scope\n" +
+          "   • Timeline communicated before starting\n" +
+          "   • Rush delivery available (extra charges apply)\n\n" +
+          "🔄 **Revisions Policy:**\n" +
+          "   • Up to 3 free revisions included\n" +
+          "   • Additional revisions charged separately\n" +
+          "   • Changes within original scope only\n\n" +
+          "💰 **Refund Policy:**\n" +
+          "   • No refunds after work begins\n" +
+          "   • 100% refund if work hasn't started\n" +
+          "   • Partial refunds at discretion\n\n" +
+          "📜 **Intellectual Property:**\n" +
+          "   • All rights remain with Rhynox Technologies\n" +
+          "   • Full ownership transferred after payment\n" +
+          "   • Source files provided post-payment\n\n" +
+          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+          "Please review and accept to proceed with your order.",
+          'bot',
+          {
+            isFormatted: true,
+            showTermsCheckbox: true
+          }
+        );
+      }, 1000);
       return;
     }
 
@@ -611,6 +665,53 @@ const Chatbot = () => {
                                   </div>
                                 </motion.button>
                               ))}
+                            </div>
+                          )}
+
+                          {/* Terms and Conditions Checkbox */}
+                          {message.showTermsCheckbox && (
+                            <div className="mt-3 space-y-3">
+                              <div 
+                                onClick={() => setTermsAccepted(!termsAccepted)}
+                                className="flex items-start gap-3 cursor-pointer group"
+                              >
+                                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 ${
+                                  termsAccepted 
+                                    ? 'bg-green-500 border-green-500' 
+                                    : 'border-gray-600 group-hover:border-gray-400'
+                                }`}>
+                                  {termsAccepted && (
+                                    <Check size={14} className="text-white" strokeWidth={3} />
+                                  )}
+                                </div>
+                                <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
+                                  I accept the terms and conditions
+                                </span>
+                              </div>
+                              {termsAccepted && (
+                                <motion.button
+                                  initial={{ opacity: 0, scale: 0.9 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  onClick={() => {
+                                    simulateTyping(() => {
+                                      addMessage(
+                                        "✅ Thank you for accepting our terms!\n\nProcessing your order...",
+                                        'bot',
+                                        {
+                                          isFormatted: true
+                                        }
+                                      );
+                                      setTimeout(() => {
+                                        submitOrder(orderData);
+                                      }, 500);
+                                      setCurrentFlow(null);
+                                    });
+                                  }}
+                                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
+                                >
+                                  Confirm and Submit Order
+                                </motion.button>
+                              )}
                             </div>
                           )}
 

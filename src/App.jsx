@@ -1055,7 +1055,7 @@ const Portfolio = () => {
   );
 };
 
-const Pricing = () => {
+const Pricing = ({ onSelectPlan }) => {
   return (
     <section id="pricing" className="pt-4 pb-24 bg-gray-950 relative snap-start min-h-screen flex flex-col justify-center">
       <div className="container mx-auto px-6 relative z-10">
@@ -1122,7 +1122,9 @@ const Pricing = () => {
                 ))}
               </div>
 
-              <button className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
+              <button 
+                onClick={() => onSelectPlan(plan.title)}
+                className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
                 plan.popular 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 shadow-lg shadow-purple-500/30' 
                   : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-700'
@@ -1865,6 +1867,7 @@ const App = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [adminAuthenticated, setAdminAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   return (
     <div className="font-sans text-white bg-gray-900 selection:bg-blue-500/30 selection:text-blue-200">
@@ -1886,7 +1889,7 @@ const App = () => {
         <Services />
         <WhyUs />
         <Portfolio />
-        <Pricing />
+        <Pricing onSelectPlan={setSelectedPlan} />
         <About />
         <Contact />
       </main>
@@ -1901,7 +1904,7 @@ const App = () => {
           )
         )}
       <Footer onAdminTrigger={() => setShowAdmin(true)} />
-      <Chatbot />
+      <Chatbot openWithPlan={selectedPlan} />
     </div>
   );
 };
