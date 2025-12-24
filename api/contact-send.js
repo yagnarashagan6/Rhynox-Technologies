@@ -143,7 +143,54 @@ export default async function handler(req, res) {
       `
     };
 
+    const mailToClient = {
+      from: `"Rhynox Technologies" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: `Thank you for contacting Rhynox Technologies`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 40px auto; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 40px 20px; text-align: center; }
+            .header h1 { color: white; margin: 0; font-size: 28px; font-weight: bold; }
+            .content { padding: 40px 30px; }
+            .info-row { margin: 20px 0; padding: 15px; background: #f9fafb; border-left: 4px solid #3b82f6; border-radius: 4px; }
+            .label { font-weight: bold; color: #374151; margin-bottom: 5px; }
+            .value { color: #6b7280; }
+            .footer { background: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>👋 Thank You!</h1>
+            </div>
+            <div class="content">
+              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Hi ${name},</p>
+              <p style="color: #374151; font-size: 16px; line-height: 1.6;">Thanks for reaching out! We've received your inquiry regarding <strong>${service}</strong>.</p>
+              
+              <div class="info-row">
+                <div class="label">We'll be in touch soon!</div>
+                <div class="value">Our team is reviewing your details and will get back to you within 24 hours.</div>
+              </div>
+
+              <p style="color: #374151; font-size: 16px; line-height: 1.6;">If you have any urgent questions, feel free to reply to this email.</p>
+            </div>
+            <div class="footer">
+              <p>© 2024 Rhynox Technologies. All rights reserved.</p>
+              <p>Building digital experiences that grow your business.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
     await transporter.sendMail(mailToRhynox);
+    await transporter.sendMail(mailToClient);
     
     // Clean up verification record after successful submission
     await EmailVerification.deleteOne({ email });

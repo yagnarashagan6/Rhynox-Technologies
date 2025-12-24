@@ -1,7 +1,32 @@
 import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
-  // Only allow POST requests
+  // Enable CORS
+  const allowedOrigins = [
+    'https://www.rhynoxtechnologies.dev',
+    'https://rhynoxtechnologies.dev',
+    'https://rhynox-technologies.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000'
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin) || !origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  }
+  
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -21,11 +46,15 @@ export default async function handler(req, res) {
     }
 
     // Create transporter with SMTP settings
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
+        throw new Error('Email configuration missing');
+    }
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_APP_PASSWORD,
       },
     });
 
@@ -35,8 +64,8 @@ export default async function handler(req, res) {
 
     // Email to admin
     const adminMailOptions = {
-      from: process.env.SMTP_USER,
-      to: process.env.ADMIN_EMAIL || process.env.SMTP_USER,
+      from: `"Rhynox Chatbot Order" <${process.env.EMAIL_USER}>`,
+      to: 'rhynoxtechnologies@gmail.com',
       subject: `🚀 New Order from Chatbot - ${service}`,
       html: `
         <!DOCTYPE html>
@@ -107,7 +136,7 @@ export default async function handler(req, res) {
 
     // Email to customer
     const customerMailOptions = {
-      from: process.env.SMTP_USER,
+      from: `"Rhynox Technologies" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Order Confirmation - ${service} | Rhynox`,
       html: `
@@ -173,7 +202,7 @@ export default async function handler(req, res) {
 
               <div class="contact-info">
                 <h3 style="color: #667eea; margin-top: 0;">📞 Need Immediate Assistance?</h3>
-                <p><strong>Email:</strong> ${process.env.SMTP_USER || 'contact@rhynox.com'}</p>
+                <p><strong>Email:</strong> ${process.env.EMAIL_USER || 'contact@rhynox.com'}</p>
                 <p><strong>Phone:</strong> +91-XXXXXXXXXX</p>
                 <p style="margin-bottom: 0;"><strong>Business Hours:</strong> Mon-Sat, 9 AM - 7 PM IST</p>
               </div>
