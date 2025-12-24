@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useTransform, useMotionValue } from 'framer-motion';
 import { 
   Code, 
@@ -508,7 +508,7 @@ const ScrollToTop = () => {
 const TopBar = () => {
   return (
     // Absolute positioning at top of page, not fixed
-    <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-center items-center z-40">
+    <div className="absolute top-0 left-0 right-0 flex justify-center items-center z-40 pt-4 md:pt-6">
        <motion.div 
          initial={{ opacity: 0, y: -20 }}
          animate={{ opacity: 1, y: 0 }}
@@ -516,10 +516,34 @@ const TopBar = () => {
          className="cursor-pointer" 
          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
        >
-          {/* Responsive text size optimized for mobile */}
-          <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 tracking-tight">
-             Rhynox <span className="text-white">Technologies</span>
-          </div>
+          {/* Company Logo SVG */}
+           <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 375 375"
+              preserveAspectRatio="xMidYMid meet"
+              className="h-16 sm:h-20 md:h-28 lg:h-36 w-auto"
+            >
+              <g>
+                <path
+                  d="M68.410156 180.320312
+                     C77.546875 176.976562
+                     86.992188 176.179688
+                     96.648438 176.117188
+                     C97.171875 176.117188
+                     97.355469 175.230469
+                     96.773438 175.167969
+                     C87.113281 173.726562
+                     77.058594 176.027344
+                     68.199219 179.921875
+                     C68.011719 180.011719
+                     68.167969 180.410156
+                     68.410156 180.320312
+                     Z"
+                  fill="#FFFFFF"
+                  fillOpacity="1"
+                />
+              </g>
+            </svg>
        </motion.div>
        {/* Button positioned absolutely on the right side */}
        <motion.button
@@ -1378,11 +1402,6 @@ const Contact = () => {
           error: '',
           success: ''
         });
-
-        // Hide notification after 5 seconds
-        setTimeout(() => {
-          setShowSuccessNotification(false);
-        }, 5000);
       } else {
         setEmailVerification(prev => ({
           ...prev,
