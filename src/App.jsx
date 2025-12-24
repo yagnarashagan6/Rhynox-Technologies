@@ -515,7 +515,7 @@ const TopBar = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => window.open(`https://wa.me/918148311669?text=${encodeURIComponent('Hi Rhynox Team!')}`, '_blank')}
           className="absolute right-4 md:right-6 px-4 md:px-6 py-2 md:py-2.5 bg-blue-600 text-white rounded-full font-medium text-sm md:text-base hover:bg-blue-700 transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.8)] flex items-center gap-2"
        >
           <MessageCircle size={18} />
@@ -641,7 +641,7 @@ const Hero = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => window.open(`https://wa.me/918148311669?text=${encodeURIComponent('Hi Rhynox Team!')}`, '_blank')}
               className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-blue-700 shadow-blue-900/30 transition-all flex items-center justify-center gap-2"
             >
               <MessageCircle size={20} />
