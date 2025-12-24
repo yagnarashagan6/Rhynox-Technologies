@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
+import Chatbot from './Chatbot';
 import { API_ENDPOINTS } from './config';
 import { getSafeImageUrl } from './utils/imageUtils';
 
@@ -50,7 +51,8 @@ const SERVICES = [
     desc: "Custom, high-performance websites built with modern frameworks like React and Next.js.",
     icon: <Code size={32} />,
     color: "text-blue-400",
-    bg: "bg-blue-900/20"
+    bg: "bg-blue-900/20",
+    image: "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: 2,
@@ -58,7 +60,8 @@ const SERVICES = [
     desc: "Native and cross-platform mobile applications designed for seamless user experiences.",
     icon: <Smartphone size={32} />,
     color: "text-purple-400",
-    bg: "bg-purple-900/20"
+    bg: "bg-purple-900/20",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: 3,
@@ -66,7 +69,8 @@ const SERVICES = [
     desc: "Eye-catching posters, branding materials, and UI elements that tell your brand's story.",
     icon: <Palette size={32} />,
     color: "text-pink-400",
-    bg: "bg-pink-900/20"
+    bg: "bg-pink-900/20",
+    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: 4,
@@ -74,7 +78,8 @@ const SERVICES = [
     desc: "High-conversion video ads scripted and produced to maximize your ROI.",
     icon: <Megaphone size={32} />,
     color: "text-red-400",
-    bg: "bg-red-900/20"
+    bg: "bg-red-900/20",
+    image: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=80"
   },
   {
     id: 5,
@@ -82,7 +87,8 @@ const SERVICES = [
     desc: "Professional editing, color grading, and motion graphics for polished content.",
     icon: <Video size={32} />,
     color: "text-teal-400",
-    bg: "bg-teal-900/20"
+    bg: "bg-teal-900/20",
+    image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
@@ -140,10 +146,30 @@ const PRICING_PLANS = [
 ];
 
 const FEATURES = [
-  { title: "Fast Delivery", icon: <Clock size={24} />, desc: "We value your time. Quick turnarounds without compromising quality." },
-  { title: "Affordable Pricing", icon: <CheckCircle size={24} />, desc: "Premium services tailored to fit startup and SME budgets." },
-  { title: "Modern Tech", icon: <Zap size={24} />, desc: "We use the latest tools (React, Tailwind, Motion) for future-proof solutions." },
-  { title: "Client Focused", icon: <Users size={24} />, desc: "Your vision is our priority. We collaborate closely at every step." }
+  { 
+    title: "Fast Delivery", 
+    icon: <Clock size={24} />, 
+    desc: "We value your time. Quick turnarounds without compromising quality.",
+    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    title: "Affordable Pricing", 
+    icon: <CheckCircle size={24} />, 
+    desc: "Premium services tailored to fit startup and SME budgets.",
+    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    title: "Modern Tech", 
+    icon: <Zap size={24} />, 
+    desc: "We use the latest tools (React, Tailwind, Motion) for future-proof solutions.",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    title: "Client Focused", 
+    icon: <Users size={24} />, 
+    desc: "Your vision is our priority. We collaborate closely at every step.",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
+  }
 ];
 
 const PORTFOLIO = [
@@ -466,10 +492,10 @@ const ScrollToTop = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
             onClick={scrollToTop}
-            className="fixed bottom-32 right-8 p-3 bg-gray-800 text-blue-400 rounded-full shadow-xl border border-gray-700 z-40 hover:bg-gray-700 focus:outline-none"
+            className="fixed bottom-24 md:bottom-32 left-4 md:left-8 p-2.5 md:p-3 bg-gray-800 text-blue-400 rounded-full shadow-xl border border-gray-700 z-40 hover:bg-gray-700 focus:outline-none"
             whileHover={{ y: -5 }}
           >
-            <ChevronUp size={24} />
+            <ChevronUp size={20} className="md:w-6 md:h-6" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -481,29 +507,29 @@ const ScrollToTop = () => {
 
 const TopBar = () => {
   return (
-    // Changed layout to center the title and position button absolutely
-    <div className="absolute top-0 left-0 right-0 p-8 flex justify-center items-center z-40 pointer-events-none">
+    // Absolute positioning at top of page, not fixed
+    <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-center items-center z-40">
        <motion.div 
          initial={{ opacity: 0, y: -20 }}
          animate={{ opacity: 1, y: 0 }}
          transition={{ duration: 0.8, ease: "easeOut" }}
-         className="pointer-events-auto cursor-pointer" 
+         className="cursor-pointer" 
          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
        >
-          {/* Increased text size to 4xl/6xl and centered text alignment */}
-          <div className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 backdrop-blur-sm bg-black/10 rounded-lg px-2 text-center tracking-tight drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+          {/* Responsive text size optimized for mobile */}
+          <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 tracking-tight">
              Rhynox <span className="text-white">Technologies</span>
           </div>
        </motion.div>
-       {/* Button positioned absolutely to the right, hidden on smaller screens to avoid overlap */}
+       {/* Button positioned absolutely on the right side */}
        <motion.button
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-          className="pointer-events-auto absolute right-8 top-9 px-6 py-2.5 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.8)] backdrop-blur-md hidden lg:block"
+          className="absolute right-4 md:right-6 px-4 md:px-6 py-2 md:py-2.5 bg-blue-600 text-white rounded-full font-medium text-sm md:text-base hover:bg-blue-700 transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.8)]"
        >
-          Get a Quote
+          Free Quote
        </motion.button>
     </div>
   );
@@ -513,15 +539,15 @@ const DockItem = ({ item }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative flex flex-col items-center gap-2 group">
-      {/* Tooltip */}
+    <div className="relative flex items-center group">
+      {/* Tooltip - only shown on desktop hover */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.8 }}
-            className="absolute -top-10 bg-gray-800 text-white text-[10px] font-semibold py-0.5 px-2 rounded border border-gray-700 shadow-xl whitespace-nowrap"
+            className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs font-semibold py-1 px-3 rounded-lg border border-gray-700 shadow-xl whitespace-nowrap hidden md:block z-10"
           >
             {item.label}
           </motion.div>
@@ -535,41 +561,38 @@ const DockItem = ({ item }) => {
             const el = document.querySelector(item.href);
             if(el) el.scrollIntoView({ behavior: 'smooth' });
         }}
-        whileHover={{ scale: 1.25, y: -8 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 300, damping: 15 }}
-        // Reduced size: w-10 h-10 (mobile), w-12 h-12 (desktop), rounded-xl
-        className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl bg-gray-800/60 hover:bg-gray-700/80 border border-white/10 text-gray-400 hover:text-blue-400 hover:border-blue-400/30 transition-colors shadow-lg backdrop-blur-md"
+        whileHover={{ scale: 1.15, y: -4 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        // Better touch targets for mobile
+        className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-full md:rounded-xl bg-gray-800/50 hover:bg-gray-700/80 border border-white/10 text-gray-400 hover:text-blue-400 hover:border-blue-400/50 transition-colors shadow-lg backdrop-blur-sm"
       >
         {item.icon}
       </motion.button>
-      
-      {/* Active Indicator Dot */}
-      <div className="w-1 h-1 rounded-full bg-transparent group-hover:bg-blue-500 transition-colors" />
     </div>
   );
 };
 
 const Dock = () => {
-  // Reduced icon size to 20
+  // Reduced icon size to 20 for desktop, 18 for mobile
   const navItems = [
-    { icon: <Home size={20} />, label: "Home", href: "#home" },
-    { icon: <LayoutGrid size={20} />, label: "Services", href: "#services" },
-    { icon: <Award size={20} />, label: "Why Us", href: "#why-us" },
-    { icon: <Briefcase size={20} />, label: "Portfolio", href: "#portfolio" },
-    { icon: <CreditCard size={20} />, label: "Pricing", href: "#pricing" },
-    { icon: <Info size={20} />, label: "About", href: "#about" },
-    { icon: <Mail size={20} />, label: "Contact", href: "#contact" },
+    { icon: <Home size={18} className="md:w-5 md:h-5" />, label: "Home", href: "#home" },
+    { icon: <LayoutGrid size={18} className="md:w-5 md:h-5" />, label: "Services", href: "#services" },
+    { icon: <Award size={18} className="md:w-5 md:h-5" />, label: "Why Us", href: "#why-us" },
+    { icon: <Briefcase size={18} className="md:w-5 md:h-5" />, label: "Portfolio", href: "#portfolio" },
+    { icon: <CreditCard size={18} className="md:w-5 md:h-5" />, label: "Pricing", href: "#pricing" },
+    { icon: <Info size={18} className="md:w-5 md:h-5" />, label: "About", href: "#about" },
+    { icon: <Mail size={18} className="md:w-5 md:h-5" />, label: "Contact", href: "#contact" },
   ];
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 flex justify-center z-50 pointer-events-none">
+    <div className="fixed bottom-3 md:bottom-5 left-0 right-0 flex justify-center z-[45] pointer-events-none px-2">
       <motion.div 
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 200, damping: 20 }}
-        // Reduced container padding (px-3 py-2) and gap
-        className="pointer-events-auto flex items-end gap-1 md:gap-3 px-3 py-2 bg-gray-900/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl"
+        // Optimized container with better mobile support
+        className="pointer-events-auto flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 bg-gray-900/90 backdrop-blur-xl border border-white/20 rounded-full md:rounded-2xl shadow-2xl overflow-x-auto no-scrollbar"
       >
         {navItems.map((item) => (
            <DockItem key={item.label} item={item} />
@@ -581,7 +604,10 @@ const Dock = () => {
 
 const Hero = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gray-950 snap-start">
+    <section id="home" className="relative min-h-screen flex items-center overflow-hidden bg-gray-950 snap-start">
+      {/* TopBar integrated at the top */}
+      <TopBar />
+      
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900 via-gray-950 to-black"></div>
       
@@ -650,25 +676,68 @@ const Hero = () => {
   );
 };
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, isClicked, onClick }) => {
   return (
     <motion.div
       variants={fadeInUp}
-      whileHover={{ y: -8, boxShadow: "0 20px 40px -15px rgba(0,0,0,0.5)" }}
+      whileHover={{ y: -8, boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)" }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="bg-gray-800/40 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-700/50 hover:border-blue-500/30 transition-all group relative overflow-hidden"
+      onClick={onClick}
+      className={`backdrop-blur-md rounded-2xl shadow-xl border-2 transition-all group relative overflow-hidden cursor-pointer ${
+        isClicked 
+          ? 'border-white shadow-[0_0_30px_rgba(255,255,255,0.3)]' 
+          : 'border-gray-700/50 hover:border-white/60 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]'
+      }`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      <div className={`w-16 h-16 rounded-xl ${service.bg} ${service.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 ease-out relative z-10`}>
-        {service.icon}
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+        <img 
+          src={service.image} 
+          alt={service.title}
+          className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/70 to-black/80" />
       </div>
-      <h3 className="text-2xl font-bold text-white mb-3 relative z-10">{service.title}</h3>
-      <p className="text-gray-400 leading-relaxed relative z-10">{service.desc}</p>
+
+      <div className="relative z-10 p-8">
+        {isClicked && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.2, 0.4, 0.2] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute inset-0 bg-white/5 pointer-events-none rounded-2xl"
+          />
+        )}
+        <div className={`w-16 h-16 rounded-xl ${service.bg} ${service.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 ease-out relative z-10 ${
+          isClicked ? 'ring-2 ring-white shadow-[0_0_20px_rgba(255,255,255,0.4)]' : ''
+        }`}>
+          {service.icon}
+        </div>
+        <h3 className={`text-2xl font-bold mb-3 relative z-10 transition-colors ${
+          isClicked ? 'text-white' : 'text-white'
+        }`}>{service.title}</h3>
+        <p className="text-gray-200 leading-relaxed relative z-10">{service.desc}</p>
+      </div>
+      
+      {isClicked && (
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: '100%' }}
+          transition={{ duration: 0.5 }}
+          className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-white/60 via-white to-white/60"
+        />
+      )}
     </motion.div>
   );
 };
 
 const Services = () => {
+  const [clickedCard, setClickedCard] = useState(null);
+
+  const handleCardClick = (serviceId) => {
+    setClickedCard(clickedCard === serviceId ? null : serviceId);
+  };
+
   return (
     <section id="services" className="pt-4 pb-24 bg-gray-900 relative overflow-hidden snap-start min-h-screen flex flex-col justify-center">
       {/* Dynamic Background */}
@@ -708,7 +777,12 @@ const Services = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {SERVICES.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard 
+              key={service.id} 
+              service={service}
+              isClicked={clickedCard === service.id}
+              onClick={() => handleCardClick(service.id)}
+            />
           ))}
         </motion.div>
       </div>
@@ -717,6 +791,12 @@ const Services = () => {
 };
 
 const WhyUs = () => {
+  const [clickedFeature, setClickedFeature] = useState(null);
+
+  const handleFeatureClick = (index) => {
+    setClickedFeature(clickedFeature === index ? null : index);
+  };
+
   const stats = [
     { number: "50+", label: "Projects Completed", gradient: "from-blue-600 to-indigo-700", icon: <Briefcase size={28} /> },
     { number: "98%", label: "Client Satisfaction", gradient: "from-purple-600 to-pink-600", icon: <Award size={28} /> },
@@ -726,118 +806,144 @@ const WhyUs = () => {
 
   return (
     <section id="why-us" className="py-24 bg-gray-950 relative overflow-hidden snap-start min-h-screen flex items-center">
-      {/* Subtle Grid Background */}
+      {/* Enhanced Background */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
+      
+      {/* Floating Particles */}
+      {[...Array(10)].map((_, i) => (
+        <motion.div
+          key={i}
+          animate={{
+            y: [0, -20, 0],
+            x: [0, Math.random() * 30 - 15, 0],
+            opacity: [0.1, 0.3, 0.1]
+          }}
+          transition={{
+            duration: 4 + Math.random() * 4,
+            repeat: Infinity,
+            delay: Math.random() * 4
+          }}
+          className="absolute w-1.5 h-1.5 bg-blue-400/30 rounded-full"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`
+          }}
+        />
+      ))}
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-            className="lg:w-1/2 w-full"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Why Choose <span className="text-blue-500">Rhynox?</span></h2>
-            <p className="text-lg text-gray-400 mb-8 leading-relaxed">
-              We don't just deliver projects; we build partnerships. Our unique blend of creative design and technical robustness ensures your business stands out in a crowded digital landscape.
-            </p>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {FEATURES.map((feature, idx) => (
-                <motion.div 
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1, type: "spring" }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.02 }}
-                  className="flex flex-col p-5 bg-gray-900 rounded-xl shadow-sm border border-gray-800 hover:border-gray-700 transition-colors hover:shadow-lg hover:shadow-blue-900/10"
-                >
-                  <div className="mb-3 text-blue-400 bg-blue-900/20 w-12 h-12 rounded-full flex items-center justify-center">
-                    {feature.icon}
-                  </div>
-                  <h4 className="font-bold text-gray-100 mb-2 text-base">{feature.title}</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed">{feature.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Stats Grid - Hidden on mobile, shown on lg+ */}
-          <motion.div 
-             initial={{ opacity: 0, scale: 0.9 }}
-             whileInView={{ opacity: 1, scale: 1 }}
-             viewport={{ once: true }}
-             transition={{ type: "spring", stiffness: 50, damping: 20 }}
-             className="hidden lg:grid lg:w-1/2 grid-cols-2 gap-4"
-          >
-            {stats.map((stat, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.15, type: "spring" }}
-                viewport={{ once: true }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className={`bg-gradient-to-br ${stat.gradient} p-6 rounded-2xl shadow-xl backdrop-blur-sm relative overflow-hidden group ${idx % 2 === 0 ? 'mt-8' : ''}`}
-              >
-                {/* Animated background effect */}
-                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                <div className="relative z-10">
-                  <div className="text-white/80 mb-3">
-                    {stat.icon}
-                  </div>
-                  <div className="text-4xl font-bold text-white mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-white/90 font-medium text-sm">
-                    {stat.label}
-                  </div>
-                </div>
-
-                {/* Decorative corner element */}
-                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Mobile Stats - Shown only on mobile as a horizontal scroll */}
+        {/* Section Header */}
+        <div className="text-center mb-16">
           <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-900/30 border border-blue-500/30 rounded-full mb-4"
+          >
+            <Sparkles size={16} className="text-blue-400" />
+            <span className="text-blue-300 text-sm font-semibold">Why Work With Us</span>
+          </motion.div>
+          
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-            className="lg:hidden w-full overflow-x-auto pb-4 -mx-6 px-6"
+            className="text-4xl md:text-5xl font-bold text-white mb-4"
           >
-            <div className="flex gap-4 min-w-max">
-              {stats.map((stat, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1, type: "spring" }}
-                  viewport={{ once: true }}
-                  className={`bg-gradient-to-br ${stat.gradient} p-6 rounded-2xl shadow-xl backdrop-blur-sm relative overflow-hidden min-w-[160px]`}
-                >
-                  <div className="relative z-10">
-                    <div className="text-white/80 mb-2">
-                      {stat.icon}
-                    </div>
-                    <div className="text-3xl font-bold text-white mb-1">
-                      {stat.number}
-                    </div>
-                    <div className="text-white/90 font-medium text-xs">
-                      {stat.label}
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/5 rounded-full blur-2xl"></div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+            Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Rhynox?</span>
+          </motion.h2>
+          <motion.div
+            initial={{ opacity: 0, width: 0 }}
+            whileInView={{ opacity: 1, width: 100 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="h-1 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 mx-auto rounded-full"
+          />
+          <p className="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+            We don't just deliver projects; we build partnerships. Our unique blend of creative design and technical robustness ensures your business stands out.
+          </p>
         </div>
+
+        {/* Features Grid with Images */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          {FEATURES.map((feature, idx) => (
+            <motion.div
+              key={idx}
+              variants={fadeInUp}
+              whileHover={{ y: -8, boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)" }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              onClick={() => handleFeatureClick(idx)}
+              className={`backdrop-blur-md rounded-2xl shadow-xl border-2 transition-all group relative overflow-hidden cursor-pointer ${
+                clickedFeature === idx
+                  ? 'border-white shadow-[0_0_30px_rgba(255,255,255,0.3)]'
+                  : 'border-gray-700/50 hover:border-white/60 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]'
+              }`}
+            >
+              {/* Background Image */}
+              <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                <img
+                  src={feature.image}
+                  alt={feature.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-black/90" />
+              </div>
+
+              <div className="relative z-10 p-6">
+                {clickedFeature === idx && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0.2, 0.4, 0.2] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 bg-white/5 pointer-events-none rounded-2xl"
+                  />
+                )}
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 relative ${
+                  clickedFeature === idx ? 'ring-2 ring-white shadow-[0_0_20px_rgba(255,255,255,0.4)]' : ''
+                }`}>
+                  {feature.icon}
+                </div>
+                <h4 className={`font-bold mb-2 text-lg transition-colors ${
+                  clickedFeature === idx ? 'text-white' : 'text-white'
+                }`}>{feature.title}</h4>
+                <p className="text-gray-200 text-sm leading-relaxed">{feature.desc}</p>
+              </div>
+
+              {clickedFeature === idx && (
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: '100%' }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-white/60 via-white to-white/60"
+                />
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Call to Action */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+          className="text-center mt-12"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-blue-500/50 transition-all flex items-center gap-2 mx-auto"
+          >
+            Let's Work Together <ArrowRight size={20} />
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );
@@ -1793,7 +1899,6 @@ const App = () => {
         `}
       </style>
       <ScrollToTop />
-      <TopBar />
       <Dock />
       <main>
         <Hero />
@@ -1815,6 +1920,7 @@ const App = () => {
           )
         )}
       <Footer onAdminTrigger={() => setShowAdmin(true)} />
+      <Chatbot />
     </div>
   );
 };

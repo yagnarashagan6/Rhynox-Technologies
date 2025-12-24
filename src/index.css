@@ -25,3 +25,19 @@ html {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* Mobile optimization utilities */
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
