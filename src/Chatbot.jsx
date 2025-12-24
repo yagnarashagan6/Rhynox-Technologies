@@ -299,30 +299,30 @@ const Chatbot = ({ openWithPlan }) => {
       setTermsAccepted(false);
       simulateTyping(() => {
         addMessage(
-          "📋 **TERMS AND CONDITIONS**\n\n" +
-          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-          "📌 **Payment Terms:**\n" +
-          "   • 50% advance payment required\n" +
-          "   • 50% on project delivery\n" +
-          "   • Accepted via UPI, Bank Transfer, or Cards\n\n" +
-          "⏰ **Delivery Timeline:**\n" +
-          "   • As per agreed project scope\n" +
-          "   • Timeline communicated before starting\n" +
-          "   • Rush delivery available (extra charges apply)\n\n" +
-          "🔄 **Revisions Policy:**\n" +
-          "   • Up to 3 free revisions included\n" +
-          "   • Additional revisions charged separately\n" +
-          "   • Changes within original scope only\n\n" +
-          "💰 **Refund Policy:**\n" +
-          "   • No refunds after work begins\n" +
-          "   • 100% refund if work hasn't started\n" +
-          "   • Partial refunds at discretion\n\n" +
-          "📜 **Intellectual Property:**\n" +
-          "   • All rights remain with Rhynox Technologies\n" +
-          "   • Full ownership transferred after payment\n" +
-          "   • Source files provided post-payment\n\n" +
-          "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-          "Please review and accept to proceed with your order.",
+          "📋 TERMS AND CONDITIONS\n\n" +
+          "────────────────────────\n\n" +
+          "📌 Payment Terms:\n" +
+          "• 50% advance payment required\n" +
+          "• 50% balance on delivery\n" +
+          "• Payment via UPI, Bank Transfer, Cards\n\n" +
+          "⏰ Delivery Timeline:\n" +
+          "• Based on project scope\n" +
+          "• Timeline shared before start\n" +
+          "• Rush delivery available (extra charges)\n\n" +
+          "🔄 Revisions Policy:\n" +
+          "• Up to 3 free revisions\n" +
+          "• Extra revisions charged separately\n" +
+          "• Within original scope only\n\n" +
+          "💰 Refund Policy:\n" +
+          "• No refunds after work starts\n" +
+          "• 100% refund if work not started\n" +
+          "• Partial refunds at discretion\n\n" +
+          "📜 Intellectual Property:\n" +
+          "• Rights remain with Rhynox until\n   full payment\n" +
+          "• Complete ownership transferred\n   after final payment\n" +
+          "• Source files provided post-payment\n\n" +
+          "────────────────────────\n\n" +
+          "Please review and accept to proceed.",
           'bot',
           {
             isFormatted: true,
@@ -480,11 +480,11 @@ const Chatbot = ({ openWithPlan }) => {
         // Construct WhatsApp message with proper formatting
         const messageText = ` *New Order Request*\n\n` +
           `━━━━━━━━━━━━━━━━━━━━━\n\n` +
-          ` *Service:*${data.service}\n` +
-          ` *Name:*${data.name}\n` +
-          ` *Email:*${data.email}\n` +
-          ` *Phone:*${data.phone}\n` +
-          ` *Details:*${data.details}\n` +
+          ` *Service:* ${data.service}\n` +
+          ` *Name:* ${data.name}\n` +
+          ` *Email:* ${data.email}\n` +
+          ` *Phone:* ${data.phone}\n` +
+          ` *Details:* ${data.details}\n` +
           `━━━━━━━━━━━━━━━━━━━━━\n` +
           ` *Time:* ${new Date().toLocaleString()}\n` +
           ` *Order ID:* #${Date.now().toString().slice(-6)}`;
