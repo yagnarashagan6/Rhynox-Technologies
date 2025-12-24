@@ -424,16 +424,16 @@ const Chatbot = () => {
 
       if (response.ok) {
         // Construct WhatsApp message with proper formatting
-        const messageText = `🚀 *New Order Request*\n\n` +
+        const messageText = ` *New Order Request*\n\n` +
           `━━━━━━━━━━━━━━━━━━━━━\n\n` +
-          `📦 *Service:*\n${data.service}\n\n` +
-          `👤 *Name:*\n${data.name}\n\n` +
-          `📧 *Email:*\n${data.email}\n\n` +
-          `📱 *Phone:*\n${data.phone}\n\n` +
-          `📝 *Details:*\n${data.details}\n\n` +
+          ` *Service:*${data.service}\n` +
+          ` *Name:*${data.name}\n` +
+          ` *Email:*${data.email}\n` +
+          ` *Phone:*${data.phone}\n` +
+          ` *Details:*${data.details}\n` +
           `━━━━━━━━━━━━━━━━━━━━━\n` +
-          `🕒 *Time:* ${new Date().toLocaleString()}\n` +
-          `📋 *Order ID:* #${Date.now().toString().slice(-6)}`;
+          ` *Time:* ${new Date().toLocaleString()}\n` +
+          ` *Order ID:* #${Date.now().toString().slice(-6)}`;
         
         const waLink = `https://wa.me/918148311669?text=${encodeURIComponent(messageText)}`;
 
