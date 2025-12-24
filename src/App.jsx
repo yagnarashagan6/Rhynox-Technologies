@@ -32,7 +32,8 @@ import {
   CreditCard,
   Info,
   Sparkles,
-  PartyPopper
+  PartyPopper,
+  MessageCircle
 } from 'lucide-react';
 import AdminLogin from './AdminLogin';
 import AdminDashboard from './AdminDashboard';
@@ -485,20 +486,6 @@ const ScrollToTop = () => {
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 origin-left z-50"
         style={{ scaleX }}
       />
-      <AnimatePresence>
-        {isVisible && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            onClick={scrollToTop}
-            className="fixed bottom-24 md:bottom-32 left-4 md:left-8 p-2.5 md:p-3 bg-gray-800 text-blue-400 rounded-full shadow-xl border border-gray-700 z-40 hover:bg-gray-700 focus:outline-none"
-            whileHover={{ y: -5 }}
-          >
-            <ChevronUp size={20} className="md:w-6 md:h-6" />
-          </motion.button>
-        )}
-      </AnimatePresence>
     </>
   );
 };
@@ -529,8 +516,9 @@ const TopBar = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-          className="absolute right-4 md:right-6 px-4 md:px-6 py-2 md:py-2.5 bg-blue-600 text-white rounded-full font-medium text-sm md:text-base hover:bg-blue-700 transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.8)]"
+          className="absolute right-4 md:right-6 px-4 md:px-6 py-2 md:py-2.5 bg-blue-600 text-white rounded-full font-medium text-sm md:text-base hover:bg-blue-700 transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:shadow-[0_0_30px_rgba(37,99,235,0.8)] flex items-center gap-2"
        >
+          <MessageCircle size={18} />
           Free Quote
        </motion.button>
     </div>
@@ -640,10 +628,6 @@ const Hero = () => {
           variants={staggerContainer}
           className="max-w-4xl mx-auto"
         >
-          <motion.div variants={fadeInUp} className="mb-4 hidden md:inline-block px-4 py-1.5 rounded-full bg-blue-900/30 text-blue-300 border border-blue-800/50 text-sm font-semibold tracking-wide uppercase backdrop-blur-sm">
-            Transforming Ideas into Reality
-          </motion.div>
-          
           <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 tracking-tight">
             We Build Digital Experiences That <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-pulse">Grow Your Business</span>
           </motion.h1>
@@ -660,6 +644,7 @@ const Hero = () => {
               onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
               className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-blue-700 shadow-blue-900/30 transition-all flex items-center justify-center gap-2"
             >
+              <MessageCircle size={20} />
               Get a Free Quote <ArrowRight size={20} />
             </motion.button>
             <motion.button 
@@ -1436,9 +1421,8 @@ const Contact = () => {
                 <div>
                   <div className="text-sm text-gray-500">Call Us</div>
                   <div className="font-semibold">
-                    <a href="tel:+917904309363" className="hover:text-purple-400 transition-colors cursor-pointer">+91 79043 09363</a>
-                    <span>, </span>
-                    <a href="tel:+916374008719" className="hover:text-purple-400 transition-colors cursor-pointer">+91 63740 08719</a>
+                    <a href="tel:+91 81483 11669" className="hover:text-purple-400 transition-colors cursor-pointer">+91 81483 11669</a>
+
                   </div>
                 </div>
               </div>

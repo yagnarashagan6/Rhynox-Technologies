@@ -16,7 +16,6 @@ import {
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -424,16 +423,19 @@ const Chatbot = () => {
       });
 
       if (response.ok) {
-        // Construct WhatsApp message
-        // Construct WhatsApp message
+        // Construct WhatsApp message with proper formatting
         const messageText = `🚀 *New Order Request*\n\n` +
-          `📦 *Service:* ${data.service}\n` +
-          `👤 *Name:* ${data.name}\n` +
-          `📧 *Email:* ${data.email}\n` +
-          `📱 *Phone:* ${data.phone}\n` +
-          `📝 *Details:* ${data.details}`;
+          `━━━━━━━━━━━━━━━━━━━━━\n\n` +
+          `📦 *Service:*\n${data.service}\n\n` +
+          `👤 *Name:*\n${data.name}\n\n` +
+          `📧 *Email:*\n${data.email}\n\n` +
+          `📱 *Phone:*\n${data.phone}\n\n` +
+          `📝 *Details:*\n${data.details}\n\n` +
+          `━━━━━━━━━━━━━━━━━━━━━\n` +
+          `🕒 *Time:* ${new Date().toLocaleString()}\n` +
+          `📋 *Order ID:* #${Date.now().toString().slice(-6)}`;
         
-        const waLink = `https://wa.me/916374008719?text=${encodeURIComponent(messageText)}`;
+        const waLink = `https://wa.me/918148311669?text=${encodeURIComponent(messageText)}`;
 
         addMessage(
           `✅ Order Received!\n\n` +
@@ -535,8 +537,7 @@ const Chatbot = () => {
             animate={{ 
               opacity: 1, 
               y: 0, 
-              scale: 1,
-              height: isMinimized ? '60px' : 'auto'
+              scale: 1
             }}
             exit={{ opacity: 0, y: 100, scale: 0.8 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -555,12 +556,6 @@ const Chatbot = () => {
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => setIsMinimized(!isMinimized)}
-                  className="text-white/80 hover:text-white transition-colors"
-                >
-                  <Minimize2 size={20} />
-                </button>
-                <button
                   onClick={() => setIsOpen(false)}
                   className="text-white/80 hover:text-white transition-colors"
                 >
@@ -569,9 +564,7 @@ const Chatbot = () => {
               </div>
             </div>
 
-            {!isMinimized && (
-              <>
-                {/* Messages */}
+            {/* Messages */}
                 <div className="h-96 overflow-y-auto p-4 space-y-4 bg-gray-950">
                   {messages.map((message) => (
                     <motion.div
@@ -747,8 +740,6 @@ const Chatbot = () => {
                     </motion.button>
                   </form>
                 </div>
-              </>
-            )}
           </motion.div>
         )}
       </AnimatePresence>
