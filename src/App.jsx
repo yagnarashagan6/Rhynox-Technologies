@@ -529,15 +529,16 @@ const DockItem = ({ item }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative flex items-center group">
-      {/* Tooltip - only shown on desktop hover */}
+    <div className="relative flex items-center group overflow-visible">
+      {/* Tooltip - shown on hover */}
       <AnimatePresence>
         {isHovered && (
           <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.8 }}
-            className="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs font-semibold py-1 px-3 rounded-lg border border-gray-700 shadow-xl whitespace-nowrap hidden md:block z-10"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute -top-8 left-1/2 -translate-x-1/2 text-white/50 text-xs font-semibold whitespace-nowrap z-[100] pointer-events-none drop-shadow-lg"
           >
             {item.label}
           </motion.div>
@@ -581,8 +582,8 @@ const Dock = () => {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 200, damping: 20 }}
-        // Optimized container with better mobile support
-        className="pointer-events-auto flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 bg-gray-900/90 backdrop-blur-xl border border-white/20 rounded-full md:rounded-2xl shadow-2xl overflow-x-auto no-scrollbar"
+        // Optimized container with better mobile support - removed overflow to allow tooltips
+        className="pointer-events-auto flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 bg-gray-900/90 backdrop-blur-xl border border-white/20 rounded-full md:rounded-2xl shadow-2xl"
       >
         {navItems.map((item) => (
            <DockItem key={item.label} item={item} />
