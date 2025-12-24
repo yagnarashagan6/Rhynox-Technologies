@@ -508,7 +508,7 @@ const ScrollToTop = () => {
 const TopBar = () => {
   return (
     // Absolute positioning at top of page, not fixed
-    <div className="absolute top-0 left-0 right-0 flex justify-center items-center z-40 pt-4 md:pt-6">
+    <div className="absolute top-0 left-0 right-0 flex justify-center items-center z-40 pt-2 md:pt-4">
        <motion.div 
          initial={{ opacity: 0, y: -20 }}
          animate={{ opacity: 1, y: 0 }}
@@ -517,33 +517,11 @@ const TopBar = () => {
          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
        >
           {/* Company Logo SVG */}
-           <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 375 375"
-              preserveAspectRatio="xMidYMid meet"
-              className="h-16 sm:h-20 md:h-28 lg:h-36 w-auto"
-            >
-              <g>
-                <path
-                  d="M68.410156 180.320312
-                     C77.546875 176.976562
-                     86.992188 176.179688
-                     96.648438 176.117188
-                     C97.171875 176.117188
-                     97.355469 175.230469
-                     96.773438 175.167969
-                     C87.113281 173.726562
-                     77.058594 176.027344
-                     68.199219 179.921875
-                     C68.011719 180.011719
-                     68.167969 180.410156
-                     68.410156 180.320312
-                     Z"
-                  fill="#FFFFFF"
-                  fillOpacity="1"
-                />
-              </g>
-            </svg>
+           <img 
+              src="/rhynox-logo.svg" 
+              alt="Rhynox Technologies" 
+              className="h-16 sm:h-20 md:h-28 lg:h-32 w-auto" 
+            />
        </motion.div>
        {/* Button positioned absolutely on the right side */}
        <motion.button
@@ -655,14 +633,14 @@ const Hero = () => {
         className="absolute bottom-0 left-0 w-80 h-80 bg-blue-600/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 mix-blend-screen" 
       />
 
-      <div className="container mx-auto px-6 relative z-10 text-center">
+      <div className="container mx-auto px-6 relative z-10 text-center pt-20 md:pt-0">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
           className="max-w-4xl mx-auto"
         >
-          <motion.div variants={fadeInUp} className="mb-4 inline-block px-4 py-1.5 rounded-full bg-blue-900/30 text-blue-300 border border-blue-800/50 text-sm font-semibold tracking-wide uppercase backdrop-blur-sm">
+          <motion.div variants={fadeInUp} className="mb-4 hidden md:inline-block px-4 py-1.5 rounded-full bg-blue-900/30 text-blue-300 border border-blue-800/50 text-sm font-semibold tracking-wide uppercase backdrop-blur-sm">
             Transforming Ideas into Reality
           </motion.div>
           

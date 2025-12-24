@@ -424,6 +424,17 @@ const Chatbot = () => {
       });
 
       if (response.ok) {
+        // Construct WhatsApp message
+        // Construct WhatsApp message
+        const messageText = `🚀 *New Order Request*\n\n` +
+          `📦 *Service:* ${data.service}\n` +
+          `👤 *Name:* ${data.name}\n` +
+          `📧 *Email:* ${data.email}\n` +
+          `📱 *Phone:* ${data.phone}\n` +
+          `📝 *Details:* ${data.details}`;
+        
+        const waLink = `https://wa.me/916374008719?text=${encodeURIComponent(messageText)}`;
+
         addMessage(
           `✅ Order Received!\n\n` +
           `Thank you, ${data.name}! We've received your order for ${data.service}.\n\n` +
@@ -434,7 +445,9 @@ const Chatbot = () => {
           'bot',
           { 
             isFormatted: true,
-            icon: <CheckCircle className="text-green-500" />
+            icon: <CheckCircle className="text-green-500" />,
+            actionUrl: waLink,
+            actionLabel: "Send Details to WhatsApp"
           }
         );
       } else {
@@ -605,6 +618,21 @@ const Chatbot = () => {
                                   </div>
                                 </motion.button>
                               ))}
+                            </div>
+                          )}
+
+                          {/* Action Button */}
+                          {message.actionUrl && (
+                            <div className="mt-3">
+                              <a
+                                href={message.actionUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-2 rounded-full transition-all font-medium text-sm shadow-md hover:shadow-lg"
+                              >
+                                <MessageCircle size={16} />
+                                {message.actionLabel || 'Open Link'}
+                              </a>
                             </div>
                           )}
 
