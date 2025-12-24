@@ -81,7 +81,6 @@ export default async function handler(req, res) {
     const mailToRhynox = {
       from: `"Rhynox Technologies Contact Form" <${process.env.EMAIL_USER}>`,
       to: 'rhynoxtechnologies@gmail.com',
-      replyTo: email,
       subject: `New Quote Request: ${service} from ${name}`,
       html: `
         <!DOCTYPE html>
