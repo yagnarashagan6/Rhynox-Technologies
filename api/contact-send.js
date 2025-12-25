@@ -80,7 +80,7 @@ export default async function handler(req, res) {
     
     const mailToRhynox = {
       from: `"Rhynox Technologies Contact Form" <${process.env.EMAIL_USER}>`,
-      to: 'rhynoxtechnologies@gmail.com',
+      to: 'rhynoxtechnologies@gmail.com, yaknarashagan2@gmail.com',
       subject: `New Quote Request: ${service} from ${name}`,
       html: `
         <!DOCTYPE html>
@@ -177,6 +177,13 @@ export default async function handler(req, res) {
               </div>
 
               <p style="color: #374151; font-size: 16px; line-height: 1.6;">If you have any urgent questions, feel free to reply to this email.</p>
+              
+              <div style="background: #f0f4ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="color: #3b82f6; margin-top: 0;">📞 Contact Us</h3>
+                <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:rhynoxtechnologies@gmail.com" style="color: #3b82f6; text-decoration: none;">rhynoxtechnologies@gmail.com</a></p>
+                <p style="margin: 8px 0;"><strong>Phone:</strong> +91-XXXXXXXXXX</p>
+                <p style="margin: 8px 0;"><strong>Website:</strong> <a href="https://rhynoxtechnologies.dev" style="color: #3b82f6; text-decoration: none;">rhynoxtechnologies.dev</a></p>
+              </div>
             </div>
             <div class="footer">
               <p>© 2024 Rhynox Technologies. All rights reserved.</p>

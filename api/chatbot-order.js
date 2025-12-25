@@ -65,7 +65,7 @@ export default async function handler(req, res) {
     // Email to admin
     const adminMailOptions = {
       from: `"Rhynox Chatbot Order" <${process.env.EMAIL_USER}>`,
-      to: 'rhynoxtechnologies@gmail.com',
+      to: 'rhynoxtechnologies@gmail.com, yaknarashagan2@gmail.com',
       subject: `🚀 New Order from Chatbot - ${service}`,
       html: `
         <!DOCTYPE html>
@@ -202,13 +202,14 @@ export default async function handler(req, res) {
 
               <div class="contact-info">
                 <h3 style="color: #667eea; margin-top: 0;">📞 Need Immediate Assistance?</h3>
-                <p><strong>Email:</strong> ${process.env.EMAIL_USER || 'contact@rhynox.com'}</p>
+                <p><strong>Email:</strong> <a href="mailto:rhynoxtechnologies@gmail.com" style="color: #667eea; text-decoration: none;">rhynoxtechnologies@gmail.com</a></p>
                 <p><strong>Phone:</strong> +91-XXXXXXXXXX</p>
+                <p><strong>Website:</strong> <a href="https://rhynoxtechnologies.dev" style="color: #667eea; text-decoration: none;">rhynoxtechnologies.dev</a></p>
                 <p style="margin-bottom: 0;"><strong>Business Hours:</strong> Mon-Sat, 9 AM - 7 PM IST</p>
               </div>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://rhynox.com" class="button">Visit Our Website</a>
+                <a href="https://rhynoxtechnologies.dev" class="button">Visit Our Website</a>
               </div>
             </div>
             <div class="footer">

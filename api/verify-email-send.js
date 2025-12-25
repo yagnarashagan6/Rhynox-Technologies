@@ -88,10 +88,18 @@ export default async function handler(req, res) {
             .header h1 { color: white; margin: 0; font-size: 28px; font-weight: bold; }
             .content { padding: 40px 30px; }
             .code-box { background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%); border: 2px dashed #3b82f6; border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0; }
-            .code { font-size: 42px; font-weight: bold; color: #3b82f6; letter-spacing: 8px; font-family: 'Courier New', monospace; }
+            .code { font-size: 42px; font-weight: bold; color: #3b82f6; letter-spacing: 8px; font-family: 'Courier New', monospace; word-break: break-all; }
             .message { color: #374151; line-height: 1.6; font-size: 16px; }
             .footer { background: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 14px; }
             .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px; color: #92400e; }
+            @media only screen and (max-width: 600px) {
+              .container { margin: 20px 10px; }
+              .header h1 { font-size: 22px; }
+              .content { padding: 20px 15px; }
+              .code-box { padding: 20px 10px; margin: 20px 0; }
+              .code { font-size: 28px; letter-spacing: 4px; }
+              .message { font-size: 14px; }
+            }
           </style>
         </head>
         <body>

@@ -9,14 +9,15 @@ import {
   User,
   Package,
   DollarSign,
-  HelpCircle,
-  CheckCircle,
   ArrowLeft,
-  Check
+  Check,
+  Info,
+  CheckCircle
 } from 'lucide-react';
 
 const Chatbot = ({ openWithPlan }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [viewingServiceDetail, setViewingServiceDetail] = useState(null);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -41,13 +42,171 @@ const Chatbot = ({ openWithPlan }) => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Service data matching your website
+  // Detailed Service Offerings for the Chatbot Logic
   const services = [
-    { name: "Website Development", price: "Starting at ₹499", icon: "🌐" },
-    { name: "App Development", price: "Starting at ₹999", icon: "📱" },
-    { name: "Graphic Designing", price: "Starting at ₹499", icon: "🎨" },
-    { name: "YouTube Ads Creation", price: "Custom Quote", icon: "📺" },
-    { name: "Video Editing", price: "Custom Quote", icon: "🎬" }
+    // Starter Tier
+    { 
+        id: 'portfolio-basic', 
+        name: "Basic Portfolio", 
+        price: "₹199", 
+        icon: "👤", 
+        category: "Starter", 
+        detail: "Single-page responsive site",
+        fullDetails: [
+            "Single-page responsive website",
+            "Clean modern design",
+            "Free Vercel Hosting 🌐"
+        ]
+    },
+    { 
+        id: 'portfolio-std', 
+        name: "Standard Portfolio", 
+        price: "₹499", 
+        icon: "💼", 
+        category: "Starter", 
+        detail: "Up to 5 pages + Contact Form",
+        fullDetails: [
+            "Up to 5 pages (Home, About, Projects, Services, Contact)",
+            "Responsive design & SEO Friendly",
+            "Contact form integration",
+            "WhatsApp Chat Button",
+            "Free Vercel Hosting 🌐"
+        ]
+    },
+    { 
+        id: 'portfolio-prem', 
+        name: "Premium Portfolio", 
+        price: "₹699", 
+        icon: "🚀", 
+        category: "Starter", 
+        detail: "7 Pages + Free Hosting",
+        fullDetails: [
+            "Up to 7 pages with Premium UI",
+            "Advanced Animations & Transitions",
+            "Contact form + Email Alerts",
+            "Advanced SEO Optimization",
+            "Social Media Integration",
+            "Performance Optimization (Fast Load)",
+            "Free Vercel Hosting 🌐"
+        ]
+    },
+    { 
+        id: 'business-static', 
+        name: "Static Business Website", 
+        price: "₹499", 
+        icon: "🏢", 
+        category: "Starter", 
+        detail: "5 Pages + Business Verified",
+        fullDetails: [
+            "Up to 5 Pages (About, Services, Contact, etc.)",
+            "Business Email Integration (e.g., info@yourbiz.com)",
+            "Google Maps & Social Media Links",
+            "SEO Friendly Structure",
+            "Fast Loading Speed",
+            "Free Vercel Hosting 🌐"
+        ]
+    },
+    
+    // Business Tier
+    { 
+        id: 'business-dynamic', 
+        name: "Dynamic Business Website", 
+        price: "₹999", 
+        icon: "⚡", 
+        category: "Business", 
+        detail: "Admin Panel + SEO",
+        fullDetails: [
+            "Admin Dashboard to Edit Content Easily",
+            "Blog / News Section",
+            "User Enquiry Management",
+            "Advanced SEO Setup",
+            "Analytics Dashboard Integration",
+            "Database Connectivity (MongoDB)",
+            "Deployment Support"
+        ]
+    },
+    { 
+        id: 'app-mvp', 
+        name: "Business App (MVP)", 
+        price: "₹999", 
+        icon: "📱", 
+        category: "Business", 
+        detail: "React App (No Backend)",
+        fullDetails: [
+            "Progressive Web App (PWA) Support",
+            "Mobile-First Responsive UI",
+            "App-like Experience on Phones",
+            "Local Storage for Data Persistence",
+            "Fast Performance & Offline Capable",
+            "Installable on Home Screen"
+        ]
+    },
+
+    // Enterprise Tier
+    { 
+        id: 'custom-web', 
+        name: "Full Stack Web App", 
+        price: "Custom", 
+        icon: "🌐", 
+        category: "Enterprise", 
+        detail: "MERN Stack / Next.js",
+        fullDetails: [
+            "Complete Custom Solution (Frontend + Backend)",
+            "User Authentication (Login/Signup)",
+            "Payment Gateway Integration",
+            "Dashboard for Users & Admins",
+            "API Development & Integration",
+            "Cloud Hosting (AWS/DigitalOcean) Setup"
+        ]
+    },
+    { 
+        id: 'custom-app', 
+        name: "Mobile App (iOS/Android)", 
+        price: "Custom", 
+        icon: "📲", 
+        category: "Enterprise", 
+        detail: "React Native / Flutter",
+        fullDetails: [
+            "Cross-Platform App (iOS & Android)",
+            "Push Notifications",
+            "Native Device Features (Camera, GPS)",
+            "App Store & Play Store Submission Support",
+            "High Performance Native Code",
+            "Real-time Data Sync"
+        ]
+    },
+    { 
+        id: 'youtube-ads', 
+        name: "YouTube Ads Creation", 
+        price: "Custom", 
+        icon: "📺", 
+        category: "Enterprise", 
+        detail: "Script + Production",
+        fullDetails: [
+            "Professional Script Writing",
+            "High-Quality Video Production",
+            "Voiceover & Sound Design",
+            "Motion Graphics & Animation",
+            "Ad Campaign Strategy",
+            "Thumbnail Design"
+        ]
+    },
+    { 
+        id: 'video-editing', 
+        name: "Professional Video Editing", 
+        price: "Custom", 
+        icon: "🎬", 
+        category: "Enterprise", 
+        detail: "Any duration",
+        fullDetails: [
+            "Cinematic Color Grading",
+            "Advanced Transitions & Effects",
+            "Sound Mixing & Mastering",
+            "Subtitles & Captions",
+            "4K Rendering",
+            "highlight & Reels Editing"
+        ]
+    }
   ];
 
   const pricingPlans = [
@@ -55,32 +214,36 @@ const Chatbot = ({ openWithPlan }) => {
       name: "Starter",
       price: "₹499",
       features: [
-        "Responsive Website (5 Pages)",
-        "Basic SEO Optimization",
-        "Contact Form Integration",
-        "1 Month Maintenance"
+        "Responsive website",
+        "Up to 5 pages",
+        "Contact form",
+        "WhatsApp integration",
+        "Basic SEO",
+        "Email integration"
       ]
     },
     {
       name: "Business",
       price: "₹999",
       features: [
-        "Dynamic React Application",
-        "CMS / Admin Dashboard",
-        "Advanced SEO & Analytics",
-        "Brand Identity Design",
-        "3 Months Support"
+        "Dynamic website OR small app",
+        "React-based UI",
+        "Admin-editable content",
+        "SEO & analytics setup",
+        "WhatsApp & email integration",
+        "Deployment support"
       ]
     },
     {
       name: "Enterprise",
       price: "Custom",
       features: [
-        "Custom Mobile App",
-        "Complex E-commerce Solutions",
-        "Full Video Production & Ads",
-        "Dedicated Project Manager",
-        "Priority 24/7 Support"
+        "Full-stack web / mobile apps",
+        "Backend & database",
+        "Payment gateway",
+        "AI chatbot integration",
+        "Cloud & hosting setup",
+        "Dedicated support"
       ]
     }
   ];
@@ -88,7 +251,7 @@ const Chatbot = ({ openWithPlan }) => {
   const quickActions = [
     { id: 'pricing', label: '💰 View Pricing', icon: <DollarSign size={16} /> },
     { id: 'order', label: '📦 Place Order', icon: <Package size={16} /> },
-    { id: 'help', label: '❓ Get Help', icon: <HelpCircle size={16} /> }
+    { id: 'help', label: '❓ Get Help', icon: <Info size={16} /> }
   ];
 
   useEffect(() => {
@@ -107,7 +270,7 @@ const Chatbot = ({ openWithPlan }) => {
           'bot'
         );
         setTimeout(() => {
-          startOrderFlow();
+          startOrderFlow(openWithPlan);
         }, 500);
       };
       
@@ -198,15 +361,40 @@ const Chatbot = ({ openWithPlan }) => {
     }, 300);
   };
 
-  const startOrderFlow = () => {
-    setCurrentFlow('order');
-    addMessage(
-      "Great! Let's get your order started. Which service are you interested in?",
-      'bot',
-      {
-        serviceOptions: services
-      }
-    );
+  const startOrderFlow = (planPlan = null) => {
+    setCurrentFlow('order-category-select');
+    
+    // If a plan is pre-selected (from website click)
+    if (planPlan) {
+        if (planPlan === 'Starter') {
+            addMessage(
+                "Excellent choice! For the Starter plan (₹499), are you looking for a **Personal Portfolio** or a **Small Business Website**?",
+                'bot',
+                { suggestions: ['Portfolio', 'Small Business'] }
+            );
+        } else if (planPlan === 'Business') {
+            addMessage(
+                "The Business Plan (₹999) is perfect for growth! Are you interested in a **Dynamic Website** or a **Simple App (MVP)**?",
+                'bot',
+                { suggestions: ['Dynamic Website', 'Business App'] }
+            );
+        } else if (planPlan === 'Enterprise') {
+            const entServices = services.filter(s => s.category === 'Enterprise');
+            addMessage(
+                "You need a powerful solution! Our Enterprise plan covers Full-stack apps, Custom backends, and more. What are you looking for?",
+                'bot',
+                { serviceOptions: entServices }
+            );
+            setCurrentFlow('order'); //Direct selection for enterprise
+        }
+    } else {
+        // Generic start - ask for category
+        addMessage(
+             "Great! Let's get your order started. Which plan fits your needs best?",
+             'bot',
+             { suggestions: ['Starter (₹499)', 'Business (₹999)', 'Enterprise (Custom)'] }
+        );
+    }
   };
 
   const handleServiceSelection = (serviceName) => {
@@ -247,6 +435,80 @@ const Chatbot = ({ openWithPlan }) => {
     const lowerMessage = message.toLowerCase();
     
     // Handle order flow stages
+    if (currentFlow === 'order-category-select') {
+        const lower = message.toLowerCase();
+        
+        // STARTER LOGIC
+        if (lower.includes('starter') || lower.includes('499')) {
+             addMessage("For the Starter plan, are you looking for a **Portfolio** or a **Small Business Website**?", 'bot', { suggestions: ['Portfolio', 'Small Business'] });
+             return;
+        }
+        if (lower.includes('portfolio')) {
+             const portfolioServices = services.filter(s => s.id.includes('portfolio'));
+             addMessage(
+                 "Great! For Portfolios we have three special tiers:\n\n" +
+                 "1. 👤 **Basic (₹199)**: Single page, modern design.\n" +
+                 "2. 💼 **Standard (₹499)**: Up to 5 pages, contact form (Recommended).\n" +
+                 "3. 🚀 **Premium (₹699)**: 7 pages + Free Hosting.\n\n" +
+                 "Which one would you like to proceed with?",
+                 'bot',
+                 { serviceOptions: portfolioServices }
+             );
+             setCurrentFlow('order'); // Now pick specific service
+             return;
+        }
+        if (lower.includes('small business') || (lower.includes('business') && !lower.includes('app') && !lower.includes('dynamic'))) {
+             // Catch "Business" if it's meant for starter, but safeguard against Business Plan 999
+             // If they came from Starter path "Small Business" is unique
+             const staticBiz = services.filter(s => s.id === 'business-static');
+             addMessage(
+                 "Perfect! Our **Static Business Website (₹499)** includes 5 pages, business email, and WhatsApp integration. Shall we proceed with this?",
+                 'bot',
+                 { serviceOptions: staticBiz }
+             );
+             setCurrentFlow('order');
+             return;
+        }
+
+        // BUSINESS LOGIC
+        if (lower.includes('business') && (lower.includes('999') || lower.includes('plan'))) {
+             addMessage("Are you interested in a **Dynamic Website** or a **Business App**?", 'bot', { suggestions: ['Dynamic Website', 'Business App'] });
+             return;
+        }
+        if (lower.includes('dynamic')) {
+            const dynBiz = services.filter(s => s.id === 'business-dynamic');
+            addMessage(
+                "Our **Dynamic Business Website (₹999)** comes with an Admin Panel to edit content, SEO optimization, and more. Ready to build this?",
+                'bot',
+                { serviceOptions: dynBiz }
+            );
+            setCurrentFlow('order');
+            return;
+        }
+        if (lower.includes('app') && !lower.includes('mobile')) {
+            const appMvp = services.filter(s => s.id === 'app-mvp');
+            addMessage(
+                "Awesome! Our **Business App Plan (₹999)** is ideal for startups. It includes a modern React/Frontend app, responsive design (No complex backend). Shall we start your MVP?",
+                'bot',
+                { serviceOptions: appMvp }
+            );
+            setCurrentFlow('order');
+            return;
+        }
+
+        // ENTERPRISE LOGIC
+        if (lower.includes('enterprise') || lower.includes('custom') || lower.includes('mobile')) {
+             const entServices = services.filter(s => s.category === 'Enterprise');
+             addMessage(
+                 "Enterprise solutions! Select a service to get a custom quote:",
+                 'bot',
+                 { serviceOptions: entServices }
+             );
+             setCurrentFlow('order');
+             return;
+        }
+    }
+
     if (currentFlow === 'order-name') {
       setOrderData(prev => ({ ...prev, name: message }));
       setCurrentFlow('order-email');
@@ -496,7 +758,6 @@ const Chatbot = ({ openWithPlan }) => {
           `Thank you, ${data.name}! We've received your order for ${data.service}.\n\n` +
           `📧 Email: ${data.email}\n` +
           `📱 Phone: ${data.phone}\n\n` +
-          `Our team will contact you within 24 hours to discuss your project in detail!\n\n` +
           `Order ID: #${Date.now().toString().slice(-6)}`,
           'bot',
           { 
@@ -506,6 +767,19 @@ const Chatbot = ({ openWithPlan }) => {
             actionLabel: "Send Details to WhatsApp"
           }
         );
+
+        // Sequence: Wait 3 seconds, then send the closing message, then show quick actions
+        setTimeout(() => {
+            addMessage(
+                "Thanks for placing the order! We will call you within 24 hours to discuss the details.",
+                'bot'
+            );
+            
+            setTimeout(() => {
+                setShowQuickActions(true);
+            }, 2000);
+        }, 3000);
+
       } else {
         throw new Error('Failed to submit order');
       }
@@ -514,6 +788,9 @@ const Chatbot = ({ openWithPlan }) => {
         "I apologize, but there was an issue submitting your order. Please try contacting us directly at contact@rhynox.com or call us.",
         'bot'
       );
+      setTimeout(() => {
+          setShowQuickActions(true);
+      }, 2000);
     }
     
     // Reset order data
@@ -524,10 +801,6 @@ const Chatbot = ({ openWithPlan }) => {
       phone: '',
       details: ''
     });
-    
-    setTimeout(() => {
-      setShowQuickActions(true);
-    }, 2000);
   };
 
   const handleSendMessage = (e) => {
@@ -648,22 +921,44 @@ const Chatbot = ({ openWithPlan }) => {
                           {message.serviceOptions && (
                             <div className="mt-2 space-y-2">
                               {message.serviceOptions.map((service, index) => (
-                                <motion.button
-                                  key={index}
-                                  initial={{ opacity: 0, x: -20 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: index * 0.1 }}
-                                  onClick={() => handleServiceSelection(service.name)}
-                                  className="w-full bg-gray-800 hover:bg-gray-700 p-3 rounded-xl text-left transition-all border border-gray-700 hover:border-purple-500"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <div>
-                                      <span className="text-2xl mr-2">{service.icon}</span>
-                                      <span className="text-sm font-semibold text-white">{service.name}</span>
-                                    </div>
-                                    <span className="text-xs text-purple-400">{service.price}</span>
-                                  </div>
-                                </motion.button>
+                                <div key={index} className="relative group">
+                                    <motion.button
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        onClick={() => handleServiceSelection(service.name)}
+                                        className="w-full bg-gray-800 hover:bg-gray-750 p-4 rounded-xl text-left transition-all border border-gray-700 hover:border-purple-500 shadow-sm relative pr-10"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-3xl p-2 bg-gray-900/50 rounded-lg">{service.icon}</span>
+                                                <div>
+                                                    <span className="font-bold text-white block">{service.name}</span>
+                                                    <span className="text-[10px] text-gray-400 block mt-1">{service.detail}</span>
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col items-end min-w-[60px]">
+                                                <span className="text-sm text-purple-400 font-bold bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20">{service.price}</span>
+                                            </div>
+                                        </div>
+                                    </motion.button>
+                                    
+                                    {/* Info Icon Button - Absolute Top Right of the Card */}
+                                    {service.fullDetails && (
+                                        <motion.button
+                                            initial={{ opacity: 0, scale: 0 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: index * 0.1 + 0.1 }}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent card click
+                                                setViewingServiceDetail(service);
+                                            }}
+                                            className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-full transition-colors z-10"
+                                        >
+                                            <Info size={18} />
+                                        </motion.button>
+                                    )}
+                                </div>
                               ))}
                             </div>
                           )}
@@ -842,6 +1137,53 @@ const Chatbot = ({ openWithPlan }) => {
                   </form>
                 </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Service Detail Modal/Popup */}
+      <AnimatePresence>
+        {viewingServiceDetail && (
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="fixed bottom-24 md:bottom-10 right-4 md:right-8 z-[60] w-[90vw] md:w-80 bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-5 overflow-hidden"
+            >
+                <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-3">
+                        <span className="text-3xl">{viewingServiceDetail.icon}</span>
+                        <div>
+                            <h3 className="font-bold text-lg text-white leading-tight">{viewingServiceDetail.name}</h3>
+                            <span className="text-purple-400 font-bold">{viewingServiceDetail.price}</span>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={() => setViewingServiceDetail(null)}
+                        className="p-1 bg-gray-800 rounded-full hover:bg-gray-700 text-gray-400 hover:text-white transition-colors"
+                    >
+                        <X size={16} />
+                    </button>
+                </div>
+                
+                <div className="space-y-3 mb-5">
+                    {viewingServiceDetail.fullDetails.map((detail, idx) => (
+                        <div key={idx} className="flex items-start gap-2">
+                            <CheckCircle size={16} className="text-green-500 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-gray-300 leading-snug">{detail}</span>
+                        </div>
+                    ))}
+                </div>
+
+                <button
+                    onClick={() => {
+                        handleServiceSelection(viewingServiceDetail.name);
+                        setViewingServiceDetail(null);
+                    }}
+                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors shadow-lg shadow-blue-900/20"
+                >
+                    Select This Plan
+                </button>
+            </motion.div>
         )}
       </AnimatePresence>
     </>
