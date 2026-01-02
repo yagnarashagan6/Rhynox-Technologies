@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Users, DollarSign, Activity, BarChart2, Settings, LogOut, Upload, Folder, User, Trash2, Edit2, Calendar, Plus, X } from 'lucide-react';
+import { Users, DollarSign, Activity, BarChart2, Settings, LogOut, Upload, Folder, User, Trash2, Edit2, Calendar, Plus, X, MessageCircle, Phone } from 'lucide-react';
 import { API_ENDPOINTS } from './config';
 import { getSafeImageUrl } from './utils/imageUtils';
 
@@ -9,12 +9,13 @@ const AdminDashboard = ({ user }) => {
   const [uploadedProjects, setUploadedProjects] = useState([]);
   const [editingProject, setEditingProject] = useState(null);
   
-  // Mock data for the dashboard
+  const [analytics, setAnalytics] = useState({ whatsapp: 0, mobile: 0 });
+
   const stats = [
     { title: 'Total Revenue', value: '₹12,45,000', icon: <DollarSign size={24} />, color: 'bg-green-500/20 text-green-500' },
-    { title: 'Active Projects', value: '18', icon: <Activity size={24} />, color: 'bg-blue-500/20 text-blue-500' },
-    { title: 'New Leads', value: '45', icon: <Users size={24} />, color: 'bg-purple-500/20 text-purple-500' },
-    { title: 'Conversion Rate', value: '12%', icon: <BarChart2 size={24} />, color: 'bg-orange-500/20 text-orange-500' },
+    { title: 'Active Projects', value: uploadedProjects.length, icon: <Activity size={24} />, color: 'bg-blue-500/20 text-blue-500' },
+    { title: 'WhatsApp Clicks', value: analytics.whatsapp, icon: <MessageCircle size={24} />, color: 'bg-[#25D366]/20 text-[#25D366]' },
+    { title: 'Mobile Clicks', value: analytics.mobile, icon: <Phone size={24} />, color: 'bg-purple-500/20 text-purple-500' },
   ];
 
   const [formData, setFormData] = useState({
@@ -37,7 +38,26 @@ const AdminDashboard = ({ user }) => {
 
   useEffect(() => {
     fetchProjects();
+    fetchAnalytics();
   }, []);
+
+  const fetchAnalytics = async () => {
+    try {
+      const res = await fetch(API_ENDPOINTS.ANALYTICS_CLICKS);
+      if (res.ok) {
+        const data = await res.json();
+        const counts = { whatsapp: 0, mobile: 0 };
+        data.forEach(item => {
+          if (counts.hasOwnProperty(item.buttonType)) {
+            counts[item.buttonType] = item.count;
+          }
+        });
+        setAnalytics(counts);
+      }
+    } catch (err) {
+      console.error("Failed to fetch analytics", err);
+    }
+  };
 
   const fetchProjects = async () => {
     try {

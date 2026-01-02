@@ -40,6 +40,7 @@ import AdminDashboard from './AdminDashboard';
 import Chatbot from './Chatbot';
 import { API_ENDPOINTS } from './config';
 import { getSafeImageUrl } from './utils/imageUtils';
+import { trackButtonClick } from './utils/analytics.js';
 
 /* --- COMPONENT ARCHITECTURE & DATA --- */
 
@@ -174,68 +175,7 @@ const FEATURES = [
   }
 ];
 
-const PORTFOLIO = [
-  { 
-    id: 1, 
-    category: "Web Dev", 
-    title: "E-Commerce Platform", 
-    subtitle: "Fashion Retail",
-    description: "A comprehensive e-commerce solution featuring real-time inventory tracking, AI-powered product recommendations, and a seamless checkout process.",
-    tags: ["React", "Node.js", "Stripe", "MongoDB"],
-    gradient: "from-blue-600 to-indigo-600",
-    image: "https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-  },
-  { 
-    id: 2, 
-    category: "App Dev", 
-    title: "Fitness Tracker", 
-    subtitle: "iOS & Android",
-    description: "A cross-platform mobile application that tracks workouts, nutrition, and sleep patterns with integration for wearable devices.",
-    tags: ["React Native", "Firebase", "HealthKit"],
-    gradient: "from-purple-600 to-fuchsia-600",
-    image: "https://images.unsplash.com/photo-1576678927484-cc907957088c?auto=format&fit=crop&w=800&q=80"
-  },
-  { 
-    id: 3, 
-    category: "Design", 
-    title: "Brand Identity", 
-    subtitle: "Tech Startup",
-    description: "Complete visual identity overhaul including logo design, typography selection, and marketing collateral for a fintech startup.",
-    tags: ["Adobe Illustrator", "Figma", "Branding"],
-    gradient: "from-pink-600 to-rose-600",
-    image: "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=800&q=80"
-  },
-  { 
-    id: 4, 
-    category: "Video", 
-    title: "Product Launch", 
-    subtitle: "Commercial Ad",
-    description: "High-energy commercial video produced for a new consumer electronics product launch, featuring 3D motion graphics.",
-    tags: ["Premiere Pro", "After Effects", "Cinema 4D"],
-    gradient: "from-orange-500 to-red-600",
-    image: "https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80"
-  },
-  { 
-    id: 5, 
-    category: "Web Dev", 
-    title: "SaaS Dashboard", 
-    subtitle: "Analytics Tool",
-    description: "An interactive data visualization dashboard for a B2B SaaS platform, handling large datasets with client-side caching.",
-    tags: ["Next.js", "D3.js", "Tailwind CSS"],
-    gradient: "from-teal-500 to-emerald-600",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
-  },
-  { 
-    id: 6, 
-    category: "Design", 
-    title: "Social Media Kit", 
-    subtitle: "Marketing Campaign",
-    description: "A cohesive set of social media templates and assets designed to boost engagement across Instagram and LinkedIn.",
-    tags: ["Photoshop", "Social Media", "Content Strategy"],
-    gradient: "from-indigo-500 to-blue-500",
-    image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80"
-  }
-];
+const PORTFOLIO = [];
 
 // --- ANIMATION VARIANTS ---
 
@@ -516,7 +456,10 @@ const TopBar = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          onClick={() => window.open(`https://wa.me/918148311669?text=${encodeURIComponent('Hi Rhynox Team!')}`, '_blank')}
+          onClick={() => {
+            trackButtonClick('whatsapp');
+            window.open(`https://wa.me/918148311669?text=${encodeURIComponent('Hi Rhynox Team!')}`, '_blank');
+          }}
           className="absolute right-4 md:right-6 w-10 h-10 md:w-12 md:h-12 bg-[#25D366] text-white rounded-full hover:bg-[#128C7E] transition-all shadow-[0_0_20px_rgba(37,211,102,0.5)] hover:shadow-[0_0_30px_rgba(37,211,102,0.8)] flex items-center justify-center p-2"
        >
           <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
@@ -668,7 +611,10 @@ const Hero = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              onClick={() => window.open(`https://wa.me/918148311669?text=${encodeURIComponent('Hi Rhynox Team!')}`, '_blank')}
+              onClick={() => {
+                trackButtonClick('whatsapp');
+                window.open(`https://wa.me/918148311669?text=${encodeURIComponent('Hi Rhynox Team!')}`, '_blank');
+              }}
               className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-blue-700 shadow-blue-900/30 transition-all flex items-center justify-center gap-2"
             >
               <MessageCircle size={20} />
@@ -990,7 +936,7 @@ const Portfolio = () => {
             challenges: p.challenges || [],
             solutions: p.solutions || []
           }));
-          setProjects([...PORTFOLIO, ...formattedData]);
+          setProjects(formattedData);
         }
       } catch (error) {
         console.error("Failed to fetch projects", error);
@@ -1450,7 +1396,13 @@ const Contact = () => {
                 <div>
                   <div className="text-sm text-gray-500">Call Us</div>
                   <div className="font-semibold">
-                    <a href="tel:+91 81483 11669" className="hover:text-purple-400 transition-colors cursor-pointer">+91 81483 11669</a>
+                    <a 
+                      href="tel:+91 81483 11669" 
+                      className="hover:text-purple-400 transition-colors cursor-pointer"
+                      onClick={() => trackButtonClick('mobile')}
+                    >
+                      +91 81483 11669
+                    </a>
 
                   </div>
                 </div>
@@ -1863,13 +1815,13 @@ const Footer = ({ onAdminTrigger }) => {
           <div>
             <h3 className="text-lg font-bold mb-6">Follow Us</h3>
             <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors text-gray-400 hover:text-white">
+              <a href="https://www.instagram.com/rhynox_technologies/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors text-gray-400 hover:text-white">
                 <Instagram size={20} />
               </a>
               <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-400 transition-colors text-gray-400 hover:text-white">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors text-gray-400 hover:text-white">
+              <a href="https://www.linkedin.com/in/rhynox-technologies-85b6a53a1/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors text-gray-400 hover:text-white">
                 <Linkedin size={20} />
               </a>
               <a href="#" className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors text-gray-400 hover:text-white">

@@ -18,6 +18,8 @@ export const API_ENDPOINTS = {
   BASE_URL: API_BASE_URL,
   PROJECTS: `${API_BASE_URL}/projects`,
   PROJECT_BY_ID: (id) => `${API_BASE_URL}/projects/${id}`,
+  ANALYTICS_CLICK: `${API_BASE_URL}/analytics/click`,
+  ANALYTICS_CLICKS: `${API_BASE_URL}/analytics/clicks`,
 };
 
 export default API_BASE_URL;

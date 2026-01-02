@@ -14,6 +14,7 @@ import {
   Info,
   CheckCircle
 } from 'lucide-react';
+import { trackButtonClick } from './utils/analytics.js';
 
 const Chatbot = ({ openWithPlan }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -1015,9 +1016,14 @@ const Chatbot = ({ openWithPlan }) => {
                             <div className="mt-3">
                               <a
                                 href={message.actionUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-2 rounded-full transition-all font-medium text-sm shadow-md hover:shadow-lg"
+                                 target="_blank"
+                                 rel="noopener noreferrer"
+                                 onClick={() => {
+                                   if (message.actionUrl.includes('wa.me')) {
+                                     trackButtonClick('whatsapp');
+                                   }
+                                 }}
+                                 className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white px-4 py-2 rounded-full transition-all font-medium text-sm shadow-md hover:shadow-lg"
                               >
                                 <MessageCircle size={16} />
                                 {message.actionLabel || 'Open Link'}

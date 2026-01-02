@@ -88,6 +88,15 @@ const emailVerificationSchema = new mongoose.Schema({
 
 const EmailVerification = mongoose.model('EmailVerification', emailVerificationSchema);
 
+// Click Analytics Schema
+const clickAnalyticsSchema = new mongoose.Schema({
+  buttonType: { type: String, required: true, unique: true }, // 'whatsapp' or 'mobile'
+  count: { type: Number, default: 0 },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+const ClickAnalytics = mongoose.model('ClickAnalytics', clickAnalyticsSchema);
+
 // Nodemailer Configuration
 const createTransporter = () => {
   return nodemailer.createTransport({
@@ -98,6 +107,37 @@ const createTransporter = () => {
     }
   });
 };
+
+// Click Analytics Routes
+app.post('/api/analytics/click', async (req, res) => {
+  try {
+    const { buttonType } = req.body;
+    if (!['whatsapp', 'mobile'].includes(buttonType)) {
+      return res.status(400).json({ error: 'Invalid button type' });
+    }
+
+    const analytics = await ClickAnalytics.findOneAndUpdate(
+      { buttonType },
+      { $inc: { count: 1 }, updatedAt: Date.now() },
+      { upsert: true, new: true }
+    );
+
+    res.json(analytics);
+  } catch (err) {
+    console.error('Error tracking click:', err);
+    res.status(500).json({ error: 'Failed to track click' });
+  }
+});
+
+app.get('/api/analytics/clicks', async (req, res) => {
+  try {
+    const analytics = await ClickAnalytics.find();
+    res.json(analytics);
+  } catch (err) {
+    console.error('Error fetching analytics:', err);
+    res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+});
 
 // Routes
 app.get('/api/projects', async (req, res) => {
