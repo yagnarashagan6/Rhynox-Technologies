@@ -1,15 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
+/* ── Base ─────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  scroll-snap-type: y mandatory;
 }
 
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030810;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e3a5f;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2d5a8e;
+}
+
+/* ── Marquee ─────────────────────────────────────────── */
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {
@@ -20,24 +53,165 @@ html {
   animation-play-state: paused;
 }
 
+/* ── Mobile overrides ────────────────────────────────── */
 @media (min-width: 768px) {
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-/* Mobile optimization utilities */
+/* ── Utility ─────────────────────────────────────────── */
 @layer utilities {
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
-  
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+}
+
+/* ── Custom scrollbar for modal ──────────────────────── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+
+/* ── Hero orb drift animations (GPU-only) ────────────── */
+@keyframes orbDrift1 {
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-18px) scale(1.05);
+  }
+}
+
+@keyframes orbDrift2 {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  40% {
+    transform: translate(-20px, 15px) scale(1.06);
+  }
+}
+
+.hero-orb-blue {
+  animation: orbDrift1 18s ease-in-out infinite;
+}
+
+.hero-orb-purple {
+  animation: orbDrift2 22s ease-in-out infinite;
+}
+
+/* ── Hero Comet Animation ───────────────────────────────────
+ * High-performance GPU-only CSS recurring comet animation
+ * • Single <div> with box-shadow head & linear-gradient tail
+ * • Animates ONLY transform & opacity
+ * • Uses will-change: transform
+ * • Teal (#6fd8c7) & Purple (#9b8cf0) theme
+ * • Staggered recurring loop (every ~4s a comet streaks across)
+ * ─────────────────────────────────────────────────────────── */
+.hero-comet-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hero-comet {
+  position: absolute;
+  right: -180px;
+  width: 180px;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg,
+      rgba(111, 216, 199, 0) 0%,
+      rgba(111, 216, 199, 0.45) 40%,
+      rgba(155, 140, 240, 0.95) 85%,
+      #ffffff 100%);
+  box-shadow:
+    0 0 10px 2px rgba(111, 216, 199, 0.7),
+    0 0 20px 4px rgba(155, 140, 240, 0.5);
+  opacity: 0;
+  will-change: transform;
+  transform: rotate(-28deg);
+  pointer-events: none;
+}
+
+.hero-comet-1 {
+  top: 15%;
+  animation: cometStreak 8s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+.hero-comet-2 {
+  top: 35%;
+  animation: cometStreak 8s cubic-bezier(0.2, 0.8, 0.2, 1) 4s infinite;
+}
+
+/* Bright glowing comet head nucleus */
+.hero-comet::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 8px 3px #6fd8c7,
+    0 0 18px 6px #9b8cf0;
+}
+
+@keyframes cometStreak {
+  0% {
+    transform: translate(0, 0) rotate(-28deg);
+    opacity: 0;
+  }
+
+  2% {
+    opacity: 1;
+  }
+
+  20% {
+    transform: translate(-100vw, 65vh) rotate(-28deg);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-100vw, 65vh) rotate(-28deg);
+    opacity: 0;
+  }
+}
+
+/* Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+  .hero-comet,
+  .hero-orb-blue,
+  .hero-orb-purple {
+    animation: none !important;
+    display: none !important;
   }
 }

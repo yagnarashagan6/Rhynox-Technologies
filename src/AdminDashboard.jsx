@@ -4,6 +4,21 @@ import { Users, DollarSign, Activity, BarChart2, Settings, LogOut, Upload, Folde
 import { API_ENDPOINTS } from './config';
 import { getSafeImageUrl } from './utils/imageUtils';
 
+// Shared blank-form state — single source of truth used by cancelEdit & handleSubmit
+const EMPTY_FORM = {
+  title: '',
+  subtitle: '',
+  category: 'Web Dev',
+  description: '',
+  images: [],
+  tags: '',
+  client: '',
+  timeline: '',
+  role: '',
+  challenges: '',
+  solutions: ''
+};
+
 const AdminDashboard = ({ user }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [uploadedProjects, setUploadedProjects] = useState([]);
@@ -18,19 +33,7 @@ const AdminDashboard = ({ user }) => {
     { title: 'Mobile Clicks', value: analytics.mobile, icon: <Phone size={24} />, color: 'bg-purple-500/20 text-purple-500' },
   ];
 
-  const [formData, setFormData] = useState({
-    title: '',
-    subtitle: '',
-    category: 'Web Dev',
-    description: '',
-    images: [], // This will now store { type: 'url' | 'file', value: string | File }
-    tags: '',
-    client: '',
-    timeline: '',
-    role: '',
-    challenges: '',
-    solutions: ''
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const fileInputRef = useRef(null);
@@ -147,19 +150,7 @@ const AdminDashboard = ({ user }) => {
 
   const cancelEdit = () => {
     setEditingProject(null);
-    setFormData({
-      title: '',
-      subtitle: '',
-      category: 'Web Dev',
-      description: '',
-      images: [],
-      tags: '',
-      client: '',
-      timeline: '',
-      role: '',
-      challenges: '',
-      solutions: ''
-    });
+    setFormData(EMPTY_FORM);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -229,19 +220,7 @@ const AdminDashboard = ({ user }) => {
             images: projectImages.filter(img => img).map(img => ({ type: 'url', value: img }))
           }));
         } else if (!editingProject) {
-            setFormData({
-              title: '',
-              subtitle: '',
-              category: 'Web Dev',
-              description: '',
-              images: [],
-              tags: '',
-              client: '',
-              timeline: '',
-              role: '',
-              challenges: '',
-              solutions: ''
-            });
+            setFormData(EMPTY_FORM);
         }
         fetchProjects();
       } else {
