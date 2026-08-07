@@ -54,9 +54,32 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error('MongoDB Connection Error:', err));
+mongoose.connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 5000 // Fast fail in 5s if MongoDB Atlas is unreachable/unwhitelisted
+})
+  .then(() => console.log('✅ MongoDB Connected Successfully'))
+  .catch(err => {
+    console.error('❌ MongoDB Connection Error:', err.message);
+    console.error('💡 TIP: If using MongoDB Atlas, check if your current IP address is whitelisted under Network Access in MongoDB Atlas (or add 0.0.0.0/0 for testing).');
+  });
+
+mongoose.connection.on('error', err => {
+  console.error('MongoDB Runtime Error:', err.message);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.warn('⚠️ MongoDB Disconnected.');
+});
+
+// Middleware to verify database connection before performing Mongoose operations
+app.use('/api', (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      error: 'Database connection failed. Please ensure your IP address is whitelisted in MongoDB Atlas (Network Access) and restart server.js.'
+    });
+  }
+  next();
+});
 
 // Project Schema
 const projectSchema = new mongoose.Schema({
@@ -139,7 +162,7 @@ app.get('/api/analytics/clicks', async (req, res) => {
   }
 });
 
-// Routes
+// Routes - Projects
 app.get('/api/projects', async (req, res) => {
   try {
     const projects = await Project.find().sort({ createdAt: -1 });
@@ -378,9 +401,8 @@ app.put('/api/projects/:id', (req, res, next) => {
   }
 });
 
-// Email Verification Routes
-// Send verification email
-app.post('/api/verify-email/send', async (req, res) => {
+// Email Verification Routes (supports both /api/verify-email/send and /api/verify-email-send)
+app.post(['/api/verify-email/send', '/api/verify-email-send'], async (req, res) => {
   try {
     const { email } = req.body;
     
@@ -474,8 +496,8 @@ app.post('/api/verify-email/send', async (req, res) => {
   }
 });
 
-// Verify code
-app.post('/api/verify-email/confirm', async (req, res) => {
+// Verify code (supports both /api/verify-email/confirm and /api/verify-email-confirm)
+app.post(['/api/verify-email/confirm', '/api/verify-email-confirm'], async (req, res) => {
   try {
     const { email, code } = req.body;
     
@@ -506,8 +528,8 @@ app.post('/api/verify-email/confirm', async (req, res) => {
   }
 });
 
-// Contact Form Submission
-app.post('/api/contact/send', async (req, res) => {
+// Contact Form Submission (supports both /api/contact/send and /api/contact-send)
+app.post(['/api/contact/send', '/api/contact-send'], async (req, res) => {
   try {
     const { name, email, service, message } = req.body;
     

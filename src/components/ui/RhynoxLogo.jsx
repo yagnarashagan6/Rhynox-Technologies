@@ -1,0 +1,19 @@
+import React from 'react';
+
+/**
+ * RhynoxLogo Component
+ * Renders the official Rhynox Technologies logo with a transparent background.
+ * Supports light / dark mode text colors via props or Tailwind classes.
+ */
+export default function RhynoxLogo({ className = "h-10 w-auto", textColor = "text-white", ...props }) {
+  return (
+    <div className={`inline-flex items-center ${textColor} ${className}`} {...props}>
+      <img 
+        src="/rhynox-logo.svg" 
+        alt="Rhynox Technologies" 
+        className="h-full w-auto object-contain transition-all"
+        loading="eager"
+      />
+    </div>
+  );
+}

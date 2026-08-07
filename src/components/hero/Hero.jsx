@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import BackgroundGlow from './BackgroundGlow';
-import ParticleNetwork from './ParticleNetwork';
 import HeroText from './HeroText';
-import Comet from './Comet';
+import Shader3 from '@/components/ui/shader3';
 
 /* ─── Logo with gentle float ──────────────────────────── */
 const LogoFloat = () => (
@@ -40,17 +38,11 @@ export default function Hero() {
     <section
       id="home"
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col overflow-hidden snap-start"
+      className="relative min-h-screen flex flex-col overflow-hidden snap-start bg-[#030810]"
       aria-label="Hero section"
     >
-      {/* ── Layer 0: CSS dark background + orbs ── */}
-      <BackgroundGlow />
-
-      {/* ── Layer 1: Canvas 2D particle network ── */}
-      <ParticleNetwork />
-
-      {/* ── Layer 2: Pure CSS Comet animation ── */}
-      <Comet />
+      {/* ── Shader3 interactive 3D background ── */}
+      <Shader3 color="#3b82f6" />
 
       {/* ── Top bar: Logo only ── */}
       <div
