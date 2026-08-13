@@ -729,7 +729,7 @@ export default function RedesignedApp() {
       <div className="bg-[#050505] text-white font-sans min-h-screen selection:bg-[#00C2BB] selection:text-black overflow-x-hidden">
 
         {/* ── 1. HEADER / NAVIGATION (VISTA.IO STYLE) ────────────────────── */}
-        <header className="fixed top-0 left-0 right-0 z-40 bg-[#08080A]/90 backdrop-blur-xl border-b border-white/10 px-6 lg:px-12 py-4 transition-all">
+        <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-200 px-6 lg:px-12 py-4 transition-all shadow-sm">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
 
             {/* Logo (Left) */}
@@ -741,12 +741,12 @@ export default function RedesignedApp() {
               <img
                 src="/rhynox svg logo.svg"
                 alt="RHYNOX TECHNOLOGIES"
-                className="h-10 sm:h-12 md:h-14 w-auto object-contain filter brightness-125 contrast-125 drop-shadow-[0_0_8px_#ffffff] drop-shadow-[0_0_16px_#ffffff] drop-shadow-[0_0_30px_rgba(255,255,255,0.95)] drop-shadow-[0_0_50px_rgba(255,255,255,0.7)] scale-[3.8] sm:scale-[4.2] origin-left transition-transform hover:scale-[4.4]"
+                className="h-10 sm:h-12 md:h-14 w-auto object-contain filter brightness-90 contrast-125 scale-[3.8] sm:scale-[4.2] origin-left transition-transform hover:scale-[4.4]"
               />
             </button>
 
-            {/* Navigation Bar (Center - Dark Pill Bar) */}
-            <nav className="hidden md:flex items-center bg-[#131417] border border-white/20 rounded-full px-5 py-1.5 gap-1 shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+            {/* Navigation Bar (Center - White Pill Bar) */}
+            <nav className="hidden md:flex items-center bg-gray-100/90 border border-gray-300 rounded-full px-5 py-1.5 gap-1 shadow-sm">
               {[
                 { id: 'home', label: 'Home' },
                 { id: 'solutions', label: 'Solutions' },
@@ -757,9 +757,9 @@ export default function RedesignedApp() {
                 <button
                   key={tab.id}
                   onClick={() => handleNavClick(tab.id)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${activeTab === tab.id
-                    ? 'bg-[#00C2BB] text-black font-semibold shadow-[0_0_20px_rgba(255,255,255,0.8)] border border-white/50'
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${activeTab === tab.id
+                    ? 'bg-[#00C2BB] text-black shadow-sm'
+                    : 'text-[#1A1A1A] hover:text-black hover:bg-gray-200'
                     }`}
                 >
                   {tab.label}
@@ -771,7 +771,7 @@ export default function RedesignedApp() {
             <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={() => setShowAdminLogin(true)}
-                className="flex items-center gap-2 text-xs font-mono uppercase text-gray-300 hover:text-[#00C2BB] px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
+                className="flex items-center gap-2 text-xs font-mono uppercase text-[#1A1A1A] hover:text-[#00C2BB] px-3 py-2 rounded-lg hover:bg-gray-100 transition-all font-bold"
               >
                 <User className="w-4 h-4 text-[#00C2BB]" />
                 <span>{isAdminLoggedIn ? "Admin Dashboard" : "Log In"}</span>
@@ -779,7 +779,7 @@ export default function RedesignedApp() {
 
               <button
                 onClick={() => handleNavClick('contact')}
-                className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-bold text-sm px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,194,187,0.4)] hover:shadow-[0_0_30px_rgba(0,194,187,0.6)] hover:scale-105 transition-all"
+                className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold text-sm px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,194,187,0.4)] hover:shadow-[0_0_30px_rgba(0,194,187,0.6)] hover:scale-105 transition-all"
               >
                 Get Started
               </button>
@@ -788,7 +788,7 @@ export default function RedesignedApp() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-[#18191B] border border-white/10 text-white hover:text-[#00C2BB]"
+              className="md:hidden p-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 hover:text-[#00C2BB]"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
