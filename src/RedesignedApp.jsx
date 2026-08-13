@@ -44,7 +44,7 @@ const SERVICES = [
     shortTitle: "Web Dev",
     category: "Engineering",
     desc: "Custom, high-performance web applications built with modern frameworks like React, Next.js, and Tailwind CSS.",
-    icon: <Code className="w-6 h-6 text-[#FF5A36]" />,
+    icon: <Code className="w-6 h-6 text-[#00C2BB]" />,
     features: ["Responsive Design", "SEO Optimized", "Fast Page Speed", "Custom CMS Integrations"]
   },
   {
@@ -53,7 +53,7 @@ const SERVICES = [
     shortTitle: "Mobile Dev",
     category: "Mobile",
     desc: "Native and cross-platform mobile applications designed for fluid, seamless iOS & Android user experiences.",
-    icon: <Smartphone className="w-6 h-6 text-[#FF5A36]" />,
+    icon: <Smartphone className="w-6 h-6 text-[#00C2BB]" />,
     features: ["iOS & Android Apps", "React Native", "Push Notifications", "Offline-first Storage"]
   },
   {
@@ -62,7 +62,7 @@ const SERVICES = [
     shortTitle: "Design",
     category: "Creative",
     desc: "Eye-catching branding materials, UI/UX mockups, social media posters, and vector illustrations.",
-    icon: <Palette className="w-6 h-6 text-[#FF5A36]" />,
+    icon: <Palette className="w-6 h-6 text-[#00C2BB]" />,
     features: ["Brand Identity", "UI/UX Mockups", "Social Media Graphics", "Marketing Collateral"]
   },
   {
@@ -71,7 +71,7 @@ const SERVICES = [
     shortTitle: "Advertising",
     category: "Marketing",
     desc: "High-conversion video ad copy, strategic targeting, and visual scripts engineered to maximize ROI.",
-    icon: <Megaphone className="w-6 h-6 text-[#FF5A36]" />,
+    icon: <Megaphone className="w-6 h-6 text-[#00C2BB]" />,
     features: ["High Conversion Scripts", "Target Audience Research", "A/B Test Graphics", "Performance Analytics"]
   },
   {
@@ -80,7 +80,7 @@ const SERVICES = [
     shortTitle: "Post-Production",
     category: "Video",
     desc: "Professional video post-production, motion graphics, audio mastering, and color grading.",
-    icon: <Video className="w-6 h-6 text-[#FF5A36]" />,
+    icon: <Video className="w-6 h-6 text-[#00C2BB]" />,
     features: ["4K Video Editing", "Dynamic Transitions", "Color Grading", "Sound Design & VFX"]
   },
   {
@@ -89,7 +89,7 @@ const SERVICES = [
     shortTitle: "SEO Growth",
     category: "Marketing",
     desc: "Data-driven SEO strategies, technical site audits, keyword domination, and organic growth scaling.",
-    icon: <Zap className="w-6 h-6 text-[#FF5A36]" />,
+    icon: <Zap className="w-6 h-6 text-[#00C2BB]" />,
     features: ["Technical SEO", "Keyword Optimization", "Link Building", "Analytics & Reporting"]
   }
 ];
@@ -235,7 +235,7 @@ const ConstellationCanvas = () => {
         height / 2,
         Math.max(width, height) / 1.2
       );
-      radialGlow.addColorStop(0, 'rgba(255, 90, 54, 0.04)');
+      radialGlow.addColorStop(0, 'rgba(0, 194, 187, 0.04)');
       radialGlow.addColorStop(0.5, 'rgba(15, 23, 42, 0.05)');
       radialGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = radialGlow;
@@ -267,7 +267,7 @@ const ConstellationCanvas = () => {
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
             const alpha = (1 - dist / 130) * 0.22;
-            ctx.strokeStyle = `rgba(255, 90, 54, ${alpha})`;
+            ctx.strokeStyle = `rgba(0, 194, 187, ${alpha})`;
             ctx.lineWidth = 0.75;
             ctx.stroke();
           }
@@ -344,7 +344,7 @@ const TypewriterText = ({
           <motion.span
             animate={{ opacity: [1, 0] }}
             transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
-            className="text-[#FF5A36] font-bold ml-1"
+            className="text-[#00C2BB] font-bold ml-1"
           >
             |
           </motion.span>
@@ -391,11 +391,11 @@ const HeroSection = ({ handleNavClick }) => {
   };
 
   return (
-    <section ref={sectionRef} className="relative pt-36 pb-20 px-6 lg:px-16 min-h-[85vh] flex items-center justify-start overflow-hidden bg-black">
+    <section ref={sectionRef} className="relative pt-28 pb-12 px-6 lg:px-16 min-h-screen h-screen flex items-center justify-start overflow-hidden bg-black">
       <ConstellationCanvas />
 
       {/* Subtle Ambient Glow behind text */}
-      <div className="absolute top-1/3 left-10 w-96 h-96 bg-[#FF5A36]/10 blur-[130px] pointer-events-none rounded-full" />
+      <div className="absolute top-1/3 left-10 w-96 h-96 bg-[#00C2BB]/10 blur-[130px] pointer-events-none rounded-full" />
 
       <motion.div style={{ opacity, scale, y: textY }} className="relative z-10 w-full max-w-4xl mr-auto py-6 flex flex-col items-start text-left">
 
@@ -404,11 +404,11 @@ const HeroSection = ({ handleNavClick }) => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="inline-flex items-center gap-2.5 text-[#FF5A36] text-xs font-mono uppercase tracking-widest mb-6"
+          className="inline-flex items-center gap-2.5 text-[#00C2BB] text-xs font-mono uppercase tracking-widest mb-6"
         >
-          <span className="h-2 w-2 rounded-full bg-[#FF5A36] animate-pulse shadow-[0_0_10px_#FF5A36]" />
+          <span className="h-2 w-2 rounded-full bg-[#00C2BB] animate-pulse shadow-[0_0_10px_#00C2BB]" />
           <Sparkles className="w-3.5 h-3.5" />
-          <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#FF5A36] to-amber-300">
+          <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#00C2BB] to-cyan-200">
             The New Standard in Digital Solutions
           </span>
         </motion.div>
@@ -422,7 +422,7 @@ const HeroSection = ({ handleNavClick }) => {
             <AnimatedTextLine word="STANDARD IN" text="STANDARD IN" delay={0.4} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#E2ECE9]" />
           </div>
           <div className="leading-tight">
-            <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#FF5A36] via-orange-400 to-amber-300 drop-shadow-[0_0_20px_rgba(255,90,54,0.3)]">
+            <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#00C2BB] via-teal-300 to-cyan-200 drop-shadow-[0_0_20px_rgba(0,194,187,0.35)]">
               <AnimatedTextLine word="DIGITAL SOLUTIONS" text="DIGITAL SOLUTIONS" delay={0.6} />
             </span>
           </div>
@@ -448,7 +448,7 @@ const HeroSection = ({ handleNavClick }) => {
         >
           <button
             onClick={() => handleNavClick('solutions')}
-            className="group bg-[#FF5A36] hover:bg-[#ff7253] text-black font-mono font-bold text-sm uppercase px-7 py-3.5 rounded-xl shadow-[0_0_25px_rgba(255,90,54,0.4)] hover:shadow-[0_0_35px_rgba(255,90,54,0.6)] hover:scale-105 transition-all flex items-center gap-2"
+            className="group bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-mono font-bold text-sm uppercase px-7 py-3.5 rounded-xl shadow-[0_0_25px_rgba(0,194,187,0.4)] hover:shadow-[0_0_35px_rgba(0,194,187,0.6)] hover:scale-105 transition-all flex items-center gap-2"
           >
             <span>Learn More</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -515,7 +515,7 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
         className="absolute inset-0 rounded-2xl pointer-events-none z-0"
         style={{
           background:
-            "linear-gradient(135deg, transparent 40%, rgba(255,90,54,0.15) 50%, transparent 60%)",
+            "linear-gradient(135deg, transparent 40%, rgba(0,194,187,0.15) 50%, transparent 60%)",
           backgroundSize: "200% 200%",
         }}
         animate={{
@@ -531,12 +531,12 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
       />
 
       {/* Glow spot on hover */}
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#FF5A36]/0 group-hover:bg-[#FF5A36]/10 rounded-full blur-2xl transition-all duration-500 pointer-events-none z-0" />
-      <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-[#FF5A36]/0 group-hover:bg-[#FF5A36]/8 rounded-full blur-2xl transition-all duration-700 pointer-events-none z-0" />
+      <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#00C2BB]/0 group-hover:bg-[#00C2BB]/10 rounded-full blur-2xl transition-all duration-500 pointer-events-none z-0" />
+      <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-[#00C2BB]/0 group-hover:bg-[#00C2BB]/8 rounded-full blur-2xl transition-all duration-700 pointer-events-none z-0" />
 
       {/* Animated top border line */}
       <motion.div
-        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#FF5A36] to-amber-400 rounded-t-2xl"
+        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#00C2BB] to-cyan-400 rounded-t-2xl"
         initial={{ width: "0%" }}
         animate={isInView ? { width: "100%" } : { width: "0%" }}
         transition={{ duration: 0.9, delay: index * 0.1 + 0.4, ease: [0.16, 1, 0.3, 1] }}
@@ -546,7 +546,7 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
         <div className="flex items-center justify-between mb-4">
           <motion.div
             className="w-12 h-12 rounded-xl bg-[#1D1F24] border border-white/10 flex items-center justify-center"
-            whileHover={{ scale: 1.15, borderColor: "rgba(255,90,54,0.8)" }}
+            whileHover={{ scale: 1.15, borderColor: "rgba(0,194,187,0.8)" }}
             animate={isInView ? { rotate: [0, -4, 4, 0] } : {}}
             transition={{
               rotate: {
@@ -559,7 +559,7 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
             {service.icon}
           </motion.div>
           <motion.span
-            className="text-[10px] font-mono uppercase text-[#FF5A36] tracking-widest px-2.5 py-0.5 bg-[#FF5A36]/10 rounded-full border border-[#FF5A36]/20"
+            className="text-[10px] font-mono uppercase text-[#00C2BB] tracking-widest px-2.5 py-0.5 bg-[#00C2BB]/10 rounded-full border border-[#00C2BB]/20"
             initial={{ opacity: 0, scale: 0.7 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.4, delay: index * 0.1 + 0.5 }}
@@ -568,7 +568,7 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
           </motion.span>
         </div>
 
-        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#FF5A36] transition-colors duration-300">
+        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00C2BB] transition-colors duration-300">
           {service.title}
         </h3>
         <p className="text-gray-400 text-xs sm:text-sm leading-relaxed line-clamp-3 mb-4">
@@ -591,7 +591,7 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
         </div>
       </div>
 
-      <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-gray-300 group-hover:text-[#FF5A36] transition-colors duration-300 font-mono">
+      <div className="relative z-10 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-gray-300 group-hover:text-[#00C2BB] transition-colors duration-300 font-mono">
         <span>Explore Service</span>
         <motion.div
           animate={{ x: [0, 4, 0] }}
@@ -616,12 +616,12 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(255,90,54,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,90,54,0.03) 1px, transparent 1px)",
+            "linear-gradient(rgba(0,194,187,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,194,187,0.03) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
       {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#FF5A36]/5 blur-[120px] pointer-events-none rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#00C2BB]/5 blur-[120px] pointer-events-none rounded-full" />
 
       <div className="max-w-7xl mx-auto relative z-10">
 
@@ -635,7 +635,7 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
         >
           <div className="max-w-2xl">
             <motion.span
-              className="text-[#FF5A36] font-mono text-xs uppercase tracking-widest block mb-3"
+              className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest block mb-3"
               initial={{ opacity: 0, x: -20 }}
               animate={headerInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.15 }}
@@ -643,17 +643,17 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
               // OUR CAPABILITIES
             </motion.span>
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white uppercase font-mono tracking-tight leading-tight">
-              Let Our Tech Take Your Business to <span className="text-[#FF5A36]">Higher Grounds</span>
+              Let Our Tech Take Your Business to <span className="text-[#00C2BB]">Higher Grounds</span>
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-[#141518] border border-white/10 text-xs text-gray-300">
-              <ShieldCheck className="w-4 h-4 text-[#FF5A36] shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-[#00C2BB] shrink-0" />
               <span>Guaranteed Quality & Performance</span>
             </div>
             <button
               onClick={() => handleNavClick('contact')}
-              className="inline-flex items-center gap-2 text-[#FF5A36] font-mono text-sm hover:underline font-bold whitespace-nowrap"
+              className="inline-flex items-center gap-2 text-[#00C2BB] font-mono text-sm hover:underline font-bold whitespace-nowrap"
             >
               <span>Book a Consultation</span>
               <ChevronRight className="w-4 h-4" />
@@ -726,7 +726,7 @@ export default function RedesignedApp() {
 
   return (
     <ReactLenis root>
-      <div className="bg-[#050505] text-white font-sans min-h-screen selection:bg-[#FF5A36] selection:text-black overflow-x-hidden">
+      <div className="bg-[#050505] text-white font-sans min-h-screen selection:bg-[#00C2BB] selection:text-black overflow-x-hidden">
 
         {/* ── 1. HEADER / NAVIGATION (VISTA.IO STYLE) ────────────────────── */}
         <header className="fixed top-0 left-0 right-0 z-40 bg-[#08080A]/90 backdrop-blur-xl border-b border-white/10 px-6 lg:px-12 py-4 transition-all">
@@ -735,18 +735,18 @@ export default function RedesignedApp() {
             {/* Logo (Left) */}
             <button
               onClick={() => handleNavClick('home')}
-              className="flex items-center group text-left focus:outline-none transition-transform hover:scale-105"
+              className="flex items-center group text-left focus:outline-none overflow-visible py-1"
               aria-label="Rhynox Technologies Logo"
             >
               <img
-                src="/rhynox-logo.svg"
+                src="/rhynox svg logo.svg"
                 alt="RHYNOX TECHNOLOGIES"
-                className="h-9 sm:h-10 md:h-11 w-auto object-contain filter drop-shadow-[0_0_12px_rgba(0,194,187,0.3)]"
+                className="h-10 sm:h-12 md:h-14 w-auto object-contain filter brightness-125 contrast-125 drop-shadow-[0_0_8px_#ffffff] drop-shadow-[0_0_16px_#ffffff] drop-shadow-[0_0_30px_rgba(255,255,255,0.95)] drop-shadow-[0_0_50px_rgba(255,255,255,0.7)] scale-[3.8] sm:scale-[4.2] origin-left transition-transform hover:scale-[4.4]"
               />
             </button>
 
             {/* Navigation Bar (Center - Dark Pill Bar) */}
-            <nav className="hidden md:flex items-center bg-[#131417] border border-white/10 rounded-full px-5 py-1.5 gap-1 shadow-inner">
+            <nav className="hidden md:flex items-center bg-[#131417] border border-white/20 rounded-full px-5 py-1.5 gap-1 shadow-[0_0_20px_rgba(255,255,255,0.15)]">
               {[
                 { id: 'home', label: 'Home' },
                 { id: 'solutions', label: 'Solutions' },
@@ -758,8 +758,8 @@ export default function RedesignedApp() {
                   key={tab.id}
                   onClick={() => handleNavClick(tab.id)}
                   className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${activeTab === tab.id
-                    ? 'bg-[#FF5A36] text-black font-semibold shadow-[0_0_15px_rgba(255,90,54,0.4)]'
-                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    ? 'bg-[#00C2BB] text-black font-semibold shadow-[0_0_20px_rgba(255,255,255,0.8)] border border-white/50'
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'
                     }`}
                 >
                   {tab.label}
@@ -771,15 +771,15 @@ export default function RedesignedApp() {
             <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={() => setShowAdminLogin(true)}
-                className="flex items-center gap-2 text-xs font-mono uppercase text-gray-300 hover:text-[#FF5A36] px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
+                className="flex items-center gap-2 text-xs font-mono uppercase text-gray-300 hover:text-[#00C2BB] px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
               >
-                <User className="w-4 h-4 text-[#FF5A36]" />
+                <User className="w-4 h-4 text-[#00C2BB]" />
                 <span>{isAdminLoggedIn ? "Admin Dashboard" : "Log In"}</span>
               </button>
 
               <button
                 onClick={() => handleNavClick('contact')}
-                className="bg-[#FF5A36] hover:bg-[#ff7253] text-black font-bold text-sm px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(255,90,54,0.4)] hover:shadow-[0_0_30px_rgba(255,90,54,0.6)] hover:scale-105 transition-all"
+                className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-bold text-sm px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,194,187,0.4)] hover:shadow-[0_0_30px_rgba(0,194,187,0.6)] hover:scale-105 transition-all"
               >
                 Get Started
               </button>
@@ -788,7 +788,7 @@ export default function RedesignedApp() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-[#18191B] border border-white/10 text-white hover:text-[#FF5A36]"
+              className="md:hidden p-2 rounded-lg bg-[#18191B] border border-white/10 text-white hover:text-[#00C2BB]"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -807,7 +807,7 @@ export default function RedesignedApp() {
                   <button
                     key={tab}
                     onClick={() => handleNavClick(tab)}
-                    className={`text-left px-4 py-3 rounded-xl font-mono text-sm capitalize ${activeTab === tab ? 'bg-[#FF5A36] text-black font-bold' : 'text-gray-300 hover:bg-white/5'
+                    className={`text-left px-4 py-3 rounded-xl font-mono text-sm capitalize ${activeTab === tab ? 'bg-[#00C2BB] text-black font-bold' : 'text-gray-300 hover:bg-white/5'
                       }`}
                   >
                     {tab}
@@ -817,15 +817,15 @@ export default function RedesignedApp() {
                 <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
                   <button
                     onClick={() => { setMobileMenuOpen(false); setShowAdminLogin(true); }}
-                    className="flex items-center gap-2 text-sm text-gray-300 px-4 py-2 hover:text-[#FF5A36]"
+                    className="flex items-center gap-2 text-sm text-gray-300 px-4 py-2 hover:text-[#00C2BB]"
                   >
-                    <User className="w-4 h-4 text-[#FF5A36]" />
+                    <User className="w-4 h-4 text-[#00C2BB]" />
                     <span>Admin / Client Portal</span>
                   </button>
 
                   <button
                     onClick={() => handleNavClick('contact')}
-                    className="w-full bg-[#FF5A36] text-black font-bold py-3 rounded-xl text-center"
+                    className="w-full bg-[#00C2BB] text-black font-bold py-3 rounded-xl text-center"
                   >
                     Get Started
                   </button>
@@ -844,14 +844,14 @@ export default function RedesignedApp() {
         {/* ── 4. METRICS / NUMBERS SECTION ("We Take Pride in Our Numbers") ────── */}
         <section className="pt-12 pb-20 px-6 lg:px-12 bg-black border-t border-white/10 relative overflow-hidden">
           {/* Subtle particle wave effect */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,90,54,0.06)_0,transparent_70%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,194,187,0.06)_0,transparent_70%)] pointer-events-none" />
 
           <div className="max-w-7xl mx-auto relative z-10 text-center">
-            <span className="text-[#FF5A36] font-mono text-xs uppercase tracking-widest block mb-3">
+            <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest block mb-3">
             // OUR IMPACT & ACCELERATION
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white uppercase font-mono tracking-tight mb-16">
-              We Take Pride in Our <span className="text-[#FF5A36]">Numbers</span>
+              We Take Pride in Our <span className="text-[#00C2BB]">Numbers</span>
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
@@ -862,9 +862,9 @@ export default function RedesignedApp() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="flex flex-col items-center p-6 rounded-2xl bg-[#0F1012] border border-white/10 hover:border-[#FF5A36]/40 transition-all"
+                  className="flex flex-col items-center p-6 rounded-2xl bg-[#0F1012] border border-white/10 hover:border-[#00C2BB]/40 transition-all"
                 >
-                  <span className="text-4xl sm:text-6xl font-black font-mono text-[#FF5A36] tracking-tight mb-2">
+                  <span className="text-4xl sm:text-6xl font-black font-mono text-[#00C2BB] tracking-tight mb-2">
                     {metric.value}
                   </span>
                   <span className="text-xs sm:text-sm font-mono text-gray-400 uppercase tracking-wider text-center">
@@ -892,8 +892,8 @@ export default function RedesignedApp() {
             return (
               <section id="vision" ref={sectionRef} className="py-24 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden">
                 {/* Ambient background glow */}
-                <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#FF5A36]/5 blur-[140px] pointer-events-none rounded-full -translate-x-1/3 -translate-y-1/3" />
-                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#FF5A36]/4 blur-[120px] pointer-events-none rounded-full translate-x-1/3 translate-y-1/3" />
+                <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#00C2BB]/5 blur-[140px] pointer-events-none rounded-full -translate-x-1/3 -translate-y-1/3" />
+                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#00C2BB]/4 blur-[120px] pointer-events-none rounded-full translate-x-1/3 translate-y-1/3" />
 
                 <div className="max-w-7xl mx-auto relative z-10">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -908,13 +908,13 @@ export default function RedesignedApp() {
                         className="flex items-center gap-2 mb-4"
                       >
                         <motion.span
-                          className="h-[2px] w-8 bg-[#FF5A36] rounded-full inline-block"
+                          className="h-[2px] w-8 bg-[#00C2BB] rounded-full inline-block"
                           initial={{ scaleX: 0 }}
                           animate={isInView ? { scaleX: 1 } : {}}
                           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
                           style={{ transformOrigin: "left" }}
                         />
-                        <span className="text-[#FF5A36] font-mono text-xs uppercase tracking-widest">
+                        <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">
                           // OUR VISION &amp; MISSION
                         </span>
                       </motion.div>
@@ -935,7 +935,7 @@ export default function RedesignedApp() {
                         ))}
                         <span className="block overflow-hidden">
                           <motion.span
-                            className="block text-[#FF5A36]"
+                            className="block text-[#00C2BB]"
                             initial={{ y: "100%", opacity: 0 }}
                             animate={isInView ? { y: "0%", opacity: 1 } : {}}
                             transition={{ duration: 0.65, delay: 0.39, ease: [0.16, 1, 0.3, 1] }}
@@ -967,7 +967,7 @@ export default function RedesignedApp() {
 
                       {/* Animated divider */}
                       <motion.div
-                        className="h-px bg-gradient-to-r from-[#FF5A36]/60 via-white/10 to-transparent mb-6"
+                        className="h-px bg-gradient-to-r from-[#00C2BB]/60 via-white/10 to-transparent mb-6"
                         initial={{ scaleX: 0 }}
                         animate={isInView ? { scaleX: 1 } : {}}
                         transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -985,12 +985,12 @@ export default function RedesignedApp() {
                             transition={{ duration: 0.5, delay: 0.78 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                           >
                             <motion.div
-                              className="w-8 h-8 rounded-lg bg-[#FF5A36]/10 flex items-center justify-center shrink-0 border border-[#FF5A36]/20"
+                              className="w-8 h-8 rounded-lg bg-[#00C2BB]/10 flex items-center justify-center shrink-0 border border-[#00C2BB]/20"
                               initial={{ scale: 0, rotate: -20 }}
                               animate={isInView ? { scale: 1, rotate: 0 } : {}}
                               transition={{ duration: 0.45, delay: 0.85 + i * 0.1, type: "spring", stiffness: 200 }}
                             >
-                              <Check className="w-4 h-4 text-[#FF5A36]" />
+                              <Check className="w-4 h-4 text-[#00C2BB]" />
                             </motion.div>
                             <span className="text-sm font-mono text-white">{item}</span>
                           </motion.div>
@@ -1007,7 +1007,7 @@ export default function RedesignedApp() {
                     >
                       {/* Glowing frame border */}
                       <motion.div
-                        className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#FF5A36]/30 via-transparent to-amber-400/20 blur-sm pointer-events-none"
+                        className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#00C2BB]/30 via-transparent to-cyan-400/20 blur-sm pointer-events-none"
                         animate={{ opacity: [0.4, 0.8, 0.4] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                       />
@@ -1029,12 +1029,12 @@ export default function RedesignedApp() {
                           animate={isInView ? { opacity: 1, y: 0 } : {}}
                           transition={{ duration: 0.55, delay: 1.1 }}
                         >
-                          <span className="h-2 w-2 rounded-full bg-[#FF5A36] animate-pulse shadow-[0_0_8px_#FF5A36]" />
+                          <span className="h-2 w-2 rounded-full bg-[#00C2BB] animate-pulse shadow-[0_0_8px_#00C2BB]" />
                           <span className="text-xs font-mono text-white">Empowering Businesses Since 2019</span>
                         </motion.div>
                       </div>
 
-                      <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-[#FF5A36]/20 blur-3xl pointer-events-none rounded-full" />
+                      <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-[#00C2BB]/20 blur-3xl pointer-events-none rounded-full" />
                     </motion.div>
 
                   </div>
@@ -1081,15 +1081,15 @@ export default function RedesignedApp() {
                   {doubled.map((item, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#111316] border border-white/10 hover:border-[#FF5A36]/60 hover:bg-[#1A1C22] transition-all duration-300 cursor-default group/badge shrink-0"
+                      className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#111316] border border-white/10 hover:border-[#00C2BB]/60 hover:bg-[#1A1C22] transition-all duration-300 cursor-default group/badge shrink-0"
                     >
-                      <span className="text-[#FF5A36] text-sm group-hover/badge:animate-spin" style={{ display: "inline-block" }}>
+                      <span className="text-[#00C2BB] text-sm group-hover/badge:animate-spin" style={{ display: "inline-block" }}>
                         {item.icon}
                       </span>
                       <span className="text-gray-200 font-mono font-bold text-xs tracking-widest whitespace-nowrap group-hover/badge:text-white transition-colors">
                         {item.text}
                       </span>
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A36]/40 group-hover/badge:bg-[#FF5A36] group-hover/badge:shadow-[0_0_8px_#FF5A36] transition-all" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#00C2BB]/40 group-hover/badge:bg-[#00C2BB] group-hover/badge:shadow-[0_0_8px_#00C2BB] transition-all" />
                     </div>
                   ))}
                 </div>
@@ -1113,7 +1113,7 @@ export default function RedesignedApp() {
                   className="inline-flex items-center gap-3"
                 >
                   <motion.span
-                    className="h-px w-12 bg-[#FF5A36]/50"
+                    className="h-px w-12 bg-[#00C2BB]/50"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
@@ -1124,7 +1124,7 @@ export default function RedesignedApp() {
                     POWERING BUSINESSES WITH INDUSTRY-LEADING TECH
                   </span>
                   <motion.span
-                    className="h-px w-12 bg-[#FF5A36]/50"
+                    className="h-px w-12 bg-[#00C2BB]/50"
                     initial={{ scaleX: 0 }}
                     whileInView={{ scaleX: 1 }}
                     viewport={{ once: true }}
@@ -1180,8 +1180,8 @@ export default function RedesignedApp() {
                         animate={headerInView ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 0.5 }}
                       >
-                        <span className="h-px w-6 bg-[#FF5A36]" />
-                        <span className="text-[#FF5A36] font-mono text-xs uppercase tracking-widest">// LATEST INSIGHTS</span>
+                        <span className="h-px w-6 bg-[#00C2BB]" />
+                        <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">// LATEST INSIGHTS</span>
                       </motion.div>
                       <h2 className="text-3xl sm:text-5xl font-black text-white font-mono uppercase leading-tight overflow-hidden">
                         {["Engineering &", "Design"].map((word, wi) => (
@@ -1192,7 +1192,7 @@ export default function RedesignedApp() {
                               animate={headerInView ? { y: "0%" } : {}}
                               transition={{ duration: 0.65, delay: wi * 0.1, ease: [0.16, 1, 0.3, 1] }}
                             >
-                              {word}{wi === 1 && <span className="text-[#FF5A36]"> Blog</span>}
+                              {word}{wi === 1 && <span className="text-[#00C2BB]"> Blog</span>}
                             </motion.span>
                           </span>
                         ))}
@@ -1213,7 +1213,7 @@ export default function RedesignedApp() {
 
                     {/* CARD 1 — Featured large card with diagonal overlay */}
                     <motion.article
-                      className="lg:col-span-5 relative rounded-3xl overflow-hidden group cursor-pointer bg-[#0E0F12] border border-white/10 hover:border-[#FF5A36]/50 shadow-2xl"
+                      className="lg:col-span-5 relative rounded-3xl overflow-hidden group cursor-pointer bg-[#0E0F12] border border-white/10 hover:border-[#00C2BB]/50 shadow-2xl"
                       initial={{ opacity: 0, x: -50, scale: 0.95 }}
                       whileInView={{ opacity: 1, x: 0, scale: 1 }}
                       viewport={{ once: true, margin: "-60px" }}
@@ -1233,7 +1233,7 @@ export default function RedesignedApp() {
                         <div className="absolute inset-0 bg-gradient-to-tl from-black/90 via-black/30 to-transparent" />
                         {/* Category badge */}
                         <motion.span
-                          className="absolute top-5 left-5 bg-[#FF5A36] text-black text-[10px] font-mono font-bold uppercase px-3 py-1.5 rounded-full shadow-[0_0_16px_rgba(255,90,54,0.5)]"
+                          className="absolute top-5 left-5 bg-[#00C2BB] text-black text-[10px] font-mono font-bold uppercase px-3 py-1.5 rounded-full shadow-[0_0_16px_rgba(0,194,187,0.5)]"
                           initial={{ opacity: 0, y: -10 }}
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
@@ -1254,13 +1254,13 @@ export default function RedesignedApp() {
                           <span className="w-1 h-1 rounded-full bg-gray-600" />
                           <span>{BLOG_POSTS[0].date}</span>
                         </div>
-                        <h3 className="text-xl font-black text-white group-hover:text-[#FF5A36] transition-colors duration-300 leading-snug mb-3">
+                        <h3 className="text-xl font-black text-white group-hover:text-[#00C2BB] transition-colors duration-300 leading-snug mb-3">
                           {BLOG_POSTS[0].title}
                         </h3>
                         <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">{BLOG_POSTS[0].desc}</p>
                         <div className="flex items-center justify-between">
                           <motion.button
-                            className="inline-flex items-center gap-2 bg-[#FF5A36]/10 hover:bg-[#FF5A36] text-[#FF5A36] hover:text-black border border-[#FF5A36]/30 font-mono font-bold text-xs px-4 py-2 rounded-lg transition-all duration-300"
+                            className="inline-flex items-center gap-2 bg-[#00C2BB]/10 hover:bg-[#00C2BB] text-[#00C2BB] hover:text-black border border-[#00C2BB]/30 font-mono font-bold text-xs px-4 py-2 rounded-lg transition-all duration-300"
                             whileHover={{ scale: 1.04 }}
                           >
                             <span>Read Article</span>
@@ -1272,7 +1272,7 @@ export default function RedesignedApp() {
 
                       {/* Animated bottom border */}
                       <motion.div
-                        className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-[#FF5A36] to-amber-400"
+                        className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-[#00C2BB] to-cyan-400"
                         initial={{ width: "0%" }}
                         whileInView={{ width: "100%" }}
                         viewport={{ once: true }}
@@ -1285,7 +1285,7 @@ export default function RedesignedApp() {
 
                       {/* CARD 2 — Horizontal split panel */}
                       <motion.article
-                        className="relative flex rounded-2xl overflow-hidden group cursor-pointer border border-white/10 hover:border-[#FF5A36]/50 bg-[#0E0F12] shadow-xl"
+                        className="relative flex rounded-2xl overflow-hidden group cursor-pointer border border-white/10 hover:border-[#00C2BB]/50 bg-[#0E0F12] shadow-xl"
                         initial={{ opacity: 0, x: 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-60px" }}
@@ -1304,7 +1304,7 @@ export default function RedesignedApp() {
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0E0F12]" />
                           {/* Vertical category label */}
                           <div className="absolute bottom-4 left-0 right-0 flex justify-center">
-                            <span className="bg-black/70 backdrop-blur-sm text-[#FF5A36] text-[9px] font-mono uppercase px-2 py-1 rounded border border-[#FF5A36]/30 tracking-widest">
+                            <span className="bg-black/70 backdrop-blur-sm text-[#00C2BB] text-[9px] font-mono uppercase px-2 py-1 rounded border border-[#00C2BB]/30 tracking-widest">
                               {BLOG_POSTS[1].category}
                             </span>
                           </div>
@@ -1319,12 +1319,12 @@ export default function RedesignedApp() {
                             <span className="mx-1 text-gray-700">·</span>
                             <span>{BLOG_POSTS[1].date}</span>
                           </div>
-                          <h3 className="text-base font-bold text-white group-hover:text-[#FF5A36] transition-colors duration-300 leading-snug mb-2">
+                          <h3 className="text-base font-bold text-white group-hover:text-[#00C2BB] transition-colors duration-300 leading-snug mb-2">
                             {BLOG_POSTS[1].title}
                           </h3>
                           <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">{BLOG_POSTS[1].desc}</p>
                           <motion.button
-                            className="self-start inline-flex items-center gap-1.5 text-[#FF5A36] font-mono text-xs font-bold"
+                            className="self-start inline-flex items-center gap-1.5 text-[#00C2BB] font-mono text-xs font-bold"
                             whileHover={{ x: 4 }}
                             transition={{ duration: 0.2 }}
                           >
@@ -1336,7 +1336,7 @@ export default function RedesignedApp() {
 
                       {/* CARD 3 — Terminal / code aesthetic */}
                       <motion.article
-                        className="relative rounded-2xl overflow-hidden group cursor-pointer bg-[#080A0D] border border-white/10 hover:border-[#FF5A36]/50 shadow-xl"
+                        className="relative rounded-2xl overflow-hidden group cursor-pointer bg-[#080A0D] border border-white/10 hover:border-[#00C2BB]/50 shadow-xl"
                         initial={{ opacity: 0, y: 40, scale: 0.96 }}
                         whileInView={{ opacity: 1, y: 0, scale: 1 }}
                         viewport={{ once: true, margin: "-60px" }}
@@ -1345,11 +1345,11 @@ export default function RedesignedApp() {
                       >
                         {/* Terminal header bar */}
                         <div className="bg-[#111316] border-b border-white/10 px-5 py-3 flex items-center gap-2">
-                          <span className="w-3 h-3 rounded-full bg-[#FF5A36]/80" />
+                          <span className="w-3 h-3 rounded-full bg-[#00C2BB]/80" />
                           <span className="w-3 h-3 rounded-full bg-amber-400/60" />
                           <span className="w-3 h-3 rounded-full bg-green-500/60" />
                           <span className="ml-3 text-[10px] font-mono text-gray-500 tracking-widest uppercase">{BLOG_POSTS[2].category}.md</span>
-                          <span className="ml-auto text-[10px] font-mono text-[#FF5A36] bg-[#FF5A36]/10 px-2 py-0.5 rounded border border-[#FF5A36]/20">03 / 03</span>
+                          <span className="ml-auto text-[10px] font-mono text-[#00C2BB] bg-[#00C2BB]/10 px-2 py-0.5 rounded border border-[#00C2BB]/20">03 / 03</span>
                         </div>
 
                         <div className="flex">
@@ -1377,12 +1377,12 @@ export default function RedesignedApp() {
                               <span className="text-gray-700">·</span>
                               <span className="text-amber-400">{BLOG_POSTS[2].readTime}</span>
                             </div>
-                            <h3 className="text-base font-bold text-white group-hover:text-[#FF5A36] transition-colors duration-300 leading-snug mb-2">
+                            <h3 className="text-base font-bold text-white group-hover:text-[#00C2BB] transition-colors duration-300 leading-snug mb-2">
                               {BLOG_POSTS[2].title}
                             </h3>
                             <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">{BLOG_POSTS[2].desc}</p>
                             <motion.button
-                              className="inline-flex items-center gap-2 bg-[#FF5A36]/10 hover:bg-[#FF5A36] text-[#FF5A36] hover:text-black border border-[#FF5A36]/30 font-mono font-bold text-xs px-4 py-2 rounded-lg transition-all duration-300"
+                              className="inline-flex items-center gap-2 bg-[#00C2BB]/10 hover:bg-[#00C2BB] text-[#00C2BB] hover:text-black border border-[#00C2BB]/30 font-mono font-bold text-xs px-4 py-2 rounded-lg transition-all duration-300"
                               whileHover={{ scale: 1.04 }}
                             >
                               <span>$ read --article</span>
@@ -1393,7 +1393,7 @@ export default function RedesignedApp() {
 
                         {/* Scan line effect */}
                         <motion.div
-                          className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#FF5A36]/30 to-transparent pointer-events-none"
+                          className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#00C2BB]/30 to-transparent pointer-events-none"
                           animate={{ top: ["0%", "100%"] }}
                           transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay: 1 }}
                         />
@@ -1411,9 +1411,9 @@ export default function RedesignedApp() {
         {/* ── 9. CTA BANNER ("Are You Ready to Accelerate Your Business?") ─── */}
         <section className="py-20 px-6 lg:px-12 bg-black">
           <div className="max-w-7xl mx-auto">
-            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#180A07] via-[#0E0F14] to-[#1F0D09] border border-[#FF5A36]/40 p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-[0_0_50px_rgba(255,90,54,0.15)]">
+            <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#051A18] via-[#0E0F14] to-[#041D1F] border border-[#00C2BB]/40 p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-[0_0_50px_rgba(0,194,187,0.15)]">
               <div className="max-w-2xl text-center lg:text-left">
-                <span className="text-[#FF5A36] font-mono text-xs uppercase tracking-widest block mb-2">
+                <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest block mb-2">
                 // START YOUR PROJECT TODAY
                 </span>
                 <h2 className="text-3xl sm:text-5xl font-black text-white font-mono uppercase tracking-tight leading-tight mb-4">
@@ -1426,7 +1426,7 @@ export default function RedesignedApp() {
 
               <button
                 onClick={() => handleNavClick('contact')}
-                className="bg-[#FF5A36] hover:bg-[#ff7253] text-black font-extrabold text-base px-9 py-4 rounded-full shadow-[0_0_30px_rgba(255,90,54,0.5)] hover:scale-105 transition-all shrink-0 flex items-center gap-3"
+                className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold text-base px-9 py-4 rounded-full shadow-[0_0_30px_rgba(0,194,187,0.5)] hover:scale-105 transition-all shrink-0 flex items-center gap-3"
               >
                 <span>Get Started Now</span>
                 <ArrowRight className="w-5 h-5" />
@@ -1541,14 +1541,14 @@ export default function RedesignedApp() {
               }
             };
 
-            const inputClass = "w-full bg-[#0E0F12] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF5A36] transition-all duration-300";
+            const inputClass = "w-full bg-[#0E0F12] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#00C2BB] transition-all duration-300";
             const labelClass = "block text-[10px] font-mono text-gray-400 uppercase tracking-wider mb-2";
 
             return (
               <section id="contact" ref={sectionRef} className="py-24 px-6 lg:px-12 bg-[#090A0C] border-t border-white/10 relative overflow-hidden">
                 {/* Background glows */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#FF5A36]/4 blur-[140px] pointer-events-none rounded-full translate-x-1/3 -translate-y-1/3" />
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#FF5A36]/3 blur-[120px] pointer-events-none rounded-full -translate-x-1/3 translate-y-1/3" />
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00C2BB]/4 blur-[140px] pointer-events-none rounded-full translate-x-1/3 -translate-y-1/3" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#00C2BB]/3 blur-[120px] pointer-events-none rounded-full -translate-x-1/3 translate-y-1/3" />
 
                 <div className="max-w-7xl mx-auto relative z-10">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
@@ -1561,8 +1561,8 @@ export default function RedesignedApp() {
                         animate={isInView ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 0.5 }}
                       >
-                        <span className="h-px w-6 bg-[#FF5A36]" />
-                        <span className="text-[#FF5A36] font-mono text-xs uppercase tracking-widest">// GET IN TOUCH</span>
+                        <span className="h-px w-6 bg-[#00C2BB]" />
+                        <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">// GET IN TOUCH</span>
                       </motion.div>
 
                       <h2 className="text-3xl sm:text-5xl font-black text-white font-mono uppercase leading-tight mb-4 overflow-hidden">
@@ -1574,7 +1574,7 @@ export default function RedesignedApp() {
                               animate={isInView ? { y: "0%" } : {}}
                               transition={{ duration: 0.65, delay: 0.1 + li * 0.12, ease: [0.16, 1, 0.3, 1] }}
                             >
-                              {li === 1 ? <><span className="text-[#FF5A36]">{line}</span></> : line}
+                              {li === 1 ? <><span className="text-[#00C2BB]">{line}</span></> : line}
                             </motion.span>
                           </span>
                         ))}
@@ -1603,14 +1603,14 @@ export default function RedesignedApp() {
                           transition={{ duration: 0.5, delay: 0.45 + i * 0.12 }}
                         >
                           <motion.div
-                            className="w-12 h-12 rounded-xl bg-[#FF5A36]/10 border border-[#FF5A36]/20 flex items-center justify-center text-[#FF5A36] shrink-0 group-hover:bg-[#FF5A36] group-hover:text-black transition-all duration-300"
+                            className="w-12 h-12 rounded-xl bg-[#00C2BB]/10 border border-[#00C2BB]/20 flex items-center justify-center text-[#00C2BB] shrink-0 group-hover:bg-[#00C2BB] group-hover:text-black transition-all duration-300"
                             whileHover={{ scale: 1.1, rotate: -5 }}
                           >
                             {item.icon}
                           </motion.div>
                           <div>
                             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">{item.label}</span>
-                            <span className="text-sm font-bold text-white group-hover:text-[#FF5A36] transition-colors">{item.value}</span>
+                            <span className="text-sm font-bold text-white group-hover:text-[#00C2BB] transition-colors">{item.value}</span>
                           </div>
                         </motion.a>
                       ))}
@@ -1624,10 +1624,10 @@ export default function RedesignedApp() {
                         animate={{ y: [0, -6, 0] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                       >
-                        <div className="w-10 h-10 rounded-lg bg-[#FF5A36] flex items-center justify-center text-black font-black text-xl shrink-0 shadow-[0_0_20px_rgba(255,90,54,0.4)]">R</div>
+                        <div className="w-10 h-10 rounded-lg bg-[#00C2BB] flex items-center justify-center text-black font-black text-xl shrink-0 shadow-[0_0_20px_rgba(0,194,187,0.4)]">R</div>
                         <div>
                           <p className="text-white text-sm font-bold font-mono">Average response time</p>
-                          <p className="text-[#FF5A36] text-xs font-mono">Within 24 hours ⚡</p>
+                          <p className="text-[#00C2BB] text-xs font-mono">Within 24 hours ⚡</p>
                         </div>
                         <span className="ml-auto h-2 w-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_#4ade80]" />
                       </motion.div>
@@ -1642,7 +1642,7 @@ export default function RedesignedApp() {
                     >
                       {/* Animated top border */}
                       <motion.div
-                        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#FF5A36] to-amber-400 rounded-t-2xl"
+                        className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#00C2BB] to-cyan-400 rounded-t-2xl"
                         initial={{ width: "0%" }}
                         animate={isInView ? { width: "100%" } : {}}
                         transition={{ duration: 0.9, delay: 0.5 }}
@@ -1659,11 +1659,11 @@ export default function RedesignedApp() {
                             transition={{ duration: 0.4 }}
                           >
                             <motion.div
-                              className="w-20 h-20 bg-[#FF5A36]/15 border border-[#FF5A36]/40 rounded-full flex items-center justify-center mx-auto mb-6"
+                              className="w-20 h-20 bg-[#00C2BB]/15 border border-[#00C2BB]/40 rounded-full flex items-center justify-center mx-auto mb-6"
                               animate={{ scale: [1, 1.08, 1] }}
                               transition={{ duration: 1.5, repeat: Infinity }}
                             >
-                              <CheckCircle className="w-10 h-10 text-[#FF5A36]" />
+                              <CheckCircle className="w-10 h-10 text-[#00C2BB]" />
                             </motion.div>
                             <h3 className="text-2xl font-black text-white font-mono mb-3">Message Sent! 🎉</h3>
                             <p className="text-gray-400 text-sm max-w-xs mx-auto">Thank you for reaching out. We've received your request and will respond within 24 hours.</p>
@@ -1716,7 +1716,7 @@ export default function RedesignedApp() {
                               {verifyStep !== 'verified' && (
                                 <div className="mt-3 p-4 rounded-xl bg-[#111316] border border-white/8">
                                   <div className="flex items-center gap-2 mb-2">
-                                    <ShieldCheck className="w-4 h-4 text-[#FF5A36]" />
+                                    <ShieldCheck className="w-4 h-4 text-[#00C2BB]" />
                                     <span className="text-xs font-mono text-white font-bold">Email Verification Required</span>
                                   </div>
                                   <p className="text-gray-500 text-[11px] leading-relaxed mb-4">
@@ -1728,7 +1728,7 @@ export default function RedesignedApp() {
                                       type="button"
                                       disabled={!isGmail}
                                       onClick={handleSendCode}
-                                      className="w-full py-3 rounded-xl text-xs font-mono font-bold border border-[#FF5A36]/40 text-[#FF5A36] hover:bg-[#FF5A36] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                                      className="w-full py-3 rounded-xl text-xs font-mono font-bold border border-[#00C2BB]/40 text-[#00C2BB] hover:bg-[#00C2BB] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                     >
                                       Send Verification Code
                                     </button>
@@ -1737,7 +1737,7 @@ export default function RedesignedApp() {
                                   {verifyStep === 'sending' && (
                                     <div className="flex items-center justify-center gap-2 py-3 border border-transparent text-xs font-mono text-gray-400">
                                       <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
-                                        <Zap className="w-4 h-4 text-[#FF5A36]" />
+                                        <Zap className="w-4 h-4 text-[#00C2BB]" />
                                       </motion.div>
                                       Sending code...
                                     </div>
@@ -1752,7 +1752,7 @@ export default function RedesignedApp() {
                                         placeholder="Enter 6-digit code"
                                         value={enteredCode}
                                         onChange={e => { setEnteredCode(e.target.value.replace(/\D/g, '')); setCodeError(''); }}
-                                        className="w-full bg-[#18191D] border border-white/10 rounded-xl px-4 py-3 text-sm text-white text-center tracking-widest font-mono focus:outline-none focus:border-[#FF5A36] transition-all"
+                                        className="w-full bg-[#18191D] border border-white/10 rounded-xl px-4 py-3 text-sm text-white text-center tracking-widest font-mono focus:outline-none focus:border-[#00C2BB] transition-all"
                                         disabled={verifyStep === 'verifying'}
                                       />
                                       {codeError && <p className="text-red-400 text-[10px] font-mono">{codeError}</p>}
@@ -1761,7 +1761,7 @@ export default function RedesignedApp() {
                                           type="button"
                                           onClick={handleVerifyCode}
                                           disabled={enteredCode.length !== 6 || verifyStep === 'verifying'}
-                                          className="flex-1 py-3 rounded-xl text-xs font-mono font-bold bg-[#FF5A36] text-black hover:bg-[#ff7253] disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                                          className="flex-1 py-3 rounded-xl text-xs font-mono font-bold bg-[#00C2BB] text-black hover:bg-[#00e5ff] disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                                         >
                                           {verifyStep === 'verifying' ? (
                                             <><Zap className="w-3.5 h-3.5 animate-spin" /> Verifying...</>
@@ -1823,10 +1823,10 @@ export default function RedesignedApp() {
                               disabled={verifyStep !== 'verified' || isSubmitting}
                               className="w-full py-4 rounded-xl text-sm font-extrabold flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                               style={{
-                                background: verifyStep === 'verified' ? '#FF5A36' : '#1a1b1e',
+                                background: verifyStep === 'verified' ? '#00C2BB' : '#1a1b1e',
                                 color: verifyStep === 'verified' ? '#000' : '#666',
                                 border: verifyStep !== 'verified' ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                boxShadow: verifyStep === 'verified' ? '0 0 24px rgba(255,90,54,0.45)' : 'none',
+                                boxShadow: verifyStep === 'verified' ? '0 0 24px rgba(0,194,187,0.45)' : 'none',
                               }}
                               whileHover={verifyStep === 'verified' && !isSubmitting ? { scale: 1.02 } : {}}
                             >
@@ -1881,11 +1881,11 @@ export default function RedesignedApp() {
             return (
               <footer ref={footerRef} className="bg-[#050607] border-t border-white/10 relative overflow-hidden">
                 {/* Subtle background glow */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#FF5A36]/4 blur-[120px] pointer-events-none rounded-full" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#00C2BB]/4 blur-[120px] pointer-events-none rounded-full" />
 
                 {/* Animated top gradient line */}
                 <motion.div
-                  className="h-[2px] bg-gradient-to-r from-transparent via-[#FF5A36] to-transparent"
+                  className="h-[2px] bg-gradient-to-r from-transparent via-[#00C2BB] to-transparent"
                   initial={{ scaleX: 0 }}
                   animate={isInView ? { scaleX: 1 } : {}}
                   transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -1904,11 +1904,11 @@ export default function RedesignedApp() {
                       transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                     >
                       {/* Logo */}
-                      <div className="flex items-center">
+                      <div className="flex items-center overflow-visible py-2">
                         <img
-                          src="/rhynox-logo.svg"
+                          src="/rhynox svg logo.svg"
                           alt="RHYNOX TECHNOLOGIES"
-                          className="h-11 sm:h-12 w-auto object-contain filter drop-shadow-[0_0_16px_rgba(0,194,187,0.35)]"
+                          className="h-36 sm:h-44 md:h-52 w-auto object-contain filter drop-shadow-[0_0_25px_rgba(255,255,255,0.9)] drop-shadow-[0_0_50px_rgba(255,255,255,0.65)] scale-[1.35] origin-left"
                         />
                       </div>
 
@@ -1920,18 +1920,18 @@ export default function RedesignedApp() {
                       {/* Contact info */}
                       <div className="flex flex-col gap-3">
                         <a href="https://maps.google.com/?q=Chennai,India" target="_blank" rel="noreferrer"
-                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#FF5A36] transition-colors text-sm group">
-                          <MapPin className="w-4 h-4 text-[#FF5A36] shrink-0 group-hover:scale-110 transition-transform" />
+                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group">
+                          <MapPin className="w-4 h-4 text-[#00C2BB] shrink-0 group-hover:scale-110 transition-transform" />
                           <span>Chennai, India</span>
                         </a>
                         <a href="mailto:rhynoxtechnologies@gmail.com"
-                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#FF5A36] transition-colors text-sm group">
-                          <Mail className="w-4 h-4 text-[#FF5A36] shrink-0 group-hover:scale-110 transition-transform" />
+                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group">
+                          <Mail className="w-4 h-4 text-[#00C2BB] shrink-0 group-hover:scale-110 transition-transform" />
                           <span>rhynoxtechnologies@gmail.com</span>
                         </a>
                         <a href="tel:+918148311669"
-                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#FF5A36] transition-colors text-sm group">
-                          <Phone className="w-4 h-4 text-[#FF5A36] shrink-0 group-hover:scale-110 transition-transform" />
+                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group">
+                          <Phone className="w-4 h-4 text-[#00C2BB] shrink-0 group-hover:scale-110 transition-transform" />
                           <span>+91 81483 11669</span>
                         </a>
                       </div>
@@ -1957,7 +1957,7 @@ export default function RedesignedApp() {
                             target="_blank"
                             rel="noreferrer"
                             title={s.name}
-                            className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-[#FF5A36] hover:border-[#FF5A36]/50 hover:bg-[#FF5A36]/10 transition-all"
+                            className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-[#00C2BB] hover:border-[#00C2BB]/50 hover:bg-[#00C2BB]/10 transition-all"
                             whileHover={{ y: -3, scale: 1.1 }}
                             transition={{ duration: 0.2 }}
                           >
@@ -1975,7 +1975,7 @@ export default function RedesignedApp() {
                       transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <h4 className="text-white font-mono font-bold text-sm uppercase tracking-widest mb-6 flex items-center gap-2">
-                        <span className="h-px w-4 bg-[#FF5A36]" />
+                        <span className="h-px w-4 bg-[#00C2BB]" />
                         Services
                       </h4>
                       <ul className="flex flex-col gap-3">
@@ -1988,9 +1988,9 @@ export default function RedesignedApp() {
                           >
                             <button
                               onClick={() => handleNavClick('solutions')}
-                              className="text-gray-400 hover:text-[#FF5A36] text-sm transition-colors flex items-center gap-2 group"
+                              className="text-gray-400 hover:text-[#00C2BB] text-sm transition-colors flex items-center gap-2 group"
                             >
-                              <ChevronRight className="w-3 h-3 text-[#FF5A36]/50 group-hover:text-[#FF5A36] group-hover:translate-x-1 transition-all" />
+                              <ChevronRight className="w-3 h-3 text-[#00C2BB]/50 group-hover:text-[#00C2BB] group-hover:translate-x-1 transition-all" />
                               {s}
                             </button>
                           </motion.li>
@@ -2006,7 +2006,7 @@ export default function RedesignedApp() {
                       transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <h4 className="text-white font-mono font-bold text-sm uppercase tracking-widest mb-6 flex items-center gap-2">
-                        <span className="h-px w-4 bg-[#FF5A36]" />
+                        <span className="h-px w-4 bg-[#00C2BB]" />
                         Company
                       </h4>
                       <ul className="flex flex-col gap-3">
@@ -2019,9 +2019,9 @@ export default function RedesignedApp() {
                           >
                             <button
                               onClick={() => handleNavClick(c === "About Us" ? "vision" : c === "Services" ? "solutions" : "contact")}
-                              className="text-gray-400 hover:text-[#FF5A36] text-sm transition-colors flex items-center gap-2 group"
+                              className="text-gray-400 hover:text-[#00C2BB] text-sm transition-colors flex items-center gap-2 group"
                             >
-                              <ChevronRight className="w-3 h-3 text-[#FF5A36]/50 group-hover:text-[#FF5A36] group-hover:translate-x-1 transition-all" />
+                              <ChevronRight className="w-3 h-3 text-[#00C2BB]/50 group-hover:text-[#00C2BB] group-hover:translate-x-1 transition-all" />
                               {c}
                             </button>
                           </motion.li>
@@ -2037,15 +2037,15 @@ export default function RedesignedApp() {
                       transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="h-2 w-2 rounded-full bg-[#FF5A36] animate-pulse shadow-[0_0_8px_#FF5A36]" />
-                        <span className="text-[10px] font-mono text-[#FF5A36] uppercase tracking-widest">Live Support</span>
+                        <span className="h-2 w-2 rounded-full bg-[#00C2BB] animate-pulse shadow-[0_0_8px_#00C2BB]" />
+                        <span className="text-[10px] font-mono text-[#00C2BB] uppercase tracking-widest">Live Support</span>
                       </div>
                       <p className="text-gray-400 text-xs leading-relaxed">
                         Have a project in mind? Our team is ready to help you build it.
                       </p>
                       <motion.button
                         onClick={() => handleNavClick('contact')}
-                        className="mt-2 bg-[#FF5A36] hover:bg-[#ff7253] text-black font-extrabold text-xs px-5 py-3 rounded-xl shadow-[0_0_20px_rgba(255,90,54,0.35)] hover:shadow-[0_0_30px_rgba(255,90,54,0.55)] transition-all flex items-center gap-2 w-fit"
+                        className="mt-2 bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold text-xs px-5 py-3 rounded-xl shadow-[0_0_20px_rgba(0,194,187,0.35)] hover:shadow-[0_0_30px_rgba(0,194,187,0.55)] transition-all flex items-center gap-2 w-fit"
                         whileHover={{ scale: 1.05 }}
                       >
                         <span>Get Started</span>
@@ -2064,13 +2064,13 @@ export default function RedesignedApp() {
                     {trustBadges.map((badge, i) => (
                       <motion.div
                         key={i}
-                        className="flex items-center gap-2.5 bg-white/3 border border-white/8 rounded-xl px-4 py-3 hover:border-[#FF5A36]/40 hover:bg-[#FF5A36]/5 transition-all group"
+                        className="flex items-center gap-2.5 bg-white/3 border border-white/8 rounded-xl px-4 py-3 hover:border-[#00C2BB]/40 hover:bg-[#00C2BB]/5 transition-all group"
                         whileHover={{ scale: 1.03 }}
                         initial={{ opacity: 0, y: 10 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.4, delay: 0.6 + i * 0.08 }}
                       >
-                        <span className="text-[#FF5A36] group-hover:scale-110 transition-transform">{badge.icon}</span>
+                        <span className="text-[#00C2BB] group-hover:scale-110 transition-transform">{badge.icon}</span>
                         <span className="text-gray-300 text-xs font-mono">{badge.label}</span>
                       </motion.div>
                     ))}

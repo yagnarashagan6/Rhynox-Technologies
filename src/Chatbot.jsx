@@ -842,14 +842,14 @@ const Chatbot = ({ openWithPlan }) => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[55] bg-[#FF5A36] hover:bg-[#ff7253] text-black p-3.5 md:p-4 rounded-full shadow-[0_0_25px_rgba(255,90,54,0.45)] hover:shadow-[0_0_35px_rgba(255,90,54,0.65)] transition-all duration-300 flex items-center justify-center"
+            className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[55] bg-[#00C2BB] hover:bg-[#00e5ff] text-black p-3.5 md:p-4 rounded-full shadow-[0_0_25px_rgba(0,194,187,0.45)] hover:shadow-[0_0_35px_rgba(0,194,187,0.65)] transition-all duration-300 flex items-center justify-center"
           >
             <MessageCircle size={26} className="md:w-7 md:h-7 stroke-[2.5]" />
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.5 }}
-              className="absolute -top-1 -right-1 bg-white text-[#FF5A36] text-[11px] w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center font-extrabold shadow-md border border-[#FF5A36]"
+              className="absolute -top-1 -right-1 bg-white text-[#00C2BB] text-[11px] w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center font-extrabold shadow-md border border-[#00C2BB]"
             >
               1
             </motion.span>
@@ -869,10 +869,10 @@ const Chatbot = ({ openWithPlan }) => {
             }}
             exit={{ opacity: 0, y: 100, scale: 0.8 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed bottom-20 md:bottom-6 right-2 md:right-6 left-2 md:left-auto z-[55] md:w-96 bg-[#121316] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden border border-[#FF5A36]/30 max-h-[calc(100vh-9rem)] md:max-h-[600px]"
+            className="fixed bottom-20 md:bottom-6 right-2 md:right-6 left-2 md:left-auto z-[55] md:w-96 bg-[#121316] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden border border-[#00C2BB]/30 max-h-[calc(100vh-9rem)] md:max-h-[600px]"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#FF5A36] to-[#ff7253] p-4 flex items-center justify-between shadow-md">
+            <div className="bg-gradient-to-r from-[#00C2BB] to-[#00e5ff] p-4 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-3">
                 <div className="bg-black/20 p-2 rounded-full backdrop-blur-sm border border-black/10">
                   <Bot size={22} className="text-black" />
@@ -907,15 +907,15 @@ const Chatbot = ({ openWithPlan }) => {
                       <div className={`flex gap-2 max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                           message.sender === 'user' 
-                            ? 'bg-[#FF5A36] text-black font-bold' 
-                            : 'bg-[#1D1F24] border border-[#FF5A36]/40 text-[#FF5A36]'
+                            ? 'bg-[#00C2BB] text-black font-bold' 
+                            : 'bg-[#1D1F24] border border-[#00C2BB]/40 text-[#00C2BB]'
                         }`}>
                           {message.sender === 'user' ? <User size={16} /> : <Bot size={16} />}
                         </div>
                         <div>
                           <div className={`p-3.5 rounded-2xl ${
                             message.sender === 'user'
-                              ? 'bg-[#FF5A36] text-black font-semibold shadow-[0_0_15px_rgba(255,90,54,0.25)]'
+                              ? 'bg-[#00C2BB] text-black font-semibold shadow-[0_0_15px_rgba(0,194,187,0.25)]'
                               : 'bg-[#1D1F24] text-gray-100 border border-white/10'
                           }`}>
                             <p className="text-sm whitespace-pre-line leading-relaxed">{message.text}</p>
@@ -931,7 +931,7 @@ const Chatbot = ({ openWithPlan }) => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 }}
                                         onClick={() => handleServiceSelection(service.name)}
-                                        className="w-full bg-[#16181D] hover:bg-[#1D1F26] p-3.5 rounded-xl text-left transition-all border border-white/10 hover:border-[#FF5A36]/60 shadow-sm relative pr-10"
+                                        className="w-full bg-[#16181D] hover:bg-[#1D1F26] p-3.5 rounded-xl text-left transition-all border border-white/10 hover:border-[#00C2BB]/60 shadow-sm relative pr-10"
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
@@ -942,7 +942,7 @@ const Chatbot = ({ openWithPlan }) => {
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end min-w-[60px]">
-                                                <span className="text-xs text-[#FF5A36] font-extrabold bg-[#FF5A36]/10 px-2 py-1 rounded-md border border-[#FF5A36]/30">{service.price}</span>
+                                                <span className="text-xs text-[#00C2BB] font-extrabold bg-[#00C2BB]/10 px-2 py-1 rounded-md border border-[#00C2BB]/30">{service.price}</span>
                                             </div>
                                         </div>
                                     </motion.button>
@@ -957,7 +957,7 @@ const Chatbot = ({ openWithPlan }) => {
                                                 e.stopPropagation(); // Prevent card click
                                                 setViewingServiceDetail(service);
                                             }}
-                                            className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-[#FF5A36] hover:bg-[#FF5A36]/10 rounded-full transition-colors z-10"
+                                            className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-[#00C2BB] hover:bg-[#00C2BB]/10 rounded-full transition-colors z-10"
                                         >
                                             <Info size={18} />
                                         </motion.button>
@@ -976,8 +976,8 @@ const Chatbot = ({ openWithPlan }) => {
                               >
                                 <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 ${
                                   termsAccepted 
-                                    ? 'bg-[#FF5A36] border-[#FF5A36]' 
-                                    : 'border-gray-600 group-hover:border-[#FF5A36]'
+                                    ? 'bg-[#00C2BB] border-[#00C2BB]' 
+                                    : 'border-gray-600 group-hover:border-[#00C2BB]'
                                 }`}>
                                   {termsAccepted && (
                                     <Check size={14} className="text-black" strokeWidth={3} />
@@ -1006,7 +1006,7 @@ const Chatbot = ({ openWithPlan }) => {
                                       setCurrentFlow(null);
                                     });
                                   }}
-                                  className="w-full bg-[#FF5A36] hover:bg-[#ff7253] text-black font-extrabold py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(255,90,54,0.35)]"
+                                  className="w-full bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(0,194,187,0.35)]"
                                 >
                                   Confirm and Submit Order
                                 </motion.button>
@@ -1044,7 +1044,7 @@ const Chatbot = ({ openWithPlan }) => {
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: index * 0.1 }}
                                   onClick={() => handleSuggestionClick(suggestion)}
-                                  className="text-xs bg-[#1A1C23] hover:bg-[#FF5A36] text-gray-300 hover:text-black font-medium px-3 py-1.5 rounded-full transition-all border border-white/10 hover:border-[#FF5A36]"
+                                  className="text-xs bg-[#1A1C23] hover:bg-[#00C2BB] text-gray-300 hover:text-black font-medium px-3 py-1.5 rounded-full transition-all border border-white/10 hover:border-[#00C2BB]"
                                 >
                                   {suggestion}
                                 </motion.button>
@@ -1063,7 +1063,7 @@ const Chatbot = ({ openWithPlan }) => {
                       animate={{ opacity: 1 }}
                       className="flex gap-2"
                     >
-                      <div className="w-8 h-8 rounded-full bg-[#1D1F24] border border-[#FF5A36]/40 flex items-center justify-center text-[#FF5A36]">
+                      <div className="w-8 h-8 rounded-full bg-[#1D1F24] border border-[#00C2BB]/40 flex items-center justify-center text-[#00C2BB]">
                         <Bot size={16} />
                       </div>
                       <div className="bg-[#1D1F24] p-3 rounded-2xl border border-white/10">
@@ -1071,17 +1071,17 @@ const Chatbot = ({ openWithPlan }) => {
                           <motion.div
                             animate={{ y: [0, -5, 0] }}
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0 }}
-                            className="w-2 h-2 bg-[#FF5A36] rounded-full"
+                            className="w-2 h-2 bg-[#00C2BB] rounded-full"
                           />
                           <motion.div
                             animate={{ y: [0, -5, 0] }}
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }}
-                            className="w-2 h-2 bg-[#FF5A36] rounded-full"
+                            className="w-2 h-2 bg-[#00C2BB] rounded-full"
                           />
                           <motion.div
                             animate={{ y: [0, -5, 0] }}
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }}
-                            className="w-2 h-2 bg-[#FF5A36] rounded-full"
+                            className="w-2 h-2 bg-[#00C2BB] rounded-full"
                           />
                         </div>
                       </div>
@@ -1102,9 +1102,9 @@ const Chatbot = ({ openWithPlan }) => {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
                           onClick={() => handleQuickAction(action.id)}
-                          className="bg-[#16181D] hover:bg-[#FF5A36] p-3 rounded-xl text-left transition-all border border-white/10 hover:border-[#FF5A36] flex items-center gap-3 group"
+                          className="bg-[#16181D] hover:bg-[#00C2BB] p-3 rounded-xl text-left transition-all border border-white/10 hover:border-[#00C2BB] flex items-center gap-3 group"
                         >
-                          <div className="text-[#FF5A36] group-hover:text-black transition-colors">{action.icon}</div>
+                          <div className="text-[#00C2BB] group-hover:text-black transition-colors">{action.icon}</div>
                           <span className="text-sm font-medium text-white group-hover:text-black transition-colors">{action.label}</span>
                         </motion.button>
                       ))}
@@ -1119,7 +1119,7 @@ const Chatbot = ({ openWithPlan }) => {
                   {currentFlow && (
                     <button
                       onClick={handleBackToMain}
-                      className="text-xs text-[#FF5A36] hover:text-[#ff7253] mb-2 flex items-center gap-1 font-mono"
+                      className="text-xs text-[#00C2BB] hover:text-[#00e5ff] mb-2 flex items-center gap-1 font-mono"
                     >
                       <ArrowLeft size={14} />
                       Back to main menu
@@ -1132,14 +1132,14 @@ const Chatbot = ({ openWithPlan }) => {
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
                       placeholder="Type your message..."
-                      className="flex-1 bg-[#1D1F24] text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-[#FF5A36] border border-white/10 text-sm"
+                      className="flex-1 bg-[#1D1F24] text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-[#00C2BB] border border-white/10 text-sm"
                     />
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       type="submit"
                       disabled={inputMessage.trim() === ''}
-                      className="bg-[#FF5A36] hover:bg-[#ff7253] text-black p-2.5 rounded-full transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_12px_rgba(255,90,54,0.3)]"
+                      className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black p-2.5 rounded-full transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_12px_rgba(0,194,187,0.3)]"
                     >
                       <Send size={18} strokeWidth={2.5} />
                     </motion.button>
@@ -1156,14 +1156,14 @@ const Chatbot = ({ openWithPlan }) => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed bottom-24 md:bottom-10 right-4 md:right-8 z-[60] w-[90vw] md:w-80 bg-[#121316] border border-[#FF5A36]/40 rounded-2xl shadow-2xl p-5 overflow-hidden"
+                className="fixed bottom-24 md:bottom-10 right-4 md:right-8 z-[60] w-[90vw] md:w-80 bg-[#121316] border border-[#00C2BB]/40 rounded-2xl shadow-2xl p-5 overflow-hidden"
             >
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
                         <span className="text-3xl">{viewingServiceDetail.icon}</span>
                         <div>
                             <h3 className="font-bold text-lg text-white leading-tight">{viewingServiceDetail.name}</h3>
-                            <span className="text-[#FF5A36] font-extrabold">{viewingServiceDetail.price}</span>
+                            <span className="text-[#00C2BB] font-extrabold">{viewingServiceDetail.price}</span>
                         </div>
                     </div>
                     <button 
@@ -1177,7 +1177,7 @@ const Chatbot = ({ openWithPlan }) => {
                 <div className="space-y-3 mb-5">
                     {viewingServiceDetail.fullDetails.map((detail, idx) => (
                         <div key={idx} className="flex items-start gap-2">
-                            <CheckCircle size={16} className="text-[#FF5A36] mt-0.5 flex-shrink-0" />
+                            <CheckCircle size={16} className="text-[#00C2BB] mt-0.5 flex-shrink-0" />
                             <span className="text-sm text-gray-300 leading-snug">{detail}</span>
                         </div>
                     ))}
@@ -1188,7 +1188,7 @@ const Chatbot = ({ openWithPlan }) => {
                         handleServiceSelection(viewingServiceDetail.name);
                         setViewingServiceDetail(null);
                     }}
-                    className="w-full py-2.5 bg-[#FF5A36] hover:bg-[#ff7253] text-black font-extrabold rounded-xl transition-all shadow-[0_0_20px_rgba(255,90,54,0.35)]"
+                    className="w-full py-2.5 bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold rounded-xl transition-all shadow-[0_0_20px_rgba(0,194,187,0.35)]"
                 >
                     Select This Plan
                 </button>

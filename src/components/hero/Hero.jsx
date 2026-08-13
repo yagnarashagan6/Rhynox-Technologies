@@ -17,9 +17,9 @@ const LogoFloat = () => (
     aria-label="Rhynox Technologies — Home"
   >
     <img
-      src="/rhynox-logo.svg"
+      src="/rhynox svg logo.svg"
       alt="Rhynox Technologies"
-      className="h-10 sm:h-12 md:h-16 lg:h-20 w-auto"
+      className="h-30 sm:h-36 md:h-40 lg:h-46 w-auto scale-110 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] drop-shadow-[0_0_40px_rgba(255,255,255,0.6)]"
       loading="eager"
       decoding="async"
     />
@@ -38,7 +38,7 @@ export default function Hero() {
     <section
       id="home"
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col overflow-hidden snap-start bg-[#030810]"
+      className="relative min-h-screen h-screen flex flex-col overflow-hidden snap-start bg-[#030810]"
       aria-label="Hero section"
     >
       {/* ── Shader3 interactive 3D background ── */}
