@@ -16,22 +16,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Scrollbar ───────────────────────────────────────── */
+/* ── Hide Scrollbar (Right Side) ───────────────────────── */
+html, body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #030810;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #008B86;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #00C2BB;
+  display: none;
+  width: 0px;
+  background: transparent;
 }
 
 /* ── Marquee ─────────────────────────────────────────── */
