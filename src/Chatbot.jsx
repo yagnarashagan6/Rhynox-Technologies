@@ -839,17 +839,17 @@ const Chatbot = ({ openWithPlan }) => {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[55] bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 md:p-4 rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all duration-300"
+            className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-[55] bg-[#00C2BB] hover:bg-[#00e5ff] text-black p-3.5 md:p-4 rounded-full shadow-[0_0_25px_rgba(0,194,187,0.45)] hover:shadow-[0_0_35px_rgba(0,194,187,0.65)] transition-all duration-300 flex items-center justify-center"
           >
-            <MessageCircle size={24} className="md:w-7 md:h-7" />
+            <MessageCircle size={26} className="md:w-7 md:h-7 stroke-[2.5]" />
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.5 }}
-              className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center font-bold"
+              className="absolute -top-1 -right-1 bg-white text-[#00C2BB] text-[11px] w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center font-extrabold shadow-md border border-[#00C2BB]"
             >
               1
             </motion.span>
@@ -869,23 +869,26 @@ const Chatbot = ({ openWithPlan }) => {
             }}
             exit={{ opacity: 0, y: 100, scale: 0.8 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed bottom-20 md:bottom-6 right-2 md:right-6 left-2 md:left-auto z-[55] md:w-96 bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-700 max-h-[calc(100vh-9rem)] md:max-h-[600px]"
+            className="fixed bottom-20 md:bottom-6 right-2 md:right-6 left-2 md:left-auto z-[55] md:w-96 bg-[#121316] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden border border-[#00C2BB]/30 max-h-[calc(100vh-9rem)] md:max-h-[600px]"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex items-center justify-between">
+            <div className="bg-gradient-to-r from-[#00C2BB] to-[#00e5ff] p-4 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-3">
-                <div className="bg-white/20 p-2 rounded-full">
-                  <Bot size={24} className="text-white" />
+                <div className="bg-black/20 p-2 rounded-full backdrop-blur-sm border border-black/10">
+                  <Bot size={22} className="text-black" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">Rhynox Assistant</h3>
-                  <p className="text-xs text-white/80">Online • Ready to help</p>
+                  <h3 className="font-extrabold text-black text-base tracking-tight font-mono">Rhynox Assistant</h3>
+                  <p className="text-xs text-black/80 font-medium flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-950 animate-pulse" />
+                    Online • Ready to help
+                  </p>
                 </div>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-white/80 hover:text-white transition-colors"
+                  className="text-black/80 hover:text-black hover:bg-black/10 p-1.5 rounded-lg transition-colors"
                 >
                   <X size={20} />
                 </button>
@@ -893,7 +896,7 @@ const Chatbot = ({ openWithPlan }) => {
             </div>
 
             {/* Messages */}
-                <div className="h-96 overflow-y-auto p-4 space-y-4 bg-gray-950">
+                <div className="h-96 overflow-y-auto p-4 space-y-4 bg-[#0B0C10]">
                   {messages.map((message) => (
                     <motion.div
                       key={message.id}
@@ -901,21 +904,21 @@ const Chatbot = ({ openWithPlan }) => {
                       animate={{ opacity: 1, y: 0 }}
                       className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className={`flex gap-2 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      <div className={`flex gap-2 max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                           message.sender === 'user' 
-                            ? 'bg-gradient-to-r from-blue-500 to-purple-500' 
-                            : 'bg-gradient-to-r from-purple-500 to-pink-500'
+                            ? 'bg-[#00C2BB] text-black font-bold' 
+                            : 'bg-[#1D1F24] border border-[#00C2BB]/40 text-[#00C2BB]'
                         }`}>
                           {message.sender === 'user' ? <User size={16} /> : <Bot size={16} />}
                         </div>
                         <div>
-                          <div className={`p-3 rounded-2xl ${
+                          <div className={`p-3.5 rounded-2xl ${
                             message.sender === 'user'
-                              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                              : 'bg-gray-800 text-gray-100'
+                              ? 'bg-[#00C2BB] text-black font-semibold shadow-[0_0_15px_rgba(0,194,187,0.25)]'
+                              : 'bg-[#1D1F24] text-gray-100 border border-white/10'
                           }`}>
-                            <p className="text-sm whitespace-pre-line">{message.text}</p>
+                            <p className="text-sm whitespace-pre-line leading-relaxed">{message.text}</p>
                           </div>
                           
                           {/* Service Options */}
@@ -928,18 +931,18 @@ const Chatbot = ({ openWithPlan }) => {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: index * 0.1 }}
                                         onClick={() => handleServiceSelection(service.name)}
-                                        className="w-full bg-gray-800 hover:bg-gray-750 p-4 rounded-xl text-left transition-all border border-gray-700 hover:border-purple-500 shadow-sm relative pr-10"
+                                        className="w-full bg-[#16181D] hover:bg-[#1D1F26] p-3.5 rounded-xl text-left transition-all border border-white/10 hover:border-[#00C2BB]/60 shadow-sm relative pr-10"
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <span className="text-3xl p-2 bg-gray-900/50 rounded-lg">{service.icon}</span>
+                                                <span className="text-2xl p-2 bg-[#0B0C10] rounded-lg border border-white/5">{service.icon}</span>
                                                 <div>
-                                                    <span className="font-bold text-white block">{service.name}</span>
-                                                    <span className="text-[10px] text-gray-400 block mt-1">{service.detail}</span>
+                                                    <span className="font-bold text-white block text-sm">{service.name}</span>
+                                                    <span className="text-[10px] text-gray-400 block mt-0.5">{service.detail}</span>
                                                 </div>
                                             </div>
                                             <div className="flex flex-col items-end min-w-[60px]">
-                                                <span className="text-sm text-purple-400 font-bold bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20">{service.price}</span>
+                                                <span className="text-xs text-[#00C2BB] font-extrabold bg-[#00C2BB]/10 px-2 py-1 rounded-md border border-[#00C2BB]/30">{service.price}</span>
                                             </div>
                                         </div>
                                     </motion.button>
@@ -954,7 +957,7 @@ const Chatbot = ({ openWithPlan }) => {
                                                 e.stopPropagation(); // Prevent card click
                                                 setViewingServiceDetail(service);
                                             }}
-                                            className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-full transition-colors z-10"
+                                            className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-[#00C2BB] hover:bg-[#00C2BB]/10 rounded-full transition-colors z-10"
                                         >
                                             <Info size={18} />
                                         </motion.button>
@@ -973,11 +976,11 @@ const Chatbot = ({ openWithPlan }) => {
                               >
                                 <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 ${
                                   termsAccepted 
-                                    ? 'bg-green-500 border-green-500' 
-                                    : 'border-gray-600 group-hover:border-gray-400'
+                                    ? 'bg-[#00C2BB] border-[#00C2BB]' 
+                                    : 'border-gray-600 group-hover:border-[#00C2BB]'
                                 }`}>
                                   {termsAccepted && (
-                                    <Check size={14} className="text-white" strokeWidth={3} />
+                                    <Check size={14} className="text-black" strokeWidth={3} />
                                   )}
                                 </div>
                                 <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
@@ -1003,7 +1006,7 @@ const Chatbot = ({ openWithPlan }) => {
                                       setCurrentFlow(null);
                                     });
                                   }}
-                                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
+                                  className="w-full bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold py-2.5 rounded-lg transition-all shadow-[0_0_15px_rgba(0,194,187,0.35)]"
                                 >
                                   Confirm and Submit Order
                                 </motion.button>
@@ -1041,7 +1044,7 @@ const Chatbot = ({ openWithPlan }) => {
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: index * 0.1 }}
                                   onClick={() => handleSuggestionClick(suggestion)}
-                                  className="text-xs bg-gray-800 hover:bg-purple-600 text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition-all border border-gray-700 hover:border-purple-500"
+                                  className="text-xs bg-[#1A1C23] hover:bg-[#00C2BB] text-gray-300 hover:text-black font-medium px-3 py-1.5 rounded-full transition-all border border-white/10 hover:border-[#00C2BB]"
                                 >
                                   {suggestion}
                                 </motion.button>
@@ -1060,25 +1063,25 @@ const Chatbot = ({ openWithPlan }) => {
                       animate={{ opacity: 1 }}
                       className="flex gap-2"
                     >
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-[#1D1F24] border border-[#00C2BB]/40 flex items-center justify-center text-[#00C2BB]">
                         <Bot size={16} />
                       </div>
-                      <div className="bg-gray-800 p-3 rounded-2xl">
-                        <div className="flex gap-1">
+                      <div className="bg-[#1D1F24] p-3 rounded-2xl border border-white/10">
+                        <div className="flex gap-1.5">
                           <motion.div
                             animate={{ y: [0, -5, 0] }}
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0 }}
-                            className="w-2 h-2 bg-purple-400 rounded-full"
+                            className="w-2 h-2 bg-[#00C2BB] rounded-full"
                           />
                           <motion.div
                             animate={{ y: [0, -5, 0] }}
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }}
-                            className="w-2 h-2 bg-purple-400 rounded-full"
+                            className="w-2 h-2 bg-[#00C2BB] rounded-full"
                           />
                           <motion.div
                             animate={{ y: [0, -5, 0] }}
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }}
-                            className="w-2 h-2 bg-purple-400 rounded-full"
+                            className="w-2 h-2 bg-[#00C2BB] rounded-full"
                           />
                         </div>
                       </div>
@@ -1099,10 +1102,10 @@ const Chatbot = ({ openWithPlan }) => {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
                           onClick={() => handleQuickAction(action.id)}
-                          className="bg-gradient-to-r from-gray-800 to-gray-700 hover:from-purple-600 hover:to-blue-600 p-3 rounded-xl text-left transition-all border border-gray-700 hover:border-purple-500 flex items-center gap-3"
+                          className="bg-[#16181D] hover:bg-[#00C2BB] p-3 rounded-xl text-left transition-all border border-white/10 hover:border-[#00C2BB] flex items-center gap-3 group"
                         >
-                          <div className="text-purple-400">{action.icon}</div>
-                          <span className="text-sm font-medium text-white">{action.label}</span>
+                          <div className="text-[#00C2BB] group-hover:text-black transition-colors">{action.icon}</div>
+                          <span className="text-sm font-medium text-white group-hover:text-black transition-colors">{action.label}</span>
                         </motion.button>
                       ))}
                     </motion.div>
@@ -1112,11 +1115,11 @@ const Chatbot = ({ openWithPlan }) => {
                 </div>
 
                 {/* Input */}
-                <div className="p-4 bg-gray-900 border-t border-gray-700">
+                <div className="p-4 bg-[#121316] border-t border-white/10">
                   {currentFlow && (
                     <button
                       onClick={handleBackToMain}
-                      className="text-xs text-purple-400 hover:text-purple-300 mb-2 flex items-center gap-1"
+                      className="text-xs text-[#00C2BB] hover:text-[#00e5ff] mb-2 flex items-center gap-1 font-mono"
                     >
                       <ArrowLeft size={14} />
                       Back to main menu
@@ -1129,16 +1132,16 @@ const Chatbot = ({ openWithPlan }) => {
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
                       placeholder="Type your message..."
-                      className="flex-1 bg-gray-800 text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 border border-gray-700"
+                      className="flex-1 bg-[#1D1F24] text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-[#00C2BB] border border-white/10 text-sm"
                     />
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       type="submit"
                       disabled={inputMessage.trim() === ''}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-2 rounded-full hover:shadow-lg hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black p-2.5 rounded-full transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_12px_rgba(0,194,187,0.3)]"
                     >
-                      <Send size={20} />
+                      <Send size={18} strokeWidth={2.5} />
                     </motion.button>
                   </form>
                 </div>
@@ -1153,19 +1156,19 @@ const Chatbot = ({ openWithPlan }) => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="fixed bottom-24 md:bottom-10 right-4 md:right-8 z-[60] w-[90vw] md:w-80 bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl p-5 overflow-hidden"
+                className="fixed bottom-24 md:bottom-10 right-4 md:right-8 z-[60] w-[90vw] md:w-80 bg-[#121316] border border-[#00C2BB]/40 rounded-2xl shadow-2xl p-5 overflow-hidden"
             >
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-center gap-3">
                         <span className="text-3xl">{viewingServiceDetail.icon}</span>
                         <div>
                             <h3 className="font-bold text-lg text-white leading-tight">{viewingServiceDetail.name}</h3>
-                            <span className="text-purple-400 font-bold">{viewingServiceDetail.price}</span>
+                            <span className="text-[#00C2BB] font-extrabold">{viewingServiceDetail.price}</span>
                         </div>
                     </div>
                     <button 
                         onClick={() => setViewingServiceDetail(null)}
-                        className="p-1 bg-gray-800 rounded-full hover:bg-gray-700 text-gray-400 hover:text-white transition-colors"
+                        className="p-1 bg-[#1D1F24] rounded-full hover:bg-[#252830] text-gray-400 hover:text-white transition-colors"
                     >
                         <X size={16} />
                     </button>
@@ -1174,7 +1177,7 @@ const Chatbot = ({ openWithPlan }) => {
                 <div className="space-y-3 mb-5">
                     {viewingServiceDetail.fullDetails.map((detail, idx) => (
                         <div key={idx} className="flex items-start gap-2">
-                            <CheckCircle size={16} className="text-green-500 mt-0.5 flex-shrink-0" />
+                            <CheckCircle size={16} className="text-[#00C2BB] mt-0.5 flex-shrink-0" />
                             <span className="text-sm text-gray-300 leading-snug">{detail}</span>
                         </div>
                     ))}
@@ -1185,7 +1188,7 @@ const Chatbot = ({ openWithPlan }) => {
                         handleServiceSelection(viewingServiceDetail.name);
                         setViewingServiceDetail(null);
                     }}
-                    className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors shadow-lg shadow-blue-900/20"
+                    className="w-full py-2.5 bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold rounded-xl transition-all shadow-[0_0_20px_rgba(0,194,187,0.35)]"
                 >
                     Select This Plan
                 </button>

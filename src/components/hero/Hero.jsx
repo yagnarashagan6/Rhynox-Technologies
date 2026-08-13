@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import BackgroundGlow from './BackgroundGlow';
-import ParticleNetwork from './ParticleNetwork';
 import HeroText from './HeroText';
-import Comet from './Comet';
+import Shader3 from '@/components/ui/shader3';
 
 /* ─── Logo with gentle float ──────────────────────────── */
 const LogoFloat = () => (
@@ -19,9 +17,9 @@ const LogoFloat = () => (
     aria-label="Rhynox Technologies — Home"
   >
     <img
-      src="/rhynox-logo.svg"
+      src="/rhynox svg logo.svg"
       alt="Rhynox Technologies"
-      className="h-10 sm:h-12 md:h-16 lg:h-20 w-auto"
+      className="h-30 sm:h-36 md:h-40 lg:h-46 w-auto scale-110 filter drop-shadow-[0_0_20px_rgba(255,255,255,0.9)] drop-shadow-[0_0_40px_rgba(255,255,255,0.6)]"
       loading="eager"
       decoding="async"
     />
@@ -40,17 +38,11 @@ export default function Hero() {
     <section
       id="home"
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col overflow-hidden snap-start"
+      className="relative min-h-screen h-screen flex flex-col overflow-hidden snap-start bg-[#030810]"
       aria-label="Hero section"
     >
-      {/* ── Layer 0: CSS dark background + orbs ── */}
-      <BackgroundGlow />
-
-      {/* ── Layer 1: Canvas 2D particle network ── */}
-      <ParticleNetwork />
-
-      {/* ── Layer 2: Pure CSS Comet animation ── */}
-      <Comet />
+      {/* ── Shader3 interactive 3D background ── */}
+      <Shader3 color="#3b82f6" />
 
       {/* ── Top bar: Logo only ── */}
       <div
