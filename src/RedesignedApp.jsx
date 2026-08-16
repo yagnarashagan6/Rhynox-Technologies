@@ -1603,10 +1603,8 @@ export default function RedesignedApp() {
                       <motion.div
                         className="mt-10 p-5 rounded-2xl bg-[#111316] border border-white/10 flex items-center gap-4 max-w-sm"
                         initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: 0.7 }}
-                        animate={{ y: [0, -6, 0] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                        animate={isInView ? { opacity: 1, y: [0, -6, 0] } : {}}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
                       >
                         <div className="w-10 h-10 rounded-lg bg-[#00C2BB] flex items-center justify-center text-black font-black text-xl shrink-0 shadow-[0_0_20px_rgba(0,194,187,0.4)]">R</div>
                         <div>
