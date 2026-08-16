@@ -767,16 +767,8 @@ export default function RedesignedApp() {
               ))}
             </nav>
 
-            {/* CTA Buttons (Far Right) */}
+            {/* CTA Button (Far Right) */}
             <div className="hidden md:flex items-center gap-4">
-              <button
-                onClick={() => setShowAdminLogin(true)}
-                className="flex items-center gap-2 text-xs font-mono uppercase text-[#1A1A1A] hover:text-[#00C2BB] px-3 py-2 rounded-lg hover:bg-gray-100 transition-all font-bold"
-              >
-                <User className="w-4 h-4 text-[#00C2BB]" />
-                <span>{isAdminLoggedIn ? "Admin Dashboard" : "Log In"}</span>
-              </button>
-
               <button
                 onClick={() => handleNavClick('contact')}
                 className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold text-sm px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,194,187,0.4)] hover:shadow-[0_0_30px_rgba(0,194,187,0.6)] hover:scale-105 transition-all"
@@ -815,14 +807,6 @@ export default function RedesignedApp() {
                 ))}
 
                 <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
-                  <button
-                    onClick={() => { setMobileMenuOpen(false); setShowAdminLogin(true); }}
-                    className="flex items-center gap-2 text-sm text-gray-300 px-4 py-2 hover:text-[#00C2BB]"
-                  >
-                    <User className="w-4 h-4 text-[#00C2BB]" />
-                    <span>Admin / Client Portal</span>
-                  </button>
-
                   <button
                     onClick={() => handleNavClick('contact')}
                     className="w-full bg-[#00C2BB] text-black font-bold py-3 rounded-xl text-center"

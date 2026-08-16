@@ -24,6 +24,10 @@
     {
       "source": "/api/contact/send",
       "destination": "/api/contact-send.js"
+    },
+    {
+      "source": "/api/chatbot-order",
+      "destination": "/api/chatbot-order.js"
     }
   ]
 }
