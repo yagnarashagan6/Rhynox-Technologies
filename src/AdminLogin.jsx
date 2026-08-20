@@ -6,6 +6,9 @@ const ADMIN_USERS = [
   { username: 'martin', password: 'rhynoxadmins' },
   { username: 'thols', password: 'rhynoxadmins' },
   { username: 'navil', password: 'rhynoxadmins' },
+  { username: 'mosina', password: 'rhynoxadmins' },
+  { username: 'kamini', password: 'rhynoxadmins' },
+  { username: 'johncy', password: 'rhynoxadmins' },
 ];
 
 /**
@@ -19,8 +22,9 @@ const AdminLogin = ({ onSuccess }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const cleanUsername = username.trim().toLowerCase();
     const match = ADMIN_USERS.find(
-      (u) => u.username === username && u.password === password
+      (u) => u.username.toLowerCase() === cleanUsername && u.password === password
     );
     if (match) {
       setError('');
