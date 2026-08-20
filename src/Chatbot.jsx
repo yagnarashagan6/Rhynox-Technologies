@@ -14,7 +14,7 @@ import {
   Info,
   CheckCircle
 } from 'lucide-react';
-import { trackButtonClick } from './utils/analytics.js';
+import { getAnalyticsSessionId, trackButtonClick, trackEvent } from './utils/analytics.js';
 
 const Chatbot = ({ openWithPlan }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -258,6 +258,10 @@ const Chatbot = ({ openWithPlan }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (isOpen) trackEvent('chatbot_open');
+  }, [isOpen]);
 
   // Handle opening chatbot with a specific plan
   useEffect(() => {
@@ -736,7 +740,7 @@ const Chatbot = ({ openWithPlan }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, sessionId: getAnalyticsSessionId(), page: window.location.pathname, messageCount: messages.length }),
       });
 
       if (response.ok) {

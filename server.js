@@ -1,13 +1,13 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
-import nodemailer from 'nodemailer';
-import crypto from 'crypto';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+import crypto from "crypto";
+import { createTransporter } from "./api/mail.js";
 
 // Load environment variables
 dotenv.config();
@@ -20,62 +20,66 @@ app.use(cors());
 app.use(express.json());
 
 // Create uploads directory if it doesn't exist
-const uploadDir = path.join(__dirname, 'uploads');
+const uploadDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
 // Serve uploaded files statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Multer Configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 
-const upload = multer({ 
+const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
     console.log("Multer processing file field:", file.fieldname);
     cb(null, true);
-  }
+  },
 });
 
 // MongoDB Connection
 const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
 
 if (!MONGO_URI) {
-  console.error('ERROR: MONGODB_URI is not defined in environment variables');
+  console.error("ERROR: MONGODB_URI is not defined in environment variables");
   process.exit(1);
 }
 
-mongoose.connect(MONGO_URI, {
-  serverSelectionTimeoutMS: 5000 // Fast fail in 5s if MongoDB Atlas is unreachable/unwhitelisted
-})
-  .then(() => console.log('✅ MongoDB Connected Successfully'))
-  .catch(err => {
-    console.error('❌ MongoDB Connection Error:', err.message);
-    console.error('💡 TIP: If using MongoDB Atlas, check if your current IP address is whitelisted under Network Access in MongoDB Atlas (or add 0.0.0.0/0 for testing).');
+mongoose
+  .connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 5000, // Fast fail in 5s if MongoDB Atlas is unreachable/unwhitelisted
+  })
+  .then(() => console.log("✅ MongoDB Connected Successfully"))
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err.message);
+    console.error(
+      "💡 TIP: If using MongoDB Atlas, check if your current IP address is whitelisted under Network Access in MongoDB Atlas (or add 0.0.0.0/0 for testing).",
+    );
   });
 
-mongoose.connection.on('error', err => {
-  console.error('MongoDB Runtime Error:', err.message);
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB Runtime Error:", err.message);
 });
 
-mongoose.connection.on('disconnected', () => {
-  console.warn('⚠️ MongoDB Disconnected.');
+mongoose.connection.on("disconnected", () => {
+  console.warn("⚠️ MongoDB Disconnected.");
 });
 
 // Middleware to verify database connection before performing Mongoose operations
-app.use('/api', (req, res, next) => {
+app.use("/api", (req, res, next) => {
   if (mongoose.connection.readyState !== 1) {
     return res.status(503).json({
-      error: 'Database connection failed. Please ensure your IP address is whitelisted in MongoDB Atlas (Network Access) and restart server.js.'
+      error:
+        "Database connection failed. Please ensure your IP address is whitelisted in MongoDB Atlas (Network Access) and restart server.js.",
     });
   }
   next();
@@ -96,74 +100,549 @@ const projectSchema = new mongoose.Schema({
   role: String,
   uploadedBy: String,
   challenges: [String],
-  solutions: [String]
+  solutions: [String],
 });
 
-const Project = mongoose.model('Project', projectSchema);
+const Project = mongoose.model("Project", projectSchema);
 
 // Email Verification Schema
 const emailVerificationSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   verificationCode: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now, expires: 600 } // Auto-delete after 10 minutes
+  createdAt: { type: Date, default: Date.now, expires: 600 }, // Auto-delete after 10 minutes
 });
 
-const EmailVerification = mongoose.model('EmailVerification', emailVerificationSchema);
+const EmailVerification = mongoose.model(
+  "EmailVerification",
+  emailVerificationSchema,
+);
 
 // Click Analytics Schema
 const clickAnalyticsSchema = new mongoose.Schema({
   buttonType: { type: String, required: true, unique: true }, // 'whatsapp' or 'mobile'
   count: { type: Number, default: 0 },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
 });
 
-const ClickAnalytics = mongoose.model('ClickAnalytics', clickAnalyticsSchema);
+const ClickAnalytics = mongoose.model("ClickAnalytics", clickAnalyticsSchema);
 
-// Nodemailer Configuration
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_APP_PASSWORD
-    }
-  });
+// Internal CRM models deliberately use separate collections from the public
+// portfolio `projects` collection. Public case studies therefore remain intact.
+const internalProjectSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    type: { type: String, enum: ["client", "internal"], default: "internal" },
+    clientName: String,
+    status: {
+      type: String,
+      enum: ["not_started", "in_progress", "on_hold", "completed", "cancelled"],
+      default: "not_started",
+    },
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high", "urgent"],
+      default: "medium",
+    },
+    progress: { type: Number, min: 0, max: 100, default: 0 },
+    startDate: Date,
+    dueDate: Date,
+    assignedTo: [String],
+    description: String,
+    tags: [String],
+    budget: Number,
+    createdBy: String,
+  },
+  {
+    timestamps: { createdAt: "createdAt", updatedAt: "lastUpdated" },
+    collection: "internal_projects",
+  },
+);
+const InternalProject = mongoose.model(
+  "InternalProject",
+  internalProjectSchema,
+);
+
+const engagementEventSchema = new mongoose.Schema(
+  {
+    sessionId: { type: String, index: true },
+    eventType: {
+      type: String,
+      enum: [
+        "page_view",
+        "contact_form_submit",
+        "chatbot_open",
+        "chatbot_message",
+        "whatsapp_click",
+        "call_click",
+        "social_share",
+        "cta_click",
+      ],
+      required: true,
+      index: true,
+    },
+    page: String,
+    referrer: String,
+    device: String,
+    browser: String,
+    os: String,
+    meta: mongoose.Schema.Types.Mixed,
+    timestamp: { type: Date, default: Date.now, index: true },
+  },
+  { collection: "engagement_events" },
+);
+const EngagementEvent = mongoose.model(
+  "EngagementEvent",
+  engagementEventSchema,
+);
+
+const contactSubmissionSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: String,
+    message: String,
+    source: String,
+    service: String,
+    status: {
+      type: String,
+      enum: ["new", "contacted", "converted", "closed"],
+      default: "new",
+    },
+    notes: [
+      { text: String, author: String, date: { type: Date, default: Date.now } },
+    ],
+  },
+  { timestamps: true, collection: "contact_submissions" },
+);
+const ContactSubmission = mongoose.model(
+  "ContactSubmission",
+  contactSubmissionSchema,
+);
+
+const chatbotSessionSchema = new mongoose.Schema(
+  {
+    sessionId: { type: String, index: true },
+    startedAt: { type: Date, default: Date.now },
+    endedAt: Date,
+    messageCount: { type: Number, default: 0 },
+    leadCaptured: { type: Boolean, default: false },
+    contactInfo: { name: String, email: String, phone: String },
+    transcriptSummary: String,
+  },
+  { timestamps: true, collection: "chatbot_sessions" },
+);
+const ChatbotSession = mongoose.model("ChatbotSession", chatbotSessionSchema);
+
+const ranges = { today: 1, "7d": 7, "30d": 30, "90d": 90 };
+const rangeStart = (range = "30d") => {
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - ((ranges[range] || ranges["30d"]) - 1));
+  return start;
+};
+const analyticsMatch = (range) => ({ timestamp: { $gte: rangeStart(range) } });
+const sourceType = (referrer = "") => {
+  const value = referrer.toLowerCase();
+  if (!value) return "Direct";
+  if (/google|bing|yahoo|duckduckgo/.test(value)) return "Search";
+  if (/facebook|instagram|linkedin|twitter|x\.com|youtube|whatsapp/.test(value))
+    return "Social";
+  return "Referral";
 };
 
 // Click Analytics Routes
-app.post('/api/analytics/click', async (req, res) => {
+app.post("/api/analytics/click", async (req, res) => {
   try {
     const { buttonType } = req.body;
-    if (!['whatsapp', 'mobile'].includes(buttonType)) {
-      return res.status(400).json({ error: 'Invalid button type' });
+    if (!["whatsapp", "mobile"].includes(buttonType)) {
+      return res.status(400).json({ error: "Invalid button type" });
     }
 
     const analytics = await ClickAnalytics.findOneAndUpdate(
       { buttonType },
       { $inc: { count: 1 }, updatedAt: Date.now() },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     );
 
     res.json(analytics);
   } catch (err) {
-    console.error('Error tracking click:', err);
-    res.status(500).json({ error: 'Failed to track click' });
+    console.error("Error tracking click:", err);
+    res.status(500).json({ error: "Failed to track click" });
   }
 });
 
-app.get('/api/analytics/clicks', async (req, res) => {
+app.get("/api/analytics/clicks", async (req, res) => {
   try {
     const analytics = await ClickAnalytics.find();
     res.json(analytics);
   } catch (err) {
-    console.error('Error fetching analytics:', err);
-    res.status(500).json({ error: 'Failed to fetch analytics' });
+    console.error("Error fetching analytics:", err);
+    res.status(500).json({ error: "Failed to fetch analytics" });
+  }
+});
+
+// Internal CRM projects. These routes intentionally do not reuse /api/projects,
+// which remains the public portfolio API.
+app.get("/api/internal-projects", async (req, res) => {
+  try {
+    res.json(await InternalProject.find().sort({ lastUpdated: -1 }));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch internal projects" });
+  }
+});
+
+app.post("/api/internal-projects", async (req, res) => {
+  try {
+    const project = await InternalProject.create(req.body);
+    res.status(201).json(project);
+  } catch (err) {
+    res.status(400).json({ error: err.message || "Failed to create project" });
+  }
+});
+
+app.put("/api/internal-projects/:id", async (req, res) => {
+  try {
+    const project = await InternalProject.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true },
+    );
+    if (!project) return res.status(404).json({ error: "Project not found" });
+    res.json(project);
+  } catch (err) {
+    res.status(400).json({ error: err.message || "Failed to update project" });
+  }
+});
+
+app.delete("/api/internal-projects/:id", async (req, res) => {
+  try {
+    const project = await InternalProject.findByIdAndDelete(req.params.id);
+    if (!project) return res.status(404).json({ error: "Project not found" });
+    res.status(204).end();
+  } catch (err) {
+    res.status(400).json({ error: "Failed to delete project" });
+  }
+});
+
+// Engagement events are safe to call from the public site. The client supplies
+// only anonymous session metadata; no raw IP address is stored.
+app.post("/api/analytics/events", async (req, res) => {
+  try {
+    const { eventType, sessionId, page, referrer, device, browser, os, meta } =
+      req.body;
+    if (
+      ![
+        "page_view",
+        "contact_form_submit",
+        "chatbot_open",
+        "chatbot_message",
+        "whatsapp_click",
+        "call_click",
+        "social_share",
+        "cta_click",
+      ].includes(eventType)
+    ) {
+      return res.status(400).json({ error: "Invalid event type" });
+    }
+    const event = await EngagementEvent.create({
+      eventType,
+      sessionId,
+      page,
+      referrer,
+      device,
+      browser,
+      os,
+      meta,
+    });
+    res.status(201).json(event);
+  } catch (err) {
+    res.status(400).json({ error: "Failed to record event" });
+  }
+});
+
+app.get("/api/analytics/overview", async (req, res) => {
+  try {
+    const match = analyticsMatch(req.query.range);
+    const [
+      events,
+      sessions,
+      contacts,
+      chatbotSessions,
+      ongoingProjects,
+      legacyClicks,
+    ] = await Promise.all([
+      EngagementEvent.find(match).sort({ timestamp: -1 }).limit(10),
+      EngagementEvent.distinct("sessionId", {
+        ...match,
+        eventType: "page_view",
+        sessionId: { $ne: null },
+      }),
+      ContactSubmission.countDocuments({
+        createdAt: { $gte: rangeStart(req.query.range) },
+      }),
+      ChatbotSession.countDocuments({
+        startedAt: { $gte: rangeStart(req.query.range) },
+      }),
+      InternalProject.countDocuments({ status: "in_progress" }),
+      ClickAnalytics.find(),
+    ]);
+    const pageViews = await EngagementEvent.countDocuments({
+      ...match,
+      eventType: "page_view",
+    });
+    const eventClickCounts = await EngagementEvent.aggregate([
+      {
+        $match: {
+          ...match,
+          eventType: { $in: ["whatsapp_click", "call_click"] },
+        },
+      },
+      { $group: { _id: "$eventType", count: { $sum: 1 } } },
+    ]);
+    const legacy = Object.fromEntries(
+      legacyClicks.map(({ buttonType, count }) => [buttonType, count]),
+    );
+    const eventCounts = Object.fromEntries(
+      eventClickCounts.map(({ _id, count }) => [_id, count]),
+    );
+    const totalVisitors = sessions.length || pageViews;
+    res.json({
+      totalVisitors,
+      uniqueVisitors: sessions.length,
+      pageViews,
+      contactSubmissions: contacts,
+      // The legacy counter remains the KPI source while it exists. New events
+      // are also recorded for logs, so adding both would count fresh clicks twice.
+      whatsappClicks: legacy.whatsapp ?? (eventCounts.whatsapp_click || 0),
+      mobileClicks: legacy.mobile ?? (eventCounts.call_click || 0),
+      chatbotSessions,
+      ongoingProjects,
+      conversionRate: totalVisitors
+        ? Number(((contacts / totalVisitors) * 100).toFixed(1))
+        : 0,
+      recentActivity: events,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch analytics overview" });
+  }
+});
+
+app.get("/api/analytics/traffic", async (req, res) => {
+  try {
+    const match = analyticsMatch(req.query.range);
+    const traffic = await EngagementEvent.aggregate([
+      { $match: { ...match, eventType: "page_view" } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+          views: { $sum: 1 },
+          visitors: { $addToSet: "$sessionId" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: "$_id",
+          views: 1,
+          visitors: { $size: "$visitors" },
+        },
+      },
+      { $sort: { date: 1 } },
+    ]);
+    res.json(traffic);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch traffic" });
+  }
+});
+
+app.get("/api/analytics/sources", async (req, res) => {
+  try {
+    const views = await EngagementEvent.find({
+      ...analyticsMatch(req.query.range),
+      eventType: "page_view",
+    })
+      .select("referrer page")
+      .lean();
+    const sources = views.reduce((result, event) => {
+      const category = sourceType(event.referrer);
+      result[category] = (result[category] || 0) + 1;
+      return result;
+    }, {});
+    const domains = views.reduce((result, event) => {
+      if (!event.referrer) return result;
+      try {
+        const domain = new URL(event.referrer).hostname;
+        result[domain] = (result[domain] || 0) + 1;
+      } catch {
+        /* malformed referrer */
+      }
+      return result;
+    }, {});
+    const pages = views.reduce((result, event) => {
+      const page = event.page || "/";
+      result[page] = (result[page] || 0) + 1;
+      return result;
+    }, {});
+    res.json({
+      sources: Object.entries(sources).map(([name, value]) => ({
+        name,
+        value,
+      })),
+      referrers: Object.entries(domains)
+        .map(([domain, visits]) => ({ domain, visits }))
+        .sort((a, b) => b.visits - a.visits)
+        .slice(0, 10),
+      pages: Object.entries(pages)
+        .map(([path, views]) => ({ path, views }))
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 10),
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch traffic sources" });
+  }
+});
+
+app.get("/api/analytics/devices", async (req, res) => {
+  try {
+    const events = await EngagementEvent.find({
+      ...analyticsMatch(req.query.range),
+      eventType: "page_view",
+    })
+      .select("device browser os")
+      .lean();
+    const count = (key) =>
+      Object.entries(
+        events.reduce((all, event) => {
+          const value = event[key] || "Unknown";
+          all[value] = (all[value] || 0) + 1;
+          return all;
+        }, {}),
+      ).map(([name, value]) => ({ name, value }));
+    res.json({
+      devices: count("device"),
+      browsers: count("browser"),
+      operatingSystems: count("os"),
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch devices" });
+  }
+});
+
+app.get("/api/analytics/events", async (req, res) => {
+  try {
+    const limit = Math.min(Number(req.query.limit) || 25, 100);
+    const filter = {};
+    if (req.query.type) filter.eventType = { $in: req.query.type.split(",") };
+    if (req.query.page) filter.page = { $regex: req.query.page, $options: "i" };
+    if (req.query.search)
+      filter.$or = [
+        { sessionId: { $regex: req.query.search, $options: "i" } },
+        { page: { $regex: req.query.search, $options: "i" } },
+      ];
+    if (req.query.cursor)
+      filter.timestamp = { $lt: new Date(req.query.cursor) };
+    if (req.query.range)
+      filter.timestamp = {
+        ...(filter.timestamp || {}),
+        $gte: rangeStart(req.query.range),
+      };
+    const events = await EngagementEvent.find(filter)
+      .sort({ timestamp: -1 })
+      .limit(limit + 1)
+      .lean();
+    const hasMore = events.length > limit;
+    const data = hasMore ? events.slice(0, limit) : events;
+    res.json({
+      events: data,
+      nextCursor: hasMore
+        ? data[data.length - 1].timestamp.toISOString()
+        : null,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch events" });
+  }
+});
+
+app.get("/api/analytics/events/export", async (req, res) => {
+  try {
+    const events = await EngagementEvent.find(analyticsMatch(req.query.range))
+      .sort({ timestamp: -1 })
+      .lean();
+    const quote = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
+    const rows = [
+      "Timestamp,Event Type,Page,Referrer,Session ID,Device",
+      ...events.map((event) =>
+        [
+          event.timestamp.toISOString(),
+          event.eventType,
+          event.page,
+          event.referrer,
+          event.sessionId,
+          event.device,
+        ]
+          .map(quote)
+          .join(","),
+      ),
+    ];
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="activity-logs.csv"',
+    );
+    res.send(rows.join("\n"));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to export events" });
+  }
+});
+
+app.get("/api/leads/contacts", async (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.search)
+      filter.$or = ["name", "email", "message"].map((key) => ({
+        [key]: { $regex: req.query.search, $options: "i" },
+      }));
+    res.json(await ContactSubmission.find(filter).sort({ createdAt: -1 }));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch contacts" });
+  }
+});
+
+app.patch("/api/leads/contacts/:id", async (req, res) => {
+  try {
+    const update = {};
+    if (req.body.status) update.status = req.body.status;
+    if (req.body.note?.text)
+      update.$push = {
+        notes: {
+          text: req.body.note.text,
+          author: req.body.note.author || "Admin",
+        },
+      };
+    const contact = await ContactSubmission.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true, runValidators: true },
+    );
+    if (!contact) return res.status(404).json({ error: "Contact not found" });
+    res.json(contact);
+  } catch (err) {
+    res.status(400).json({ error: "Failed to update contact" });
+  }
+});
+
+app.get("/api/leads/chatbot-sessions", async (req, res) => {
+  try {
+    res.json(await ChatbotSession.find().sort({ startedAt: -1 }));
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch chatbot sessions" });
   }
 });
 
 // Routes - Projects
-app.get('/api/projects', async (req, res) => {
+app.get("/api/projects", async (req, res) => {
   try {
     const projects = await Project.find().sort({ createdAt: -1 });
     res.json(projects);
@@ -172,113 +651,153 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
-app.post('/api/projects', (req, res, next) => {
-  upload.any()(req, res, (err) => {
-    if (err) {
-      if (err instanceof multer.MulterError) {
-        console.error("Multer Error:", err.message, "Field:", err.field);
-        return res.status(500).json({ error: `Multer Error: ${err.message} ${err.field ? `on field ${err.field}` : ''}` });
-      }
-      console.error("Upload Error:", err);
-      return res.status(500).json({ error: err.message });
-    }
-    next();
-  });
-}, async (req, res) => {
-  try {
-    console.log("Creating new project...");
-    const { title, subtitle, category, description, tags, gradient, client, timeline, role, uploadedBy, imageStructure, challenges, solutions } = req.body;
-    
-    let imageUrls = [];
-    if (imageStructure) {
-        try {
-            const structure = JSON.parse(imageStructure);
-            const uploadedFiles = req.files ? req.files.filter(f => f.fieldname === 'images') : [];
-            let fileIndex = 0;
-            structure.forEach(item => {
-                if (item.type === 'url') {
-                    imageUrls.push(item.value);
-                } else if (item.type === 'file' && uploadedFiles[fileIndex]) {
-                    const file = uploadedFiles[fileIndex];
-                    imageUrls.push(`${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
-                    fileIndex++;
-                }
+app.post(
+  "/api/projects",
+  (req, res, next) => {
+    upload.any()(req, res, (err) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          console.error("Multer Error:", err.message, "Field:", err.field);
+          return res
+            .status(500)
+            .json({
+              error: `Multer Error: ${err.message} ${err.field ? `on field ${err.field}` : ""}`,
             });
-        } catch (parseErr) {
-            console.error("Error parsing imageStructure in POST:", parseErr);
-            return res.status(400).json({ error: "Invalid image structure data" });
         }
-    } else {
-        imageUrls = req.files 
-          ? req.files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`)
-          : [];
-    }
-
-    // Parse tags if it's a string
-    let parsedTags = [];
-    if (typeof tags === 'string') {
-        parsedTags = tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
-    } else if (Array.isArray(tags)) {
-        parsedTags = tags;
-    }
-
-    // Parse challenges if it's a string
-    let parsedChallenges = [];
-    if (typeof challenges === 'string') {
-        parsedChallenges = challenges.split(',').map(c => c.trim()).filter(c => c.length > 0);
-    } else if (Array.isArray(challenges)) {
-        parsedChallenges = challenges;
-    }
-
-    // Parse solutions if it's a string
-    let parsedSolutions = [];
-    if (typeof solutions === 'string') {
-        parsedSolutions = solutions.split(',').map(s => s.trim()).filter(s => s.length > 0);
-    } else if (Array.isArray(solutions)) {
-        parsedSolutions = solutions;
-    }
-
-    const newProject = new Project({
-      title,
-      subtitle,
-      category,
-      description,
-      images: imageUrls,
-      tags: parsedTags,
-      gradient,
-      client,
-      timeline,
-      role,
-      uploadedBy,
-      challenges: parsedChallenges,
-      solutions: parsedSolutions
+        console.error("Upload Error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      next();
     });
-    await newProject.save();
-    console.log("New project created successfully.");
-    res.status(201).json(newProject);
-  } catch (err) {
-    console.error("Error saving project:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
+  },
+  async (req, res) => {
+    try {
+      console.log("Creating new project...");
+      const {
+        title,
+        subtitle,
+        category,
+        description,
+        tags,
+        gradient,
+        client,
+        timeline,
+        role,
+        uploadedBy,
+        imageStructure,
+        challenges,
+        solutions,
+      } = req.body;
 
-app.delete('/api/projects/:id', async (req, res) => {
+      let imageUrls = [];
+      if (imageStructure) {
+        try {
+          const structure = JSON.parse(imageStructure);
+          const uploadedFiles = req.files
+            ? req.files.filter((f) => f.fieldname === "images")
+            : [];
+          let fileIndex = 0;
+          structure.forEach((item) => {
+            if (item.type === "url") {
+              imageUrls.push(item.value);
+            } else if (item.type === "file" && uploadedFiles[fileIndex]) {
+              const file = uploadedFiles[fileIndex];
+              imageUrls.push(
+                `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+              );
+              fileIndex++;
+            }
+          });
+        } catch (parseErr) {
+          console.error("Error parsing imageStructure in POST:", parseErr);
+          return res
+            .status(400)
+            .json({ error: "Invalid image structure data" });
+        }
+      } else {
+        imageUrls = req.files
+          ? req.files.map(
+              (file) =>
+                `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+            )
+          : [];
+      }
+
+      // Parse tags if it's a string
+      let parsedTags = [];
+      if (typeof tags === "string") {
+        parsedTags = tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag.length > 0);
+      } else if (Array.isArray(tags)) {
+        parsedTags = tags;
+      }
+
+      // Parse challenges if it's a string
+      let parsedChallenges = [];
+      if (typeof challenges === "string") {
+        parsedChallenges = challenges
+          .split(",")
+          .map((c) => c.trim())
+          .filter((c) => c.length > 0);
+      } else if (Array.isArray(challenges)) {
+        parsedChallenges = challenges;
+      }
+
+      // Parse solutions if it's a string
+      let parsedSolutions = [];
+      if (typeof solutions === "string") {
+        parsedSolutions = solutions
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0);
+      } else if (Array.isArray(solutions)) {
+        parsedSolutions = solutions;
+      }
+
+      const newProject = new Project({
+        title,
+        subtitle,
+        category,
+        description,
+        images: imageUrls,
+        tags: parsedTags,
+        gradient,
+        client,
+        timeline,
+        role,
+        uploadedBy,
+        challenges: parsedChallenges,
+        solutions: parsedSolutions,
+      });
+      await newProject.save();
+      console.log("New project created successfully.");
+      res.status(201).json(newProject);
+    } catch (err) {
+      console.error("Error saving project:", err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+);
+
+app.delete("/api/projects/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deletedProject = await Project.findByIdAndDelete(id);
     if (!deletedProject) {
       return res.status(404).json({ error: "Project not found" });
     }
-    
+
     // Delete all image files associated with the project
     if (deletedProject.images && deletedProject.images.length > 0) {
-        deletedProject.images.forEach(imageUrl => {
-            const imageName = imageUrl.split('/').pop();
-            const imagePath = path.join(__dirname, 'uploads', imageName);
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
-            }
-        });
+      deletedProject.images.forEach((imageUrl) => {
+        const imageName = imageUrl.split("/").pop();
+        const imagePath = path.join(__dirname, "uploads", imageName);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      });
     }
 
     res.json({ message: "Project deleted successfully" });
@@ -288,153 +807,198 @@ app.delete('/api/projects/:id', async (req, res) => {
   }
 });
 
-app.put('/api/projects/:id', (req, res, next) => {
-  upload.any()(req, res, (err) => {
-    if (err) {
-      if (err instanceof multer.MulterError) {
-        console.error("Multer Error:", err.message, "Field:", err.field);
-        return res.status(500).json({ error: `Multer Error: ${err.message} ${err.field ? `on field ${err.field}` : ''}` });
-      }
-      console.error("Upload Error:", err);
-      return res.status(500).json({ error: err.message });
-    }
-    next();
-  });
-}, async (req, res) => {
-  try {
-    const { id } = req.params;
-    console.log(`Updating project ${id}...`);
-    
-    const { title, subtitle, category, description, tags, gradient, client, timeline, role, imageStructure, challenges, solutions } = req.body;
-    
-    const project = await Project.findById(id);
-    if (!project) {
-      return res.status(404).json({ error: "Project not found" });
-    }
-
-    // Update fields
-    project.title = title || project.title;
-    project.subtitle = subtitle || project.subtitle;
-    project.category = category || project.category;
-    project.description = description || project.description;
-    project.gradient = gradient || project.gradient;
-    project.client = client || project.client;
-    project.timeline = timeline || project.timeline;
-    project.role = role || project.role;
-
-    // Update tags
-    if (tags) {
-        if (typeof tags === 'string') {
-            project.tags = tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
-        } else if (Array.isArray(tags)) {
-            project.tags = tags;
-        }
-    }
-
-    // Update challenges
-    if (challenges !== undefined) {
-        if (typeof challenges === 'string') {
-            project.challenges = challenges.split(',').map(c => c.trim()).filter(c => c.length > 0);
-        } else if (Array.isArray(challenges)) {
-            project.challenges = challenges;
-        }
-    }
-
-    // Update solutions
-    if (solutions !== undefined) {
-        if (typeof solutions === 'string') {
-            project.solutions = solutions.split(',').map(s => s.trim()).filter(s => s.length > 0);
-        } else if (Array.isArray(solutions)) {
-            project.solutions = solutions;
-        }
-    }
-
-    // Handle Image Updates
-    if (imageStructure) {
-        try {
-            const structure = JSON.parse(imageStructure);
-            const uploadedFiles = req.files ? req.files.filter(f => f.fieldname === 'images') : [];
-            const newImages = [];
-            let fileIndex = 0;
-
-            structure.forEach(item => {
-                if (item.type === 'url') {
-                    newImages.push(item.value);
-                } else if (item.type === 'file' && uploadedFiles[fileIndex]) {
-                    const file = uploadedFiles[fileIndex];
-                    newImages.push(`${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
-                    fileIndex++;
-                }
+app.put(
+  "/api/projects/:id",
+  (req, res, next) => {
+    upload.any()(req, res, (err) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          console.error("Multer Error:", err.message, "Field:", err.field);
+          return res
+            .status(500)
+            .json({
+              error: `Multer Error: ${err.message} ${err.field ? `on field ${err.field}` : ""}`,
             });
-
-            // Identify images to delete from disk (only if they are local uploads)
-            if (project.images && project.images.length > 0) {
-                const baseUrl = `${req.protocol}://${req.get('host')}/uploads/`;
-                project.images.forEach(oldUrl => {
-                    if (oldUrl.startsWith(baseUrl) && !newImages.includes(oldUrl)) {
-                        const oldImageName = oldUrl.split('/').pop();
-                        const oldImagePath = path.join(__dirname, 'uploads', oldImageName);
-                        if (fs.existsSync(oldImagePath)) {
-                            try {
-                                fs.unlinkSync(oldImagePath);
-                            } catch (unlinkErr) {
-                                console.error(`Failed to delete old image: ${oldImagePath}`, unlinkErr);
-                            }
-                        }
-                    }
-                });
-            }
-
-            project.images = newImages;
-        } catch (parseErr) {
-            console.error("Error parsing imageStructure:", parseErr);
-            return res.status(400).json({ error: "Invalid image structure data" });
         }
-    }
+        console.error("Upload Error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      next();
+    });
+  },
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log(`Updating project ${id}...`);
 
-    await project.save();
-    console.log(`Project ${id} updated successfully.`);
-    res.json(project);
-  } catch (err) {
-    console.error("Error updating project:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
+      const {
+        title,
+        subtitle,
+        category,
+        description,
+        tags,
+        gradient,
+        client,
+        timeline,
+        role,
+        imageStructure,
+        challenges,
+        solutions,
+      } = req.body;
+
+      const project = await Project.findById(id);
+      if (!project) {
+        return res.status(404).json({ error: "Project not found" });
+      }
+
+      // Update fields
+      project.title = title || project.title;
+      project.subtitle = subtitle || project.subtitle;
+      project.category = category || project.category;
+      project.description = description || project.description;
+      project.gradient = gradient || project.gradient;
+      project.client = client || project.client;
+      project.timeline = timeline || project.timeline;
+      project.role = role || project.role;
+
+      // Update tags
+      if (tags) {
+        if (typeof tags === "string") {
+          project.tags = tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag.length > 0);
+        } else if (Array.isArray(tags)) {
+          project.tags = tags;
+        }
+      }
+
+      // Update challenges
+      if (challenges !== undefined) {
+        if (typeof challenges === "string") {
+          project.challenges = challenges
+            .split(",")
+            .map((c) => c.trim())
+            .filter((c) => c.length > 0);
+        } else if (Array.isArray(challenges)) {
+          project.challenges = challenges;
+        }
+      }
+
+      // Update solutions
+      if (solutions !== undefined) {
+        if (typeof solutions === "string") {
+          project.solutions = solutions
+            .split(",")
+            .map((s) => s.trim())
+            .filter((s) => s.length > 0);
+        } else if (Array.isArray(solutions)) {
+          project.solutions = solutions;
+        }
+      }
+
+      // Handle Image Updates
+      if (imageStructure) {
+        try {
+          const structure = JSON.parse(imageStructure);
+          const uploadedFiles = req.files
+            ? req.files.filter((f) => f.fieldname === "images")
+            : [];
+          const newImages = [];
+          let fileIndex = 0;
+
+          structure.forEach((item) => {
+            if (item.type === "url") {
+              newImages.push(item.value);
+            } else if (item.type === "file" && uploadedFiles[fileIndex]) {
+              const file = uploadedFiles[fileIndex];
+              newImages.push(
+                `${req.protocol}://${req.get("host")}/uploads/${file.filename}`,
+              );
+              fileIndex++;
+            }
+          });
+
+          // Identify images to delete from disk (only if they are local uploads)
+          if (project.images && project.images.length > 0) {
+            const baseUrl = `${req.protocol}://${req.get("host")}/uploads/`;
+            project.images.forEach((oldUrl) => {
+              if (oldUrl.startsWith(baseUrl) && !newImages.includes(oldUrl)) {
+                const oldImageName = oldUrl.split("/").pop();
+                const oldImagePath = path.join(
+                  __dirname,
+                  "uploads",
+                  oldImageName,
+                );
+                if (fs.existsSync(oldImagePath)) {
+                  try {
+                    fs.unlinkSync(oldImagePath);
+                  } catch (unlinkErr) {
+                    console.error(
+                      `Failed to delete old image: ${oldImagePath}`,
+                      unlinkErr,
+                    );
+                  }
+                }
+              }
+            });
+          }
+
+          project.images = newImages;
+        } catch (parseErr) {
+          console.error("Error parsing imageStructure:", parseErr);
+          return res
+            .status(400)
+            .json({ error: "Invalid image structure data" });
+        }
+      }
+
+      await project.save();
+      console.log(`Project ${id} updated successfully.`);
+      res.json(project);
+    } catch (err) {
+      console.error("Error updating project:", err);
+      res.status(500).json({ error: err.message });
+    }
+  },
+);
 
 // Email Verification Routes (supports both /api/verify-email/send and /api/verify-email-send)
-app.post(['/api/verify-email/send', '/api/verify-email-send'], async (req, res) => {
-  try {
-    const { email } = req.body;
-    
-    // Validate Gmail format with regex
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    if (!gmailRegex.test(email)) {
-      return res.status(400).json({ 
-        error: 'Invalid Gmail address. Please enter a valid @gmail.com email address.' 
+app.post(
+  ["/api/verify-email/send", "/api/verify-email-send"],
+  async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      // Validate a standard email address format.
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          error: "Invalid email address. Please enter a valid email address.",
+        });
+      }
+
+      // Generate 6-digit verification code
+      const verificationCode = crypto.randomInt(100000, 999999).toString();
+
+      // Delete any existing verification for this email
+      await EmailVerification.deleteMany({ email });
+
+      // Save new verification code
+      const verification = new EmailVerification({
+        email,
+        verificationCode,
+        isVerified: false,
       });
-    }
+      await verification.save();
 
-    // Generate 6-digit verification code
-    const verificationCode = crypto.randomInt(100000, 999999).toString();
-
-    // Delete any existing verification for this email
-    await EmailVerification.deleteMany({ email });
-
-    // Save new verification code
-    const verification = new EmailVerification({
-      email,
-      verificationCode,
-      isVerified: false
-    });
-    await verification.save();
-
-    // Send verification email
-    const transporter = createTransporter();
-    const mailOptions = {
-      from: `"Rhynox Technologies" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: 'Verify Your Email - Rhynox Technologies',
-      html: `
+      // Send verification email
+      const transporter = createTransporter();
+      const mailOptions = {
+        from: `"Rhynox Technologies" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: "Verify Your Email - Rhynox Technologies",
+        html: `
         <!DOCTYPE html>
         <html>
         <head>
@@ -479,86 +1043,91 @@ app.post(['/api/verify-email/send', '/api/verify-email-send'], async (req, res) 
           </div>
         </body>
         </html>
-      `
-    };
+      `,
+      };
 
-    await transporter.sendMail(mailOptions);
-    
-    res.json({ 
-      success: true, 
-      message: 'Verification code sent to your email. Please check your inbox.' 
-    });
-  } catch (err) {
-    console.error('Error sending verification email:', err);
-    res.status(500).json({ 
-      error: 'Failed to send verification email. Please try again.' 
-    });
-  }
-});
+      await transporter.sendMail(mailOptions);
 
-// Verify code (supports both /api/verify-email/confirm and /api/verify-email-confirm)
-app.post(['/api/verify-email/confirm', '/api/verify-email-confirm'], async (req, res) => {
-  try {
-    const { email, code } = req.body;
-    
-    const verification = await EmailVerification.findOne({ 
-      email, 
-      verificationCode: code 
-    });
-
-    if (!verification) {
-      return res.status(400).json({ 
-        error: 'Invalid verification code. Please check and try again.' 
+      res.json({
+        success: true,
+        message:
+          "Verification code sent to your email. Please check your inbox.",
+      });
+    } catch (err) {
+      console.error("Error sending verification email:", err);
+      res.status(500).json({
+        error: "Failed to send verification email. Please try again.",
       });
     }
+  },
+);
 
-    // Mark as verified
-    verification.isVerified = true;
-    await verification.save();
+// Verify code (supports both /api/verify-email/confirm and /api/verify-email-confirm)
+app.post(
+  ["/api/verify-email/confirm", "/api/verify-email-confirm"],
+  async (req, res) => {
+    try {
+      const { email, code } = req.body;
 
-    res.json({ 
-      success: true, 
-      message: 'Email verified successfully!' 
-    });
-  } catch (err) {
-    console.error('Error verifying code:', err);
-    res.status(500).json({ 
-      error: 'Verification failed. Please try again.' 
-    });
-  }
-});
+      const verification = await EmailVerification.findOne({
+        email,
+        verificationCode: code,
+      });
+
+      if (!verification) {
+        return res.status(400).json({
+          error: "Invalid verification code. Please check and try again.",
+        });
+      }
+
+      // Mark as verified
+      verification.isVerified = true;
+      await verification.save();
+
+      res.json({
+        success: true,
+        message: "Email verified successfully!",
+      });
+    } catch (err) {
+      console.error("Error verifying code:", err);
+      res.status(500).json({
+        error: "Verification failed. Please try again.",
+      });
+    }
+  },
+);
 
 // Contact Form Submission (supports both /api/contact/send and /api/contact-send)
-app.post(['/api/contact/send', '/api/contact-send'], async (req, res) => {
+app.post(["/api/contact/send", "/api/contact-send"], async (req, res) => {
   try {
     const { name, email, service, message } = req.body;
-    
+
     // Validate required fields
     if (!name || !email || !service || !message) {
-      return res.status(400).json({ 
-        error: 'All fields are required.' 
+      return res.status(400).json({
+        error: "All fields are required.",
       });
     }
 
     // Verify that the email was verified
-    const verification = await EmailVerification.findOne({ 
-      email, 
-      isVerified: true 
+    const verification = await EmailVerification.findOne({
+      email,
+      isVerified: true,
     });
 
     if (!verification) {
-      return res.status(400).json({ 
-        error: 'Email not verified. Please verify your email first.' 
+      return res.status(400).json({
+        error: "Email not verified. Please verify your email first.",
       });
     }
 
     // Send email to Rhynox Technologies
     const transporter = createTransporter();
-    
+
     // Email to Rhynox Technologies
     const mailToRhynox = {
       from: `"Rhynox Technologies Contact Form" <${process.env.EMAIL_USER}>`,
-      to: 'rhynoxtechnologies@gmail.com, yaknarashagan2@gmail.com',
+      to: "contact@rhynoxtechnologies.dev",
       subject: `New Quote Request: ${service} from ${name}`,
       html: `
         <!DOCTYPE html>
@@ -617,7 +1186,7 @@ app.post(['/api/contact/send', '/api/contact-send'], async (req, res) => {
           </div>
         </body>
         </html>
-      `
+      `,
     };
 
     const mailToClient = {
@@ -658,7 +1227,7 @@ app.post(['/api/contact/send', '/api/contact-send'], async (req, res) => {
               
               <div style="background: #f0f4ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
                 <h3 style="color: #3b82f6; margin-top: 0;">📞 Contact Us</h3>
-                <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:rhynoxtechnologies@gmail.com" style="color: #3b82f6; text-decoration: none;">rhynoxtechnologies@gmail.com</a></p>
+                <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:contact@rhynoxtechnologies.dev" style="color: #3b82f6; text-decoration: none;">contact@rhynoxtechnologies.dev</a></p>
                 <p style="margin: 8px 0;"><strong>Phone:</strong> <a href="tel:+918148311669" style="color: #3b82f6; text-decoration: none;">+91 81483 11669</a></p>
                 <p style="margin: 8px 0;"><strong>Website:</strong> <a href="https://rhynoxtechnologies.dev" style="color: #3b82f6; text-decoration: none;">rhynoxtechnologies.dev</a></p>
               </div>
@@ -670,55 +1239,75 @@ app.post(['/api/contact/send', '/api/contact-send'], async (req, res) => {
           </div>
         </body>
         </html>
-      `
+      `,
     };
 
     await transporter.sendMail(mailToRhynox);
     await transporter.sendMail(mailToClient);
-    
+
+    await Promise.all([
+      ContactSubmission.create({
+        name,
+        email,
+        message,
+        service,
+        source: req.get("referer") || "Website contact form",
+      }),
+      EngagementEvent.create({
+        eventType: "contact_form_submit",
+        sessionId: req.body.sessionId,
+        page: req.body.page || "/contact",
+        referrer: req.get("referer") || "",
+        meta: { service },
+      }),
+    ]);
+
     // Clean up verification record after successful submission
     await EmailVerification.deleteOne({ email });
-    
-    res.json({ 
-      success: true, 
-      message: 'Your message has been sent successfully! We will contact you shortly.' 
+
+    res.json({
+      success: true,
+      message:
+        "Your message has been sent successfully! We will contact you shortly.",
     });
   } catch (err) {
-    console.error('Error sending contact email:', err);
-    res.status(500).json({ 
-      error: 'Failed to send message. Please try again.' 
+    console.error("Error sending contact email:", err);
+    res.status(500).json({
+      error: "Failed to send message. Please try again.",
     });
   }
 });
 
 // Chatbot Order Submission
-app.post('/api/chatbot-order', async (req, res) => {
+app.post("/api/chatbot-order", async (req, res) => {
   try {
     const { service, name, email, phone, details } = req.body;
 
     // Validate required fields
     if (!service || !name || !email || !phone) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' });
+      return res.status(400).json({ error: "Invalid email format" });
     }
 
     // Generate order ID
     const orderId = `RHX-${Date.now().toString().slice(-8)}`;
-    const orderDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    const orderDate = new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+    });
 
     const transporter = createTransporter();
 
     // Email to Admin/Company (Rhynox)
     const adminMailOptions = {
-        from: `"Rhynox Chatbot Order" <${process.env.EMAIL_USER}>`,
-        to: 'rhynoxtechnologies@gmail.com, yaknarashagan2@gmail.com', // Assuming this is the admin email
-        subject: `🚀 New Order from Chatbot - ${service}`,
-        html: `
+      from: `"Rhynox Chatbot Order" <${process.env.EMAIL_USER}>`,
+      to: "contact@rhynoxtechnologies.dev",
+      subject: `🚀 New Order from Chatbot - ${service}`,
+      html: `
           <!DOCTYPE html>
           <html>
           <head>
@@ -763,7 +1352,7 @@ app.post('/api/chatbot-order', async (req, res) => {
                   </div>
                   <div class="detail-row">
                     <div class="detail-label">📝 Details:</div>
-                    <div class="detail-value">${details || 'No additional details provided'}</div>
+                    <div class="detail-value">${details || "No additional details provided"}</div>
                   </div>
                   <div class="detail-row">
                     <div class="detail-label">🕐 Date:</div>
@@ -787,10 +1376,10 @@ app.post('/api/chatbot-order', async (req, res) => {
 
     // Email to Customer
     const customerMailOptions = {
-        from: `"Rhynox Technologies" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: `Order Confirmation - ${service} | Rhynox`,
-        html: `
+      from: `"Rhynox Technologies" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: `Order Confirmation - ${service} | Rhynox`,
+      html: `
           <!DOCTYPE html>
           <html>
           <head>
@@ -823,7 +1412,7 @@ app.post('/api/chatbot-order', async (req, res) => {
                   <h3 style="color: #667eea; margin-top: 0;">📦 Your Order Summary</h3>
                   <p><strong>Service:</strong> ${service}</p>
                   <p><strong>Order Date:</strong> ${orderDate}</p>
-                  ${details ? `<p><strong>Project Details:</strong> ${details}</p>` : ''}
+                  ${details ? `<p><strong>Project Details:</strong> ${details}</p>` : ""}
                 </div>
   
                 <div class="next-steps">
@@ -853,7 +1442,7 @@ app.post('/api/chatbot-order', async (req, res) => {
   
                 <div class="contact-info">
                   <h3 style="color: #667eea; margin-top: 0;">📞 Need Immediate Assistance?</h3>
-                  <p><strong>Email:</strong> <a href="mailto:rhynoxtechnologies@gmail.com" style="color: #667eea; text-decoration: none;">rhynoxtechnologies@gmail.com</a></p>
+                  <p><strong>Email:</strong> <a href="mailto:contact@rhynoxtechnologies.dev" style="color: #667eea; text-decoration: none;">contact@rhynoxtechnologies.dev</a></p>
                   <p><strong>Phone:</strong> <a href="tel:+918148311669" style="color: #667eea; text-decoration: none;">+91 81483 11669</a></p>
                   <p><strong>Website:</strong> <a href="https://rhynoxtechnologies.dev" style="color: #667eea; text-decoration: none;">rhynoxtechnologies.dev</a></p>
                   <p style="margin-bottom: 0;"><strong>Business Hours:</strong> Mon-Sat, 9 AM - 7 PM IST</p>
@@ -877,16 +1466,36 @@ app.post('/api/chatbot-order', async (req, res) => {
     await transporter.sendMail(adminMailOptions);
     await transporter.sendMail(customerMailOptions);
 
+    await Promise.all([
+      ChatbotSession.create({
+        sessionId: req.body.sessionId,
+        startedAt: new Date(),
+        endedAt: new Date(),
+        messageCount: req.body.messageCount || 0,
+        leadCaptured: true,
+        contactInfo: { name, email, phone },
+        transcriptSummary: details
+          ? `${service}: ${details}`
+          : `Order request for ${service}`,
+      }),
+      EngagementEvent.create({
+        eventType: "chatbot_message",
+        sessionId: req.body.sessionId,
+        page: req.body.page || "/",
+        meta: { service, leadCaptured: true },
+      }),
+    ]);
+
     res.json({
-        success: true,
-        message: 'Order placed successfully',
-        orderId,
+      success: true,
+      message: "Order placed successfully",
+      orderId,
     });
   } catch (err) {
-    console.error('Chatbot order error:', err);
-    res.status(500).json({ 
-      error: 'Failed to process order',
-      details: err.message 
+    console.error("Chatbot order error:", err);
+    res.status(500).json({
+      error: "Failed to process order",
+      details: err.message,
     });
   }
 });

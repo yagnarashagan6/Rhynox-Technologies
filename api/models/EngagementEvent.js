@@ -1,0 +1,33 @@
+import mongoose from "mongoose";
+
+const engagementEventSchema = new mongoose.Schema(
+  {
+    sessionId: { type: String, index: true },
+    eventType: {
+      type: String,
+      enum: [
+        "page_view",
+        "contact_form_submit",
+        "chatbot_open",
+        "chatbot_message",
+        "whatsapp_click",
+        "call_click",
+        "social_share",
+        "cta_click",
+      ],
+      required: true,
+      index: true,
+    },
+    page: String,
+    referrer: String,
+    device: String,
+    browser: String,
+    os: String,
+    meta: mongoose.Schema.Types.Mixed,
+    timestamp: { type: Date, default: Date.now, index: true },
+  },
+  { collection: "engagement_events" },
+);
+
+export default mongoose.models.EngagementEvent ||
+  mongoose.model("EngagementEvent", engagementEventSchema);

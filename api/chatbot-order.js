@@ -1,71 +1,65 @@
-import nodemailer from 'nodemailer';
+import connectDB from "./db.js";
+import ChatbotSession from "./models/ChatbotSession.js";
+import { createTransporter } from "./mail.js";
 
 export default async function handler(req, res) {
   // Enable CORS
   const allowedOrigins = [
-    'https://www.rhynoxtechnologies.dev',
-    'https://rhynoxtechnologies.dev',
-    'https://rhynox-technologies.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
+    "https://www.rhynoxtechnologies.dev",
+    "https://rhynoxtechnologies.dev",
+    "https://rhynox-technologies.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
   ];
-  
+
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin) || !origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
   }
-  
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST");
   res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
   );
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
+    await connectDB();
     const { service, name, email, phone, details } = req.body;
 
     // Validate required fields
     if (!service || !name || !email || !phone) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' });
+      return res.status(400).json({ error: "Invalid email format" });
     }
 
-    // Create transporter with SMTP settings
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
-        throw new Error('Email configuration missing');
-    }
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_APP_PASSWORD,
-      },
-    });
+    const transporter = createTransporter();
 
     // Generate order ID
     const orderId = `RHX-${Date.now().toString().slice(-8)}`;
-    const orderDate = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+    const orderDate = new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+    });
 
     // Email to admin
     const adminMailOptions = {
       from: `"Rhynox Chatbot Order" <${process.env.EMAIL_USER}>`,
-      to: 'rhynoxtechnologies@gmail.com, yaknarashagan2@gmail.com',
+      to: "contact@rhynoxtechnologies.dev",
       subject: `🚀 New Order from Chatbot - ${service}`,
       html: `
         <!DOCTYPE html>
@@ -112,7 +106,7 @@ export default async function handler(req, res) {
                 </div>
                 <div class="detail-row">
                   <div class="detail-label">📝 Details:</div>
-                  <div class="detail-value">${details || 'No additional details provided'}</div>
+                  <div class="detail-value">${details || "No additional details provided"}</div>
                 </div>
                 <div class="detail-row">
                   <div class="detail-label">🕐 Date:</div>
@@ -172,7 +166,7 @@ export default async function handler(req, res) {
                 <h3 style="color: #667eea; margin-top: 0;">📦 Your Order Summary</h3>
                 <p><strong>Service:</strong> ${service}</p>
                 <p><strong>Order Date:</strong> ${orderDate}</p>
-                ${details ? `<p><strong>Project Details:</strong> ${details}</p>` : ''}
+                ${details ? `<p><strong>Project Details:</strong> ${details}</p>` : ""}
               </div>
 
               <div class="next-steps">
@@ -202,7 +196,7 @@ export default async function handler(req, res) {
 
               <div class="contact-info">
                 <h3 style="color: #667eea; margin-top: 0;">📞 Need Immediate Assistance?</h3>
-                <p><strong>Email:</strong> <a href="mailto:rhynoxtechnologies@gmail.com" style="color: #667eea; text-decoration: none;">rhynoxtechnologies@gmail.com</a></p>
+                <p><strong>Email:</strong> <a href="mailto:contact@rhynoxtechnologies.dev" style="color: #667eea; text-decoration: none;">contact@rhynoxtechnologies.dev</a></p>
                 <p><strong>Phone:</strong> +91-XXXXXXXXXX</p>
                 <p><strong>Website:</strong> <a href="https://rhynoxtechnologies.dev" style="color: #667eea; text-decoration: none;">rhynoxtechnologies.dev</a></p>
                 <p style="margin-bottom: 0;"><strong>Business Hours:</strong> Mon-Sat, 9 AM - 7 PM IST</p>
@@ -226,18 +220,25 @@ export default async function handler(req, res) {
     await transporter.sendMail(adminMailOptions);
     await transporter.sendMail(customerMailOptions);
 
+    await ChatbotSession.create({
+      sessionId: orderId,
+      messageCount: 1,
+      leadCaptured: true,
+      contactInfo: { name, email, phone },
+      transcriptSummary: `${service}: ${details || "No additional details provided"}`,
+    });
+
     // Return success response
     return res.status(200).json({
       success: true,
-      message: 'Order placed successfully',
+      message: "Order placed successfully",
       orderId,
     });
-
   } catch (error) {
-    console.error('Chatbot order error:', error);
-    return res.status(500).json({ 
-      error: 'Failed to process order',
-      details: error.message 
+    console.error("Chatbot order error:", error);
+    return res.status(500).json({
+      error: "Failed to process order",
+      details: error.message,
     });
   }
 }

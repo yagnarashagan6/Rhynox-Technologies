@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -13,14 +14,6 @@
     "skipLibCheck": true,
     "types": []
   },
-  "include": [
-    "src/**/*",
-    "server.js",
-    "api/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build"
-  ]
+  "include": ["src/**/*", "server.js", "api/**/*"],
+  "exclude": ["node_modules", "dist", "build"]
 }

@@ -1,86 +1,77 @@
-import nodemailer from 'nodemailer';
-import connectDB from './db.js';
-import EmailVerification from './models/EmailVerification.js';
-
-const createTransporter = () => {
-  // Validate environment variables
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
-    throw new Error('Email configuration missing. Please set EMAIL_USER and EMAIL_APP_PASSWORD environment variables.');
-  }
-
-  // Create transporter with nodemailer v6.9.8
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_APP_PASSWORD
-    }
-  });
-
-  return transporter;
-};
+import connectDB from "./db.js";
+import EmailVerification from "./models/EmailVerification.js";
+import ContactSubmission from "./models/ContactSubmission.js";
+import { createTransporter } from "./mail.js";
 
 export default async function handler(req, res) {
   // Enable CORS
   const allowedOrigins = [
-    'https://www.rhynoxtechnologies.dev',
-    'https://rhynoxtechnologies.dev',
-    'https://rhynox-technologies.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
+    "https://www.rhynoxtechnologies.dev",
+    "https://rhynoxtechnologies.dev",
+    "https://rhynox-technologies.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
   ];
-  
+
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin) || !origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
   }
-  
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST");
   res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
   );
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.status(200).end();
     return;
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     await connectDB();
 
     const { name, email, service, message } = req.body;
-    
+
     // Validate required fields
     if (!name || !email || !service || !message) {
-      return res.status(400).json({ 
-        error: 'All fields are required.' 
+      return res.status(400).json({
+        error: "All fields are required.",
       });
     }
 
     // Verify that the email was verified
-    const verification = await EmailVerification.findOne({ 
-      email, 
-      isVerified: true 
+    const verification = await EmailVerification.findOne({
+      email,
+      isVerified: true,
     });
 
     if (!verification) {
-      return res.status(400).json({ 
-        error: 'Email not verified. Please verify your email first.' 
+      return res.status(400).json({
+        error: "Email not verified. Please verify your email first.",
       });
     }
 
+    await ContactSubmission.create({
+      name,
+      email,
+      service,
+      message,
+      source: "contact_form",
+    });
+
     // Send email to Rhynox Technologies
     const transporter = createTransporter();
-    
+
     const mailToRhynox = {
       from: `"Rhynox Technologies Contact Form" <${process.env.EMAIL_USER}>`,
-      to: 'rhynoxtechnologies@gmail.com, yaknarashagan2@gmail.com',
+      to: "contact@rhynoxtechnologies.dev",
       subject: `New Quote Request: ${service} from ${name}`,
       html: `
         <!DOCTYPE html>
@@ -139,7 +130,7 @@ export default async function handler(req, res) {
           </div>
         </body>
         </html>
-      `
+      `,
     };
 
     const mailToClient = {
@@ -180,7 +171,7 @@ export default async function handler(req, res) {
               
               <div style="background: #f0f4ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
                 <h3 style="color: #3b82f6; margin-top: 0;">📞 Contact Us</h3>
-                <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:rhynoxtechnologies@gmail.com" style="color: #3b82f6; text-decoration: none;">rhynoxtechnologies@gmail.com</a></p>
+                <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:contact@rhynoxtechnologies.dev" style="color: #3b82f6; text-decoration: none;">contact@rhynoxtechnologies.dev</a></p>
                 <p style="margin: 8px 0;"><strong>Phone:</strong> +91-XXXXXXXXXX</p>
                 <p style="margin: 8px 0;"><strong>Website:</strong> <a href="https://rhynoxtechnologies.dev" style="color: #3b82f6; text-decoration: none;">rhynoxtechnologies.dev</a></p>
               </div>
@@ -192,38 +183,41 @@ export default async function handler(req, res) {
           </div>
         </body>
         </html>
-      `
+      `,
     };
 
     await transporter.sendMail(mailToRhynox);
     await transporter.sendMail(mailToClient);
-    
+
     // Clean up verification record after successful submission
     await EmailVerification.deleteOne({ email });
-    
-    res.json({ 
-      success: true, 
-      message: 'Your message has been sent successfully! We will contact you shortly.' 
+
+    res.json({
+      success: true,
+      message:
+        "Your message has been sent successfully! We will contact you shortly.",
     });
   } catch (err) {
-    console.error('Error sending contact email:', err);
-    console.error('Error details:', {
+    console.error("Error sending contact email:", err);
+    console.error("Error details:", {
       message: err.message,
       stack: err.stack,
-      name: err.name
+      name: err.name,
     });
-    
+
     // Provide more specific error message
-    let errorMessage = 'Failed to send message. Please try again.';
-    if (err.message && err.message.includes('Email configuration')) {
-      errorMessage = 'Email service is not configured properly. Please contact support.';
-    } else if (err.message && err.message.includes('createTransport')) {
-      errorMessage = 'Email service initialization failed. Please contact support.';
+    let errorMessage = "Failed to send message. Please try again.";
+    if (err.message && err.message.includes("Email configuration")) {
+      errorMessage =
+        "Email service is not configured properly. Please contact support.";
+    } else if (err.message && err.message.includes("createTransport")) {
+      errorMessage =
+        "Email service initialization failed. Please contact support.";
     }
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: errorMessage,
-      details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      details: process.env.NODE_ENV === "development" ? err.message : undefined,
     });
   }
 }

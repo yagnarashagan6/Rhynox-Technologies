@@ -20,6 +20,17 @@ export const API_ENDPOINTS = {
   PROJECT_BY_ID: (id) => `${API_BASE_URL}/projects/${id}`,
   ANALYTICS_CLICK: `${API_BASE_URL}/analytics/click`,
   ANALYTICS_CLICKS: `${API_BASE_URL}/analytics/clicks`,
+  ANALYTICS_OVERVIEW: (range = '30d') => `${API_BASE_URL}/analytics/overview?range=${range}`,
+  ANALYTICS_TRAFFIC: (range = '30d') => `${API_BASE_URL}/analytics/traffic?range=${range}`,
+  ANALYTICS_SOURCES: (range = '30d') => `${API_BASE_URL}/analytics/sources?range=${range}`,
+  ANALYTICS_DEVICES: (range = '30d') => `${API_BASE_URL}/analytics/devices?range=${range}`,
+  ANALYTICS_EVENTS: `${API_BASE_URL}/analytics/events`,
+  ANALYTICS_EVENTS_EXPORT: (range = '30d') => `${API_BASE_URL}/analytics/events/export?format=csv&range=${range}`,
+  INTERNAL_PROJECTS: `${API_BASE_URL}/internal-projects`,
+  INTERNAL_PROJECT_BY_ID: (id) => `${API_BASE_URL}/internal-projects/${id}`,
+  LEAD_CONTACTS: `${API_BASE_URL}/leads/contacts`,
+  LEAD_CONTACT_BY_ID: (id) => `${API_BASE_URL}/leads/contacts/${id}`,
+  CHATBOT_SESSIONS: `${API_BASE_URL}/leads/chatbot-sessions`,
 };
 
 export default API_BASE_URL;

@@ -5,6 +5,7 @@ A modern, full-stack website for Rhynox Technologies built with React, Vite, Tai
 ## ✨ Features
 
 ### Frontend
+
 - ✨ Modern UI/UX with smooth animations
 - 🎨 Tailwind CSS for styling
 - 🚀 Framer Motion for animations
@@ -15,6 +16,7 @@ A modern, full-stack website for Rhynox Technologies built with React, Vite, Tai
 - 🎭 Service cards and pricing plans
 
 ### Backend
+
 - 🔐 Admin authentication system
 - 📊 Admin dashboard for project management
 - 🖼️ Multiple image upload support
@@ -23,6 +25,7 @@ A modern, full-stack website for Rhynox Technologies built with React, Vite, Tai
 - ☁️ Cloudinary integration for production file storage
 
 ### Security
+
 - 🔒 Environment variables for sensitive data
 - 🚫 MongoDB credentials protected
 - 📁 Uploads directory excluded from Git
@@ -31,6 +34,7 @@ A modern, full-stack website for Rhynox Technologies built with React, Vite, Tai
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
 - npm or yarn package manager
 - Git
@@ -40,18 +44,21 @@ A modern, full-stack website for Rhynox Technologies built with React, Vite, Tai
 ### Installation
 
 1. **Clone the repository:**
+
 ```bash
 git clone <your-repo-url>
 cd rhynox-technologies-main
 ```
 
 2. **Install dependencies:**
+
 ```bash
 npm install
 ```
 
 3. **Set up environment variables:**
-Create a `.env` file in the root directory:
+   Create a `.env` file in the root directory:
+
 ```env
 MONGODB_URI=your_mongodb_connection_string
 PORT=5000
@@ -64,20 +71,25 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 4. **Run the application:**
 
 **Frontend (Vite Dev Server):**
+
 ```bash
 npm run dev
 ```
+
 Access at: `http://localhost:5173`
 
 **Backend (Express Server):**
+
 ```bash
 npm start
 ```
+
 Runs on: `http://localhost:5000`
 
 ## 📦 Dependencies
 
 ### Core Dependencies
+
 - `react` (^19.2.0) - UI library
 - `react-dom` (^19.2.0) - React DOM rendering
 - `framer-motion` (^12.23.26) - Animation library
@@ -91,6 +103,7 @@ Runs on: `http://localhost:5000`
 - `multiparty` (^4.2.3) - Form data parsing
 
 ### Development Dependencies
+
 - `vite` (^7.2.4) - Build tool
 - `@vitejs/plugin-react` (^5.1.1) - Vite React plugin
 - `tailwindcss` (^3.4.17) - CSS framework
@@ -145,6 +158,7 @@ This project is configured for easy deployment to Vercel with both frontend and 
    - Get your Cloud Name, API Key, and API Secret
 
 2. **Push to Git**
+
    ```bash
    git add .
    git commit -m "Ready for deployment"
@@ -186,18 +200,21 @@ For detailed deployment instructions, see **[DEPLOYMENT.md](./DEPLOYMENT.md)**
 ## 🎯 Key Features Explained
 
 ### Admin Dashboard
+
 - Upload and manage projects
 - Multiple image support per project
 - Edit and delete projects
 - View project analytics
 
 ### API Endpoints
+
 - `GET /api/projects` - Get all projects
 - `POST /api/projects` - Create new project
 - `PUT /api/projects/:id` - Update project
 - `DELETE /api/projects/:id` - Delete project
 
 ### File Upload System
+
 - **Local Development**: Files saved to `uploads/` folder
 - **Production (Vercel)**: Files uploaded to Cloudinary
 - Automatic switching based on environment
@@ -205,10 +222,12 @@ For detailed deployment instructions, see **[DEPLOYMENT.md](./DEPLOYMENT.md)**
 ## 🆘 Troubleshooting
 
 ### MongoDB Connection Issues
+
 - Ensure MongoDB Atlas allows connections from `0.0.0.0/0`
 - Verify connection string in `.env`
 
 ### File Upload Issues
+
 - Check Cloudinary credentials
 - Verify environment variables in Vercel
 
@@ -217,7 +236,8 @@ For more troubleshooting, see [DEPLOYMENT.md](./DEPLOYMENT.md)
 ## 📞 Contact
 
 For inquiries, reach out to:
-- Email: rhynoxtechnologies@gmail.com
+
+- Email: contact@rhynoxtechnologies.dev
 - Phone: +91 79043 09363, +91 63740 08719
 
 ## 📄 License
@@ -227,4 +247,3 @@ For inquiries, reach out to:
 ---
 
 **Made with ❤️ by Rhynox Technologies**
-

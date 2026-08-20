@@ -1,6 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
-import ReactLenis from 'lenis/react';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useInView,
+} from "framer-motion";
+import ReactLenis from "lenis/react";
 import {
   Code,
   Smartphone,
@@ -30,11 +36,12 @@ import {
   Headset,
   Award,
   Layers,
-  Send
-} from 'lucide-react';
-import AdminLogin from './AdminLogin';
-import AdminDashboard from './AdminDashboard';
-import Chatbot from './Chatbot';
+  Send,
+} from "lucide-react";
+import AdminLogin from "./AdminLogin";
+import AdminDashboard from "./AdminDashboard";
+import Chatbot from "./Chatbot";
+import { getAnalyticsSessionId, trackEvent } from "./utils/analytics";
 
 // --- DATA CONSTANTS FOR RHYNOX TECHNOLOGIES ---
 const SERVICES = [
@@ -45,7 +52,12 @@ const SERVICES = [
     category: "Engineering",
     desc: "Custom, high-performance web applications built with modern frameworks like React, Next.js, and Tailwind CSS.",
     icon: <Code className="w-6 h-6 text-[#00C2BB]" />,
-    features: ["Responsive Design", "SEO Optimized", "Fast Page Speed", "Custom CMS Integrations"]
+    features: [
+      "Responsive Design",
+      "SEO Optimized",
+      "Fast Page Speed",
+      "Custom CMS Integrations",
+    ],
   },
   {
     id: 2,
@@ -54,7 +66,12 @@ const SERVICES = [
     category: "Mobile",
     desc: "Native and cross-platform mobile applications designed for fluid, seamless iOS & Android user experiences.",
     icon: <Smartphone className="w-6 h-6 text-[#00C2BB]" />,
-    features: ["iOS & Android Apps", "React Native", "Push Notifications", "Offline-first Storage"]
+    features: [
+      "iOS & Android Apps",
+      "React Native",
+      "Push Notifications",
+      "Offline-first Storage",
+    ],
   },
   {
     id: 3,
@@ -63,7 +80,12 @@ const SERVICES = [
     category: "Creative",
     desc: "Eye-catching branding materials, UI/UX mockups, social media posters, and vector illustrations.",
     icon: <Palette className="w-6 h-6 text-[#00C2BB]" />,
-    features: ["Brand Identity", "UI/UX Mockups", "Social Media Graphics", "Marketing Collateral"]
+    features: [
+      "Brand Identity",
+      "UI/UX Mockups",
+      "Social Media Graphics",
+      "Marketing Collateral",
+    ],
   },
   {
     id: 4,
@@ -72,7 +94,12 @@ const SERVICES = [
     category: "Marketing",
     desc: "High-conversion video ad copy, strategic targeting, and visual scripts engineered to maximize ROI.",
     icon: <Megaphone className="w-6 h-6 text-[#00C2BB]" />,
-    features: ["High Conversion Scripts", "Target Audience Research", "A/B Test Graphics", "Performance Analytics"]
+    features: [
+      "High Conversion Scripts",
+      "Target Audience Research",
+      "A/B Test Graphics",
+      "Performance Analytics",
+    ],
   },
   {
     id: 5,
@@ -81,7 +108,12 @@ const SERVICES = [
     category: "Video",
     desc: "Professional video post-production, motion graphics, audio mastering, and color grading.",
     icon: <Video className="w-6 h-6 text-[#00C2BB]" />,
-    features: ["4K Video Editing", "Dynamic Transitions", "Color Grading", "Sound Design & VFX"]
+    features: [
+      "4K Video Editing",
+      "Dynamic Transitions",
+      "Color Grading",
+      "Sound Design & VFX",
+    ],
   },
   {
     id: 6,
@@ -90,8 +122,13 @@ const SERVICES = [
     category: "Marketing",
     desc: "Data-driven SEO strategies, technical site audits, keyword domination, and organic growth scaling.",
     icon: <Zap className="w-6 h-6 text-[#00C2BB]" />,
-    features: ["Technical SEO", "Keyword Optimization", "Link Building", "Analytics & Reporting"]
-  }
+    features: [
+      "Technical SEO",
+      "Keyword Optimization",
+      "Link Building",
+      "Analytics & Reporting",
+    ],
+  },
 ];
 
 const PRICING_PLANS = [
@@ -100,49 +137,52 @@ const PRICING_PLANS = [
     title: "Starter",
     price: "₹499",
     period: "starting price",
-    description: "Ideal for personal portfolios, landing pages & small static websites.",
+    description:
+      "Ideal for personal portfolios, landing pages & small static websites.",
     features: [
       "Responsive Single Page / Portfolio",
       "Up to 5 Custom Sections",
       "Contact Form & Email Delivery",
       "WhatsApp Chat Direct Link",
       "Basic On-Page SEO",
-      "1 Month Free Maintenance"
+      "1 Month Free Maintenance",
     ],
-    popular: false
+    popular: false,
   },
   {
     id: "business",
     title: "Business",
     price: "₹999",
     period: "starting price",
-    description: "Best for dynamic startup websites, business portals & web apps.",
+    description:
+      "Best for dynamic startup websites, business portals & web apps.",
     features: [
       "Full Modern React/Next.js Web App",
       "Admin Editable Content & CMS",
       "SEO & Google Analytics Integration",
       "Custom Animations & Micro-Interactions",
       "WhatsApp & Lead Management",
-      "3 Months Priority Support"
+      "3 Months Priority Support",
     ],
-    popular: true
+    popular: true,
   },
   {
     id: "enterprise",
     title: "Enterprise",
     price: "Custom",
     period: "tailored scope",
-    description: "Comprehensive end-to-end full stack web, mobile & AI integrations.",
+    description:
+      "Comprehensive end-to-end full stack web, mobile & AI integrations.",
     features: [
       "Full-Stack Web & Native Mobile Apps",
       "Custom Backend API & Cloud Infrastructure",
       "Secure Payment Gateway Integration",
       "AI Chatbot & Automation Bot",
       "Custom Graphic Design Package",
-      "Dedicated Technical Account Manager"
+      "Dedicated Technical Account Manager",
     ],
-    popular: false
-  }
+    popular: false,
+  },
 ];
 
 const METRICS = [
@@ -150,7 +190,7 @@ const METRICS = [
   { value: "99%", label: "Client Satisfaction" },
   { value: "5+", label: "Years Experience" },
   { value: "24/7", label: "Dedicated Support" },
-  { value: "50+", label: "Enterprise Clients" }
+  { value: "50+", label: "Enterprise Clients" },
 ];
 
 const PARTNER_LOGOS = [
@@ -160,7 +200,7 @@ const PARTNER_LOGOS = [
   { name: "Tailwind", text: "TAILWIND" },
   { name: "AWS", text: "AWS CLOUD" },
   { name: "Python", text: "PYTHON" },
-  { name: "Figma", text: "FIGMA" }
+  { name: "Figma", text: "FIGMA" },
 ];
 
 const BLOG_POSTS = [
@@ -171,7 +211,8 @@ const BLOG_POSTS = [
     date: "August 2, 2026",
     readTime: "5 min read",
     desc: "Discover the architectural patterns and optimization techniques driving ultra-fast modern web applications.",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80"
+    image:
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 2,
@@ -180,7 +221,8 @@ const BLOG_POSTS = [
     date: "July 28, 2026",
     readTime: "4 min read",
     desc: "How sleek dark aesthetics, subtle micro-animations, and sharp typography transform user trust.",
-    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80"
+    image:
+      "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
   },
   {
     id: 3,
@@ -189,8 +231,9 @@ const BLOG_POSTS = [
     date: "July 15, 2026",
     readTime: "6 min read",
     desc: "A breakdown of creative video scripting, targeted audience hooks, and post-campaign tracking.",
-    image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&w=800&q=80"
-  }
+    image:
+      "https://images.unsplash.com/photo-1533750349088-cd871a92f312?auto=format&fit=crop&w=800&q=80",
+  },
 ];
 
 // --- CANVAS PARTICLE BACKGROUND COMPONENT ---
@@ -200,7 +243,7 @@ const ConstellationCanvas = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     let animationFrameId;
 
     let width = (canvas.width = canvas.parentElement.offsetWidth);
@@ -211,7 +254,7 @@ const ConstellationCanvas = () => {
       width = canvas.width = canvas.parentElement.offsetWidth;
       height = canvas.height = canvas.parentElement.offsetHeight;
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Particle nodes
     const particleCount = Math.floor((width * height) / 14000);
@@ -220,7 +263,7 @@ const ConstellationCanvas = () => {
       y: Math.random() * height,
       vx: (Math.random() - 0.5) * 0.4,
       vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 1.8 + 0.8
+      radius: Math.random() * 1.8 + 0.8,
     }));
 
     const draw = () => {
@@ -233,11 +276,11 @@ const ConstellationCanvas = () => {
         0,
         width / 2,
         height / 2,
-        Math.max(width, height) / 1.2
+        Math.max(width, height) / 1.2,
       );
-      radialGlow.addColorStop(0, 'rgba(0, 194, 187, 0.04)');
-      radialGlow.addColorStop(0.5, 'rgba(15, 23, 42, 0.05)');
-      radialGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      radialGlow.addColorStop(0, "rgba(0, 194, 187, 0.04)");
+      radialGlow.addColorStop(0.5, "rgba(15, 23, 42, 0.05)");
+      radialGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = radialGlow;
       ctx.fillRect(0, 0, width, height);
 
@@ -252,7 +295,7 @@ const ConstellationCanvas = () => {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
         ctx.fill();
 
         // Connect nearby nodes
@@ -280,7 +323,7 @@ const ConstellationCanvas = () => {
     draw();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -301,9 +344,9 @@ const TypewriterText = ({
   pauseDuration = 2000,
   loop = true,
   className = "",
-  showCursor = true
+  showCursor = true,
 }) => {
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -334,7 +377,16 @@ const TypewriterText = ({
       }
     }
     return () => clearTimeout(timeout);
-  }, [displayText, isDeleting, isPaused, text, speed, deleteSpeed, pauseDuration, loop]);
+  }, [
+    displayText,
+    isDeleting,
+    isPaused,
+    text,
+    speed,
+    deleteSpeed,
+    pauseDuration,
+    loop,
+  ]);
 
   return (
     <div className={`font-mono ${className}`}>
@@ -343,7 +395,11 @@ const TypewriterText = ({
         {showCursor && (
           <motion.span
             animate={{ opacity: [1, 0] }}
-            transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+            transition={{
+              duration: 0.8,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
             className="text-[#00C2BB] font-bold ml-1"
           >
             |
@@ -359,7 +415,7 @@ const HeroSection = ({ handleNavClick }) => {
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
   });
 
   // Dynamic scroll transformations
@@ -379,7 +435,7 @@ const HeroSection = ({ handleNavClick }) => {
             transition={{
               duration: 0.6,
               delay: delay + index * 0.03,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.16, 1, 0.3, 1],
             }}
             className="inline-block transform-gpu origin-bottom select-none"
           >
@@ -391,14 +447,19 @@ const HeroSection = ({ handleNavClick }) => {
   };
 
   return (
-    <section ref={sectionRef} className="relative pt-28 pb-12 px-6 lg:px-16 min-h-screen h-screen flex items-center justify-start overflow-hidden bg-black">
+    <section
+      ref={sectionRef}
+      className="relative pt-28 pb-12 px-6 lg:px-16 min-h-screen h-screen flex items-center justify-start overflow-hidden bg-black"
+    >
       <ConstellationCanvas />
 
       {/* Subtle Ambient Glow behind text */}
       <div className="absolute top-1/3 left-10 w-96 h-96 bg-[#00C2BB]/10 blur-[130px] pointer-events-none rounded-full" />
 
-      <motion.div style={{ opacity, scale, y: textY }} className="relative z-10 w-full max-w-4xl mr-auto py-6 flex flex-col items-start text-left">
-
+      <motion.div
+        style={{ opacity, scale, y: textY }}
+        className="relative z-10 w-full max-w-4xl mr-auto py-6 flex flex-col items-start text-left"
+      >
         {/* Futuristic Badge */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -416,14 +477,28 @@ const HeroSection = ({ handleNavClick }) => {
         {/* Refined Left-Aligned Headline Stack */}
         <div className="font-mono uppercase tracking-tight font-extrabold flex flex-col items-start gap-1 mb-8 select-none">
           <div className="leading-tight">
-            <AnimatedTextLine word="THE NEW" text="THE NEW" delay={0.2} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#E2ECE9]" />
+            <AnimatedTextLine
+              word="THE NEW"
+              text="THE NEW"
+              delay={0.2}
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#E2ECE9]"
+            />
           </div>
           <div className="leading-none">
-            <AnimatedTextLine word="STANDARD IN" text="STANDARD IN" delay={0.4} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#E2ECE9]" />
+            <AnimatedTextLine
+              word="STANDARD IN"
+              text="STANDARD IN"
+              delay={0.4}
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-[#E2ECE9]"
+            />
           </div>
           <div className="leading-tight">
             <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[#00C2BB] via-teal-300 to-cyan-200 drop-shadow-[0_0_20px_rgba(0,194,187,0.35)]">
-              <AnimatedTextLine word="DIGITAL SOLUTIONS" text="DIGITAL SOLUTIONS" delay={0.6} />
+              <AnimatedTextLine
+                word="DIGITAL SOLUTIONS"
+                text="DIGITAL SOLUTIONS"
+                delay={0.6}
+              />
             </span>
           </div>
         </div>
@@ -447,7 +522,7 @@ const HeroSection = ({ handleNavClick }) => {
           className="flex items-center gap-4"
         >
           <button
-            onClick={() => handleNavClick('solutions')}
+            onClick={() => handleNavClick("solutions")}
             className="group bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-mono font-bold text-sm uppercase px-7 py-3.5 rounded-xl shadow-[0_0_25px_rgba(0,194,187,0.4)] hover:shadow-[0_0_35px_rgba(0,194,187,0.6)] hover:scale-105 transition-all flex items-center gap-2"
           >
             <span>Learn More</span>
@@ -455,7 +530,7 @@ const HeroSection = ({ handleNavClick }) => {
           </button>
 
           <button
-            onClick={() => handleNavClick('contact')}
+            onClick={() => handleNavClick("contact")}
             className="bg-[#141518] hover:bg-[#1E2025] border border-white/10 text-white font-mono text-sm px-7 py-3.5 rounded-xl hover:border-white/20 transition-all"
           >
             Contact Sales
@@ -539,7 +614,11 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
         className="absolute top-0 left-0 h-[2px] bg-gradient-to-r from-[#00C2BB] to-cyan-400 rounded-t-2xl"
         initial={{ width: "0%" }}
         animate={isInView ? { width: "100%" } : { width: "0%" }}
-        transition={{ duration: 0.9, delay: index * 0.1 + 0.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{
+          duration: 0.9,
+          delay: index * 0.1 + 0.4,
+          ease: [0.16, 1, 0.3, 1],
+        }}
       />
 
       <div className="relative z-10">
@@ -582,7 +661,10 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
               key={fi}
               initial={{ opacity: 0, x: -10 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.35, delay: index * 0.1 + 0.55 + fi * 0.08 }}
+              transition={{
+                duration: 0.35,
+                delay: index * 0.1 + 0.55 + fi * 0.08,
+              }}
               className="text-[10px] font-mono text-gray-400 bg-white/5 border border-white/8 px-2 py-0.5 rounded-md"
             >
               {feat}
@@ -595,7 +677,12 @@ const SolutionCard = ({ service, index, setSelectedServiceModal }) => {
         <span>Explore Service</span>
         <motion.div
           animate={{ x: [0, 4, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+          transition={{
+            duration: 1.8,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: index * 0.2,
+          }}
         >
           <ArrowRight className="w-4 h-4" />
         </motion.div>
@@ -610,7 +697,10 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
   const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
 
   return (
-    <section id="solutions" className="py-16 lg:py-24 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden">
+    <section
+      id="solutions"
+      className="py-16 lg:py-24 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden"
+    >
       {/* Subtle background grid */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -624,7 +714,6 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#00C2BB]/5 blur-[120px] pointer-events-none rounded-full" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-
         {/* Header Section */}
         <motion.div
           ref={headerRef}
@@ -643,7 +732,8 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
               // OUR CAPABILITIES
             </motion.span>
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white uppercase font-mono tracking-tight leading-tight">
-              Let Our Tech Take Your Business to <span className="text-[#00C2BB]">Higher Grounds</span>
+              Let Our Tech Take Your Business to{" "}
+              <span className="text-[#00C2BB]">Higher Grounds</span>
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -652,7 +742,7 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
               <span>Guaranteed Quality & Performance</span>
             </div>
             <button
-              onClick={() => handleNavClick('contact')}
+              onClick={() => handleNavClick("contact")}
               className="inline-flex items-center gap-2 text-[#00C2BB] font-mono text-sm hover:underline font-bold whitespace-nowrap"
             >
               <span>Book a Consultation</span>
@@ -672,36 +762,50 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
             />
           ))}
         </div>
-
       </div>
     </section>
   );
 };
 
-
 // --- MAIN REDESIGNED APP COMPONENT ---
 export default function RedesignedApp() {
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [selectedServiceModal, setSelectedServiceModal] = useState(null);
-  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterAgreed, setNewsletterAgreed] = useState(false);
   const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
-  const [contactForm, setContactForm] = useState({ name: '', email: '', message: '', service: 'General Inquiry' });
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+    service: "General Inquiry",
+  });
   const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [adminUser, setAdminUser] = useState(null);
+
+  useEffect(() => {
+    trackEvent("page_view");
+  }, []);
 
   // Scroll to section when tab is clicked
   const handleNavClick = (tab) => {
     setActiveTab(tab);
     setMobileMenuOpen(false);
-    if (tab === 'home') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (tab === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       const el = document.getElementById(tab);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
+        const header = document.querySelector("header");
+        const headerHeight = header?.getBoundingClientRect().height || 92;
+        const targetTop = Math.max(
+          0,
+          el.getBoundingClientRect().top + window.scrollY - headerHeight - 8,
+        );
+        window.scrollTo({ top: targetTop, behavior: "smooth" });
       }
     }
   };
@@ -711,7 +815,7 @@ export default function RedesignedApp() {
     if (newsletterEmail && newsletterAgreed) {
       setNewsletterSubmitted(true);
       setTimeout(() => setNewsletterSubmitted(false), 5000);
-      setNewsletterEmail('');
+      setNewsletterEmail("");
     }
   };
 
@@ -720,21 +824,24 @@ export default function RedesignedApp() {
     if (contactForm.name && contactForm.email && contactForm.message) {
       setContactSubmitted(true);
       setTimeout(() => setContactSubmitted(false), 5000);
-      setContactForm({ name: '', email: '', message: '', service: 'General Inquiry' });
+      setContactForm({
+        name: "",
+        email: "",
+        message: "",
+        service: "General Inquiry",
+      });
     }
   };
 
   return (
     <ReactLenis root>
       <div className="bg-[#050505] text-white font-sans min-h-screen selection:bg-[#00C2BB] selection:text-black overflow-x-hidden">
-
         {/* ── 1. HEADER / NAVIGATION (VISTA.IO STYLE) ────────────────────── */}
         <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-200 px-6 lg:px-12 py-4 transition-all shadow-sm">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-
             {/* Logo (Left) */}
             <button
-              onClick={() => handleNavClick('home')}
+              onClick={() => handleNavClick("home")}
               className="flex items-center group text-left focus:outline-none overflow-visible py-1"
               aria-label="Rhynox Technologies Logo"
             >
@@ -748,19 +855,20 @@ export default function RedesignedApp() {
             {/* Navigation Bar (Center - White Pill Bar) */}
             <nav className="hidden md:flex items-center bg-gray-100/90 border border-gray-300 rounded-full px-5 py-1.5 gap-1 shadow-sm">
               {[
-                { id: 'home', label: 'Home' },
-                { id: 'solutions', label: 'Solutions' },
-                { id: 'vision', label: 'Vision' },
-                { id: 'blog', label: 'Blog' },
-                { id: 'contact', label: 'Contact' }
+                { id: "home", label: "Home" },
+                { id: "solutions", label: "Solutions" },
+                { id: "vision", label: "Vision" },
+                { id: "blog", label: "Blog" },
+                { id: "contact", label: "Contact" },
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => handleNavClick(tab.id)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${activeTab === tab.id
-                    ? 'bg-[#00C2BB] text-black shadow-sm'
-                    : 'text-[#1A1A1A] hover:text-black hover:bg-gray-200'
-                    }`}
+                  className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+                    activeTab === tab.id
+                      ? "bg-[#00C2BB] text-black shadow-sm"
+                      : "text-[#1A1A1A] hover:text-black hover:bg-gray-200"
+                  }`}
                 >
                   {tab.label}
                 </button>
@@ -770,7 +878,7 @@ export default function RedesignedApp() {
             {/* CTA Button (Far Right) */}
             <div className="hidden md:flex items-center gap-4">
               <button
-                onClick={() => handleNavClick('contact')}
+                onClick={() => handleNavClick("contact")}
                 className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold text-sm px-5 py-2.5 rounded-full shadow-[0_0_20px_rgba(0,194,187,0.4)] hover:shadow-[0_0_30px_rgba(0,194,187,0.6)] hover:scale-105 transition-all"
               >
                 Get Started
@@ -782,7 +890,11 @@ export default function RedesignedApp() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg bg-gray-100 border border-gray-300 text-gray-800 hover:text-[#00C2BB]"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
 
@@ -791,24 +903,29 @@ export default function RedesignedApp() {
             {mobileMenuOpen && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="md:hidden bg-[#0D0E11] border-t border-white/10 mt-4 px-4 py-6 rounded-2xl flex flex-col gap-3"
               >
-                {['home', 'solutions', 'vision', 'blog', 'contact'].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => handleNavClick(tab)}
-                    className={`text-left px-4 py-3 rounded-xl font-mono text-sm capitalize ${activeTab === tab ? 'bg-[#00C2BB] text-black font-bold' : 'text-gray-300 hover:bg-white/5'
+                {["home", "solutions", "vision", "blog", "contact"].map(
+                  (tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => handleNavClick(tab)}
+                      className={`text-left px-4 py-3 rounded-xl font-mono text-sm capitalize ${
+                        activeTab === tab
+                          ? "bg-[#00C2BB] text-black font-bold"
+                          : "text-gray-300 hover:bg-white/5"
                       }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+                    >
+                      {tab}
+                    </button>
+                  ),
+                )}
 
                 <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
                   <button
-                    onClick={() => handleNavClick('contact')}
+                    onClick={() => handleNavClick("contact")}
                     className="w-full bg-[#00C2BB] text-black font-bold py-3 rounded-xl text-center"
                   >
                     Get Started
@@ -823,7 +940,10 @@ export default function RedesignedApp() {
         <HeroSection handleNavClick={handleNavClick} />
 
         {/* ── 3. FEATURES / SERVICES GRID ("Let Our Tech Take Your Business Higher") */}
-        <SolutionsSection handleNavClick={handleNavClick} setSelectedServiceModal={setSelectedServiceModal} />
+        <SolutionsSection
+          handleNavClick={handleNavClick}
+          setSelectedServiceModal={setSelectedServiceModal}
+        />
 
         {/* ── 4. METRICS / NUMBERS SECTION ("We Take Pride in Our Numbers") ────── */}
         <section className="pt-12 pb-20 px-6 lg:px-12 bg-black border-t border-white/10 relative overflow-hidden">
@@ -832,10 +952,11 @@ export default function RedesignedApp() {
 
           <div className="max-w-7xl mx-auto relative z-10 text-center">
             <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest block mb-3">
-            // OUR IMPACT & ACCELERATION
+              // OUR IMPACT & ACCELERATION
             </span>
             <h2 className="text-3xl sm:text-5xl font-black text-white uppercase font-mono tracking-tight mb-16">
-              We Take Pride in Our <span className="text-[#00C2BB]">Numbers</span>
+              We Take Pride in Our{" "}
+              <span className="text-[#00C2BB]">Numbers</span>
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center">
@@ -864,7 +985,10 @@ export default function RedesignedApp() {
         {(() => {
           const VisionSection = () => {
             const sectionRef = useRef(null);
-            const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+            const isInView = useInView(sectionRef, {
+              once: true,
+              margin: "-100px",
+            });
 
             const checkItems = [
               "Modern Stack",
@@ -874,14 +998,17 @@ export default function RedesignedApp() {
             ];
 
             return (
-              <section id="vision" ref={sectionRef} className="py-24 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden">
+              <section
+                id="vision"
+                ref={sectionRef}
+                className="py-24 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden"
+              >
                 {/* Ambient background glow */}
                 <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#00C2BB]/5 blur-[140px] pointer-events-none rounded-full -translate-x-1/3 -translate-y-1/3" />
                 <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#00C2BB]/4 blur-[120px] pointer-events-none rounded-full translate-x-1/3 translate-y-1/3" />
 
                 <div className="max-w-7xl mx-auto relative z-10">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
                     {/* ── LEFT: Text Content ── */}
                     <div>
                       {/* Label */}
@@ -895,7 +1022,11 @@ export default function RedesignedApp() {
                           className="h-[2px] w-8 bg-[#00C2BB] rounded-full inline-block"
                           initial={{ scaleX: 0 }}
                           animate={isInView ? { scaleX: 1 } : {}}
-                          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                          transition={{
+                            duration: 0.5,
+                            delay: 0.1,
+                            ease: "easeOut",
+                          }}
                           style={{ transformOrigin: "left" }}
                         />
                         <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">
@@ -905,24 +1036,36 @@ export default function RedesignedApp() {
 
                       {/* Heading – word-by-word reveal */}
                       <h2 className="text-3xl sm:text-5xl font-black text-white uppercase font-mono tracking-tight leading-tight mb-6 overflow-hidden">
-                        {["Engineered for Impact,", "Built for"].map((line, li) => (
-                          <span key={li} className="block overflow-hidden">
-                            <motion.span
-                              className="block"
-                              initial={{ y: "100%", opacity: 0 }}
-                              animate={isInView ? { y: "0%", opacity: 1 } : {}}
-                              transition={{ duration: 0.65, delay: 0.15 + li * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                            >
-                              {line}
-                            </motion.span>
-                          </span>
-                        ))}
+                        {["Engineered for Impact,", "Built for"].map(
+                          (line, li) => (
+                            <span key={li} className="block overflow-hidden">
+                              <motion.span
+                                className="block"
+                                initial={{ y: "100%", opacity: 0 }}
+                                animate={
+                                  isInView ? { y: "0%", opacity: 1 } : {}
+                                }
+                                transition={{
+                                  duration: 0.65,
+                                  delay: 0.15 + li * 0.12,
+                                  ease: [0.16, 1, 0.3, 1],
+                                }}
+                              >
+                                {line}
+                              </motion.span>
+                            </span>
+                          ),
+                        )}
                         <span className="block overflow-hidden">
                           <motion.span
                             className="block text-[#00C2BB]"
                             initial={{ y: "100%", opacity: 0 }}
                             animate={isInView ? { y: "0%", opacity: 1 } : {}}
-                            transition={{ duration: 0.65, delay: 0.39, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{
+                              duration: 0.65,
+                              delay: 0.39,
+                              ease: [0.16, 1, 0.3, 1],
+                            }}
                           >
                             Growth
                           </motion.span>
@@ -934,9 +1077,17 @@ export default function RedesignedApp() {
                         className="text-gray-300 text-base leading-relaxed mb-6"
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0.5,
+                          ease: "easeOut",
+                        }}
                       >
-                        Rhynox Technologies was founded with a singular mission: to make high-end, enterprise-grade software development, web engineering, graphic design, and video marketing accessible to forward-thinking businesses and ambitious startups.
+                        Rhynox Technologies was founded with a singular mission:
+                        to make high-end, enterprise-grade software development,
+                        web engineering, graphic design, and video marketing
+                        accessible to forward-thinking businesses and ambitious
+                        startups.
                       </motion.p>
 
                       {/* Paragraph 2 */}
@@ -944,9 +1095,17 @@ export default function RedesignedApp() {
                         className="text-gray-400 text-sm leading-relaxed mb-8"
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: 0.62, ease: "easeOut" }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0.62,
+                          ease: "easeOut",
+                        }}
                       >
-                        We believe that modern technology shouldn't be overly complex or cost-prohibitive. By combining clean architectural principles with responsive design and modern AI tooling, we deliver scalable solutions that outpace the competition.
+                        We believe that modern technology shouldn't be overly
+                        complex or cost-prohibitive. By combining clean
+                        architectural principles with responsive design and
+                        modern AI tooling, we deliver scalable solutions that
+                        outpace the competition.
                       </motion.p>
 
                       {/* Animated divider */}
@@ -954,7 +1113,11 @@ export default function RedesignedApp() {
                         className="h-px bg-gradient-to-r from-[#00C2BB]/60 via-white/10 to-transparent mb-6"
                         initial={{ scaleX: 0 }}
                         animate={isInView ? { scaleX: 1 } : {}}
-                        transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.7,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
                         style={{ transformOrigin: "left" }}
                       />
 
@@ -966,17 +1129,28 @@ export default function RedesignedApp() {
                             className="flex items-center gap-3"
                             initial={{ opacity: 0, x: -24 }}
                             animate={isInView ? { opacity: 1, x: 0 } : {}}
-                            transition={{ duration: 0.5, delay: 0.78 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{
+                              duration: 0.5,
+                              delay: 0.78 + i * 0.1,
+                              ease: [0.16, 1, 0.3, 1],
+                            }}
                           >
                             <motion.div
                               className="w-8 h-8 rounded-lg bg-[#00C2BB]/10 flex items-center justify-center shrink-0 border border-[#00C2BB]/20"
                               initial={{ scale: 0, rotate: -20 }}
                               animate={isInView ? { scale: 1, rotate: 0 } : {}}
-                              transition={{ duration: 0.45, delay: 0.85 + i * 0.1, type: "spring", stiffness: 200 }}
+                              transition={{
+                                duration: 0.45,
+                                delay: 0.85 + i * 0.1,
+                                type: "spring",
+                                stiffness: 200,
+                              }}
                             >
                               <Check className="w-4 h-4 text-[#00C2BB]" />
                             </motion.div>
-                            <span className="text-sm font-mono text-white">{item}</span>
+                            <span className="text-sm font-mono text-white">
+                              {item}
+                            </span>
                           </motion.div>
                         ))}
                       </div>
@@ -987,13 +1161,21 @@ export default function RedesignedApp() {
                       className="relative"
                       initial={{ opacity: 0, x: 60, scale: 0.95 }}
                       animate={isInView ? { opacity: 1, x: 0, scale: 1 } : {}}
-                      transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{
+                        duration: 0.85,
+                        delay: 0.3,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
                     >
                       {/* Glowing frame border */}
                       <motion.div
                         className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#00C2BB]/30 via-transparent to-cyan-400/20 blur-sm pointer-events-none"
                         animate={{ opacity: [0.4, 0.8, 0.4] }}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
                       />
 
                       <div className="relative z-10 rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
@@ -1003,7 +1185,11 @@ export default function RedesignedApp() {
                           className="w-full h-auto object-cover"
                           initial={{ scale: 1.1 }}
                           animate={isInView ? { scale: 1 } : {}}
-                          transition={{ duration: 1.1, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                          transition={{
+                            duration: 1.1,
+                            delay: 0.35,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
                         />
 
                         {/* Overlay badge */}
@@ -1014,13 +1200,14 @@ export default function RedesignedApp() {
                           transition={{ duration: 0.55, delay: 1.1 }}
                         >
                           <span className="h-2 w-2 rounded-full bg-[#00C2BB] animate-pulse shadow-[0_0_8px_#00C2BB]" />
-                          <span className="text-xs font-mono text-white">Empowering Businesses Since 2019</span>
+                          <span className="text-xs font-mono text-white">
+                            Empowering Businesses Since 2019
+                          </span>
                         </motion.div>
                       </div>
 
                       <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-[#00C2BB]/20 blur-3xl pointer-events-none rounded-full" />
                     </motion.div>
-
                   </div>
                 </div>
               </section>
@@ -1028,7 +1215,6 @@ export default function RedesignedApp() {
           };
           return <VisionSection />;
         })()}
-
 
         {/* ── 7. PARTNER / INTEGRATIONS MARQUEE TICKER ───────────────────── */}
         {(() => {
@@ -1056,7 +1242,10 @@ export default function RedesignedApp() {
             return (
               <div
                 className="flex overflow-hidden group"
-                style={{ maskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)" }}
+                style={{
+                  maskImage:
+                    "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+                }}
               >
                 <div
                   className={`flex gap-4 shrink-0 ${direction === "left" ? "animate-[marqueeLeft_var(--speed)_linear_infinite]" : "animate-[marqueeRight_var(--speed)_linear_infinite]"} group-hover:[animation-play-state:paused]`}
@@ -1067,7 +1256,10 @@ export default function RedesignedApp() {
                       key={i}
                       className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-[#111316] border border-white/10 hover:border-[#00C2BB]/60 hover:bg-[#1A1C22] transition-all duration-300 cursor-default group/badge shrink-0"
                     >
-                      <span className="text-[#00C2BB] text-sm group-hover/badge:animate-spin" style={{ display: "inline-block" }}>
+                      <span
+                        className="text-[#00C2BB] text-sm group-hover/badge:animate-spin"
+                        style={{ display: "inline-block" }}
+                      >
                         {item.icon}
                       </span>
                       <span className="text-gray-200 font-mono font-bold text-xs tracking-widest whitespace-nowrap group-hover/badge:text-white transition-colors">
@@ -1142,21 +1334,31 @@ export default function RedesignedApp() {
         {(() => {
           const BlogSection = () => {
             const headerRef = useRef(null);
-            const headerInView = useInView(headerRef, { once: true, margin: "-80px" });
+            const headerInView = useInView(headerRef, {
+              once: true,
+              margin: "-80px",
+            });
 
             return (
-              <section id="blog" className="py-24 px-6 lg:px-12 bg-[#0A0B0D] relative overflow-hidden">
+              <section
+                id="blog"
+                className="py-24 px-6 lg:px-12 bg-[#0A0B0D] relative overflow-hidden"
+              >
                 {/* Background texture */}
-                <div className="absolute inset-0 pointer-events-none"
+                <div
+                  className="absolute inset-0 pointer-events-none"
                   style={{
-                    backgroundImage: "radial-gradient(circle at 80% 20%, rgba(255,90,54,0.04) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(255,90,54,0.03) 0%, transparent 50%)"
+                    backgroundImage:
+                      "radial-gradient(circle at 80% 20%, rgba(255,90,54,0.04) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(255,90,54,0.03) 0%, transparent 50%)",
                   }}
                 />
 
                 <div className="max-w-7xl mx-auto relative z-10">
-
                   {/* Section Header */}
-                  <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                  <div
+                    ref={headerRef}
+                    className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+                  >
                     <div>
                       <motion.div
                         className="flex items-center gap-2 mb-3"
@@ -1165,7 +1367,9 @@ export default function RedesignedApp() {
                         transition={{ duration: 0.5 }}
                       >
                         <span className="h-px w-6 bg-[#00C2BB]" />
-                        <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">// LATEST INSIGHTS</span>
+                        <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">
+                          // LATEST INSIGHTS
+                        </span>
                       </motion.div>
                       <h2 className="text-3xl sm:text-5xl font-black text-white font-mono uppercase leading-tight overflow-hidden">
                         {["Engineering &", "Design"].map((word, wi) => (
@@ -1174,9 +1378,16 @@ export default function RedesignedApp() {
                               className="block"
                               initial={{ y: "100%" }}
                               animate={headerInView ? { y: "0%" } : {}}
-                              transition={{ duration: 0.65, delay: wi * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                              transition={{
+                                duration: 0.65,
+                                delay: wi * 0.1,
+                                ease: [0.16, 1, 0.3, 1],
+                              }}
                             >
-                              {word}{wi === 1 && <span className="text-[#00C2BB]"> Blog</span>}
+                              {word}
+                              {wi === 1 && (
+                                <span className="text-[#00C2BB]"> Blog</span>
+                              )}
                             </motion.span>
                           </span>
                         ))}
@@ -1188,13 +1399,13 @@ export default function RedesignedApp() {
                       animate={headerInView ? { opacity: 1, y: 0 } : {}}
                       transition={{ duration: 0.55, delay: 0.3 }}
                     >
-                      Expert articles on frontend performance, UI/UX aesthetics, video marketing, and digital acceleration.
+                      Expert articles on frontend performance, UI/UX aesthetics,
+                      video marketing, and digital acceleration.
                     </motion.p>
                   </div>
 
                   {/* ── CARD GRID: 3 Unique Styles ── */}
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-7">
-
                     {/* CARD 1 — Featured large card with diagonal overlay */}
                     <motion.article
                       className="lg:col-span-5 relative rounded-3xl overflow-hidden group cursor-pointer bg-[#0E0F12] border border-white/10 hover:border-[#00C2BB]/50 shadow-2xl"
@@ -1234,14 +1445,19 @@ export default function RedesignedApp() {
                       {/* Content */}
                       <div className="p-7">
                         <div className="flex items-center gap-3 text-[10px] text-gray-500 font-mono mb-4">
-                          <span className="flex items-center gap-1.5"><Clock className="w-3 h-3" />{BLOG_POSTS[0].readTime}</span>
+                          <span className="flex items-center gap-1.5">
+                            <Clock className="w-3 h-3" />
+                            {BLOG_POSTS[0].readTime}
+                          </span>
                           <span className="w-1 h-1 rounded-full bg-gray-600" />
                           <span>{BLOG_POSTS[0].date}</span>
                         </div>
                         <h3 className="text-xl font-black text-white group-hover:text-[#00C2BB] transition-colors duration-300 leading-snug mb-3">
                           {BLOG_POSTS[0].title}
                         </h3>
-                        <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">{BLOG_POSTS[0].desc}</p>
+                        <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-2">
+                          {BLOG_POSTS[0].desc}
+                        </p>
                         <div className="flex items-center justify-between">
                           <motion.button
                             className="inline-flex items-center gap-2 bg-[#00C2BB]/10 hover:bg-[#00C2BB] text-[#00C2BB] hover:text-black border border-[#00C2BB]/30 font-mono font-bold text-xs px-4 py-2 rounded-lg transition-all duration-300"
@@ -1250,7 +1466,9 @@ export default function RedesignedApp() {
                             <span>Read Article</span>
                             <ArrowRight className="w-3.5 h-3.5" />
                           </motion.button>
-                          <span className="text-[10px] text-gray-600 font-mono">01 / 03</span>
+                          <span className="text-[10px] text-gray-600 font-mono">
+                            01 / 03
+                          </span>
                         </div>
                       </div>
 
@@ -1260,20 +1478,27 @@ export default function RedesignedApp() {
                         initial={{ width: "0%" }}
                         whileInView={{ width: "100%" }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{
+                          duration: 1,
+                          delay: 0.6,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
                       />
                     </motion.article>
 
                     {/* RIGHT COLUMN: stacked cards */}
                     <div className="lg:col-span-7 flex flex-col gap-6">
-
                       {/* CARD 2 — Horizontal split panel */}
                       <motion.article
                         className="relative flex rounded-2xl overflow-hidden group cursor-pointer border border-white/10 hover:border-[#00C2BB]/50 bg-[#0E0F12] shadow-xl"
                         initial={{ opacity: 0, x: 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-60px" }}
-                        transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{
+                          duration: 0.7,
+                          delay: 0.1,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
                         whileHover={{ y: -5, transition: { duration: 0.3 } }}
                       >
                         {/* Left image strip */}
@@ -1296,7 +1521,9 @@ export default function RedesignedApp() {
                         {/* Right content */}
                         <div className="p-6 flex flex-col justify-center flex-1 relative">
                           {/* Glowing number */}
-                          <span className="absolute top-4 right-5 text-5xl font-black font-mono text-white/5 select-none pointer-events-none">02</span>
+                          <span className="absolute top-4 right-5 text-5xl font-black font-mono text-white/5 select-none pointer-events-none">
+                            02
+                          </span>
                           <div className="flex items-center gap-2 text-[10px] text-gray-500 font-mono mb-3">
                             <Clock className="w-3 h-3" />
                             <span>{BLOG_POSTS[1].readTime}</span>
@@ -1306,7 +1533,9 @@ export default function RedesignedApp() {
                           <h3 className="text-base font-bold text-white group-hover:text-[#00C2BB] transition-colors duration-300 leading-snug mb-2">
                             {BLOG_POSTS[1].title}
                           </h3>
-                          <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">{BLOG_POSTS[1].desc}</p>
+                          <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">
+                            {BLOG_POSTS[1].desc}
+                          </p>
                           <motion.button
                             className="self-start inline-flex items-center gap-1.5 text-[#00C2BB] font-mono text-xs font-bold"
                             whileHover={{ x: 4 }}
@@ -1324,7 +1553,11 @@ export default function RedesignedApp() {
                         initial={{ opacity: 0, y: 40, scale: 0.96 }}
                         whileInView={{ opacity: 1, y: 0, scale: 1 }}
                         viewport={{ once: true, margin: "-60px" }}
-                        transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{
+                          duration: 0.7,
+                          delay: 0.2,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
                         whileHover={{ y: -5, transition: { duration: 0.3 } }}
                       >
                         {/* Terminal header bar */}
@@ -1332,14 +1565,20 @@ export default function RedesignedApp() {
                           <span className="w-3 h-3 rounded-full bg-[#00C2BB]/80" />
                           <span className="w-3 h-3 rounded-full bg-amber-400/60" />
                           <span className="w-3 h-3 rounded-full bg-green-500/60" />
-                          <span className="ml-3 text-[10px] font-mono text-gray-500 tracking-widest uppercase">{BLOG_POSTS[2].category}.md</span>
-                          <span className="ml-auto text-[10px] font-mono text-[#00C2BB] bg-[#00C2BB]/10 px-2 py-0.5 rounded border border-[#00C2BB]/20">03 / 03</span>
+                          <span className="ml-3 text-[10px] font-mono text-gray-500 tracking-widest uppercase">
+                            {BLOG_POSTS[2].category}.md
+                          </span>
+                          <span className="ml-auto text-[10px] font-mono text-[#00C2BB] bg-[#00C2BB]/10 px-2 py-0.5 rounded border border-[#00C2BB]/20">
+                            03 / 03
+                          </span>
                         </div>
 
                         <div className="flex">
                           {/* Line numbers column */}
                           <div className="py-5 px-3 border-r border-white/5 flex flex-col gap-1 text-[10px] font-mono text-gray-700 select-none shrink-0">
-                            {[1, 2, 3, 4, 5, 6].map(n => <span key={n}>{n}</span>)}
+                            {[1, 2, 3, 4, 5, 6].map((n) => (
+                              <span key={n}>{n}</span>
+                            ))}
                           </div>
 
                           <div className="flex-1 p-5">
@@ -1359,12 +1598,16 @@ export default function RedesignedApp() {
                               <span className="text-green-500">▸</span>
                               <span>{BLOG_POSTS[2].date}</span>
                               <span className="text-gray-700">·</span>
-                              <span className="text-amber-400">{BLOG_POSTS[2].readTime}</span>
+                              <span className="text-amber-400">
+                                {BLOG_POSTS[2].readTime}
+                              </span>
                             </div>
                             <h3 className="text-base font-bold text-white group-hover:text-[#00C2BB] transition-colors duration-300 leading-snug mb-2">
                               {BLOG_POSTS[2].title}
                             </h3>
-                            <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">{BLOG_POSTS[2].desc}</p>
+                            <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">
+                              {BLOG_POSTS[2].desc}
+                            </p>
                             <motion.button
                               className="inline-flex items-center gap-2 bg-[#00C2BB]/10 hover:bg-[#00C2BB] text-[#00C2BB] hover:text-black border border-[#00C2BB]/30 font-mono font-bold text-xs px-4 py-2 rounded-lg transition-all duration-300"
                               whileHover={{ scale: 1.04 }}
@@ -1379,10 +1622,14 @@ export default function RedesignedApp() {
                         <motion.div
                           className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#00C2BB]/30 to-transparent pointer-events-none"
                           animate={{ top: ["0%", "100%"] }}
-                          transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay: 1 }}
+                          transition={{
+                            duration: 3.5,
+                            repeat: Infinity,
+                            ease: "linear",
+                            delay: 1,
+                          }}
                         />
                       </motion.article>
-
                     </div>
                   </div>
                 </div>
@@ -1398,18 +1645,19 @@ export default function RedesignedApp() {
             <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#051A18] via-[#0E0F14] to-[#041D1F] border border-[#00C2BB]/40 p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-[0_0_50px_rgba(0,194,187,0.15)]">
               <div className="max-w-2xl text-center lg:text-left">
                 <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest block mb-2">
-                // START YOUR PROJECT TODAY
+                  // START YOUR PROJECT TODAY
                 </span>
                 <h2 className="text-3xl sm:text-5xl font-black text-white font-mono uppercase tracking-tight leading-tight mb-4">
                   Are You Ready to Accelerate Your Business?
                 </h2>
                 <p className="text-gray-400 text-sm sm:text-base">
-                  Get in touch with our engineering team for a customized blueprint, quick estimate, and strategic deployment.
+                  Get in touch with our engineering team for a customized
+                  blueprint, quick estimate, and strategic deployment.
                 </p>
               </div>
 
               <button
-                onClick={() => handleNavClick('contact')}
+                onClick={() => handleNavClick("contact")}
                 className="bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold text-base px-9 py-4 rounded-full shadow-[0_0_30px_rgba(0,194,187,0.5)] hover:scale-105 transition-all shrink-0 flex items-center gap-3"
               >
                 <span>Get Started Now</span>
@@ -1423,120 +1671,149 @@ export default function RedesignedApp() {
         {(() => {
           const ContactSection = () => {
             const sectionRef = useRef(null);
-            const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
+            const isInView = useInView(sectionRef, {
+              once: true,
+              margin: "-80px",
+            });
 
             // Form state
             const [form, setForm] = useState({
-              name: '', email: '', service: 'Website Development', message: ''
+              name: "",
+              email: "",
+              service: "Website Development",
+              message: "",
             });
             // Email verification state
-            const [verifyStep, setVerifyStep] = useState('idle'); // idle | sending | code_sent | verifying | verified
-            const [enteredCode, setEnteredCode] = useState('');
-            const [codeError, setCodeError] = useState('');
+            const [verifyStep, setVerifyStep] = useState("idle"); // idle | sending | code_sent | verifying | verified
+            const [enteredCode, setEnteredCode] = useState("");
+            const [codeError, setCodeError] = useState("");
             const [submitted, setSubmitted] = useState(false);
             const [isSubmitting, setIsSubmitting] = useState(false);
 
-            const isGmail = form.email.toLowerCase().endsWith('@gmail.com');
+            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
 
             const handleSendCode = async () => {
-              if (!isGmail) return;
-              setVerifyStep('sending');
-              setCodeError('');
+              if (!isValidEmail) return;
+              setVerifyStep("sending");
+              setCodeError("");
 
               try {
-                const res = await fetch('/api/verify-email-send', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ email: form.email })
+                const res = await fetch("/api/verify-email-send", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email: form.email }),
                 });
 
                 const data = await res.json().catch(() => ({}));
                 if (res.ok) {
-                  setVerifyStep('code_sent');
+                  setVerifyStep("code_sent");
                 } else if (res.status === 404) {
-                  setVerifyStep('idle');
-                  setCodeError('Server route not found (404). Please restart "node server.js" in your terminal.');
+                  setVerifyStep("idle");
+                  setCodeError(
+                    'Server route not found (404). Please restart "node server.js" in your terminal.',
+                  );
                 } else {
-                  setVerifyStep('idle');
-                  setCodeError(data.error || 'Failed to send code.');
+                  setVerifyStep("idle");
+                  setCodeError(data.error || "Failed to send code.");
                 }
               } catch (err) {
-                setVerifyStep('idle');
-                setCodeError('Connection refused. Please make sure "node server.js" is running on port 5000.');
+                setVerifyStep("idle");
+                setCodeError(
+                  'Connection refused. Please make sure "node server.js" is running on port 5000.',
+                );
               }
             };
 
             const handleVerifyCode = async () => {
               if (enteredCode.length !== 6) return;
-              setVerifyStep('verifying');
-              setCodeError('');
+              setVerifyStep("verifying");
+              setCodeError("");
 
               try {
-                const res = await fetch('/api/verify-email-confirm', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ email: form.email, code: enteredCode })
+                const res = await fetch("/api/verify-email-confirm", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    email: form.email,
+                    code: enteredCode,
+                  }),
                 });
 
                 const data = await res.json().catch(() => ({}));
                 if (res.ok) {
-                  setVerifyStep('verified');
-                  setCodeError('');
+                  setVerifyStep("verified");
+                  setCodeError("");
                 } else if (res.status === 404) {
-                  setVerifyStep('code_sent');
-                  setCodeError('Server route 404. Please restart "node server.js".');
+                  setVerifyStep("code_sent");
+                  setCodeError(
+                    'Server route 404. Please restart "node server.js".',
+                  );
                 } else {
-                  setVerifyStep('code_sent');
-                  setCodeError(data.error || 'Invalid code.');
+                  setVerifyStep("code_sent");
+                  setCodeError(data.error || "Invalid code.");
                 }
               } catch (err) {
-                setVerifyStep('code_sent');
-                setCodeError('Connection error. Please try again.');
+                setVerifyStep("code_sent");
+                setCodeError("Connection error. Please try again.");
               }
             };
 
             const handleSubmit = async (e) => {
               e.preventDefault();
-              if (verifyStep !== 'verified') return;
+              if (verifyStep !== "verified") return;
               setIsSubmitting(true);
-              setCodeError('');
+              setCodeError("");
 
               try {
-                const res = await fetch('/api/contact-send', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(form)
+                const res = await fetch("/api/contact-send", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    ...form,
+                    sessionId: getAnalyticsSessionId(),
+                    page: window.location.pathname,
+                  }),
                 });
 
                 const data = await res.json().catch(() => ({}));
                 if (res.ok) {
                   setSubmitted(true);
                   setTimeout(() => setSubmitted(false), 6000);
-                  setForm({ name: '', email: '', service: 'Website Development', message: '' });
-                  setVerifyStep('idle');
-                  setEnteredCode('');
+                  setForm({
+                    name: "",
+                    email: "",
+                    service: "Website Development",
+                    message: "",
+                  });
+                  setVerifyStep("idle");
+                  setEnteredCode("");
                 } else {
-                  setCodeError(data.error || 'Failed to send message.');
+                  setCodeError(data.error || "Failed to send message.");
                 }
               } catch (err) {
-                setCodeError('Connection error. Please try again.');
+                setCodeError("Connection error. Please try again.");
               } finally {
                 setIsSubmitting(false);
               }
             };
 
-            const inputClass = "w-full bg-[#0E0F12] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#00C2BB] transition-all duration-300";
-            const labelClass = "block text-[10px] font-mono text-gray-400 uppercase tracking-wider mb-2";
+            const inputClass =
+              "w-full bg-[#0E0F12] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#00C2BB] transition-all duration-300";
+            const labelClass =
+              "block text-[10px] font-mono text-gray-400 uppercase tracking-wider mb-2";
 
             return (
-              <section id="contact" ref={sectionRef} className="py-24 px-6 lg:px-12 bg-[#090A0C] border-t border-white/10 relative overflow-hidden">
+              <section
+                id="contact"
+                ref={sectionRef}
+                className="py-24 px-6 lg:px-12 bg-[#090A0C] border-t border-white/10 relative overflow-hidden"
+              >
                 {/* Background glows */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00C2BB]/4 blur-[140px] pointer-events-none rounded-full translate-x-1/3 -translate-y-1/3" />
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#00C2BB]/3 blur-[120px] pointer-events-none rounded-full -translate-x-1/3 translate-y-1/3" />
 
                 <div className="max-w-7xl mx-auto relative z-10">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-
                     {/* ── LEFT: Info panel ── */}
                     <div>
                       <motion.div
@@ -1546,22 +1823,38 @@ export default function RedesignedApp() {
                         transition={{ duration: 0.5 }}
                       >
                         <span className="h-px w-6 bg-[#00C2BB]" />
-                        <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">// GET IN TOUCH</span>
+                        <span className="text-[#00C2BB] font-mono text-xs uppercase tracking-widest">
+                          // GET IN TOUCH
+                        </span>
                       </motion.div>
 
                       <h2 className="text-3xl sm:text-5xl font-black text-white font-mono uppercase leading-tight mb-4 overflow-hidden">
-                        {["Let's Build Something", "Amazing Together"].map((line, li) => (
-                          <span key={li} className="block overflow-hidden">
-                            <motion.span
-                              className="block"
-                              initial={{ y: "100%" }}
-                              animate={isInView ? { y: "0%" } : {}}
-                              transition={{ duration: 0.65, delay: 0.1 + li * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                            >
-                              {li === 1 ? <><span className="text-[#00C2BB]">{line}</span></> : line}
-                            </motion.span>
-                          </span>
-                        ))}
+                        {["Let's Build Something", "Amazing Together"].map(
+                          (line, li) => (
+                            <span key={li} className="block overflow-hidden">
+                              <motion.span
+                                className="block"
+                                initial={{ y: "100%" }}
+                                animate={isInView ? { y: "0%" } : {}}
+                                transition={{
+                                  duration: 0.65,
+                                  delay: 0.1 + li * 0.12,
+                                  ease: [0.16, 1, 0.3, 1],
+                                }}
+                              >
+                                {li === 1 ? (
+                                  <>
+                                    <span className="text-[#00C2BB]">
+                                      {line}
+                                    </span>
+                                  </>
+                                ) : (
+                                  line
+                                )}
+                              </motion.span>
+                            </span>
+                          ),
+                        )}
                       </h2>
 
                       <motion.p
@@ -1570,13 +1863,24 @@ export default function RedesignedApp() {
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.55, delay: 0.38 }}
                       >
-                        Have a project in mind? We'd love to hear about it. Send us a message and we'll get back to you within 24 hours.
+                        Have a project in mind? We'd love to hear about it. Send
+                        us a message and we'll get back to you within 24 hours.
                       </motion.p>
 
                       {/* Contact cards */}
                       {[
-                        { icon: <Mail className="w-5 h-5" />, label: "Email Us", value: "rhynoxtechnologies@gmail.com", href: "mailto:rhynoxtechnologies@gmail.com" },
-                        { icon: <Phone className="w-5 h-5" />, label: "Call Us", value: "+91 81483 11669", href: "tel:+918148311669" },
+                        {
+                          icon: <Mail className="w-5 h-5" />,
+                          label: "Email Us",
+                          value: "contact@rhynoxtechnologies.dev",
+                          href: "mailto:contact@rhynoxtechnologies.dev",
+                        },
+                        {
+                          icon: <Phone className="w-5 h-5" />,
+                          label: "Call Us",
+                          value: "+91 81483 11669",
+                          href: "tel:+918148311669",
+                        },
                       ].map((item, i) => (
                         <motion.a
                           key={i}
@@ -1593,8 +1897,12 @@ export default function RedesignedApp() {
                             {item.icon}
                           </motion.div>
                           <div>
-                            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">{item.label}</span>
-                            <span className="text-sm font-bold text-white group-hover:text-[#00C2BB] transition-colors">{item.value}</span>
+                            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">
+                              {item.label}
+                            </span>
+                            <span className="text-sm font-bold text-white group-hover:text-[#00C2BB] transition-colors">
+                              {item.value}
+                            </span>
                           </div>
                         </motion.a>
                       ))}
@@ -1604,12 +1912,23 @@ export default function RedesignedApp() {
                         className="mt-10 p-5 rounded-2xl bg-[#111316] border border-white/10 flex items-center gap-4 max-w-sm"
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: [0, -6, 0] } : {}}
-                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 0.7,
+                        }}
                       >
-                        <div className="w-10 h-10 rounded-lg bg-[#00C2BB] flex items-center justify-center text-black font-black text-xl shrink-0 shadow-[0_0_20px_rgba(0,194,187,0.4)]">R</div>
+                        <div className="w-10 h-10 rounded-lg bg-[#00C2BB] flex items-center justify-center text-black font-black text-xl shrink-0 shadow-[0_0_20px_rgba(0,194,187,0.4)]">
+                          R
+                        </div>
                         <div>
-                          <p className="text-white text-sm font-bold font-mono">Average response time</p>
-                          <p className="text-[#00C2BB] text-xs font-mono">Within 24 hours ⚡</p>
+                          <p className="text-white text-sm font-bold font-mono">
+                            Average response time
+                          </p>
+                          <p className="text-[#00C2BB] text-xs font-mono">
+                            Within 24 hours ⚡
+                          </p>
                         </div>
                         <span className="ml-auto h-2 w-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_#4ade80]" />
                       </motion.div>
@@ -1620,7 +1939,11 @@ export default function RedesignedApp() {
                       className="bg-[#0E0F12] border border-white/10 rounded-2xl p-8 lg:p-10 relative overflow-hidden shadow-2xl"
                       initial={{ opacity: 0, x: 50, scale: 0.97 }}
                       animate={isInView ? { opacity: 1, x: 0, scale: 1 } : {}}
-                      transition={{ duration: 0.75, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{
+                        duration: 0.75,
+                        delay: 0.25,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
                     >
                       {/* Animated top border */}
                       <motion.div
@@ -1647,8 +1970,13 @@ export default function RedesignedApp() {
                             >
                               <CheckCircle className="w-10 h-10 text-[#00C2BB]" />
                             </motion.div>
-                            <h3 className="text-2xl font-black text-white font-mono mb-3">Message Sent! 🎉</h3>
-                            <p className="text-gray-400 text-sm max-w-xs mx-auto">Thank you for reaching out. We've received your request and will respond within 24 hours.</p>
+                            <h3 className="text-2xl font-black text-white font-mono mb-3">
+                              Message Sent! 🎉
+                            </h3>
+                            <p className="text-gray-400 text-sm max-w-xs mx-auto">
+                              Thank you for reaching out. We've received your
+                              request and will respond within 24 hours.
+                            </p>
                           </motion.div>
                         ) : (
                           <motion.form
@@ -1662,53 +1990,72 @@ export default function RedesignedApp() {
                             <div>
                               <label className={labelClass}>Your Name</label>
                               <input
-                                type="text" required
+                                type="text"
+                                required
                                 placeholder="John Doe"
                                 value={form.name}
-                                onChange={e => setForm({ ...form, name: e.target.value })}
+                                onChange={(e) =>
+                                  setForm({ ...form, name: e.target.value })
+                                }
                                 className={inputClass}
                               />
                             </div>
 
                             {/* Gmail Address + Verification */}
                             <div>
-                              <label className={labelClass}>Your Gmail Address</label>
+                              <label className={labelClass}>
+                                Your Gmail Address
+                              </label>
                               <div className="flex gap-2">
                                 <input
-                                  type="email" required
-                                  placeholder="john@gmail.com"
+                                  type="email"
+                                  required
+                                  placeholder="john@example.com"
                                   value={form.email}
-                                  onChange={e => { setForm({ ...form, email: e.target.value }); setVerifyStep('idle'); setEnteredCode(''); setCodeError(''); }}
+                                  onChange={(e) => {
+                                    setForm({ ...form, email: e.target.value });
+                                    setVerifyStep("idle");
+                                    setEnteredCode("");
+                                    setCodeError("");
+                                  }}
                                   className={`${inputClass} flex-1`}
-                                  disabled={verifyStep === 'verified'}
+                                  disabled={verifyStep === "verified"}
                                 />
-                                {verifyStep === 'verified' && (
+                                {verifyStep === "verified" && (
                                   <div className="flex items-center gap-1 px-4 text-green-400 text-xs font-mono shrink-0 border border-green-400/30 rounded-xl bg-green-400/10">
                                     <Check className="w-4 h-4" /> Verified
                                   </div>
                                 )}
                               </div>
 
-                              {/* Gmail-only note */}
-                              {!isGmail && form.email.length > 3 && verifyStep !== 'verified' && (
-                                <p className="text-amber-400 text-[10px] font-mono mt-1.5">⚠ Only Gmail addresses are accepted.</p>
-                              )}
+                              {/* Email format note */}
+                              {!isValidEmail &&
+                                form.email.length > 3 &&
+                                verifyStep !== "verified" && (
+                                  <p className="text-amber-400 text-[10px] font-mono mt-1.5">
+                                    ⚠ Please enter a valid email address.
+                                  </p>
+                                )}
 
                               {/* Verification panel */}
-                              {verifyStep !== 'verified' && (
+                              {verifyStep !== "verified" && (
                                 <div className="mt-3 p-4 rounded-xl bg-[#111316] border border-white/8">
                                   <div className="flex items-center gap-2 mb-2">
                                     <ShieldCheck className="w-4 h-4 text-[#00C2BB]" />
-                                    <span className="text-xs font-mono text-white font-bold">Email Verification Required</span>
+                                    <span className="text-xs font-mono text-white font-bold">
+                                      Email Verification Required
+                                    </span>
                                   </div>
                                   <p className="text-gray-500 text-[11px] leading-relaxed mb-4">
-                                    To ensure genuine communication, please verify your Gmail address by entering the code we've sent to your inbox.
+                                    To ensure genuine communication, please
+                                    verify your Gmail address by entering the
+                                    code we've sent to your inbox.
                                   </p>
 
-                                  {verifyStep === 'idle' && (
+                                  {verifyStep === "idle" && (
                                     <button
                                       type="button"
-                                      disabled={!isGmail}
+                                      disabled={!isValidEmail}
                                       onClick={handleSendCode}
                                       className="w-full py-3 rounded-xl text-xs font-mono font-bold border border-[#00C2BB]/40 text-[#00C2BB] hover:bg-[#00C2BB] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                                     >
@@ -1716,44 +2063,75 @@ export default function RedesignedApp() {
                                     </button>
                                   )}
 
-                                  {verifyStep === 'sending' && (
+                                  {verifyStep === "sending" && (
                                     <div className="flex items-center justify-center gap-2 py-3 border border-transparent text-xs font-mono text-gray-400">
-                                      <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }}>
+                                      <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{
+                                          duration: 1,
+                                          repeat: Infinity,
+                                          ease: "linear",
+                                        }}
+                                      >
                                         <Zap className="w-4 h-4 text-[#00C2BB]" />
                                       </motion.div>
                                       Sending code...
                                     </div>
                                   )}
 
-                                  {(verifyStep === 'code_sent' || verifyStep === 'verifying') && (
+                                  {(verifyStep === "code_sent" ||
+                                    verifyStep === "verifying") && (
                                     <div className="space-y-3">
-                                      <p className="text-[10px] text-green-400 font-mono">✓ Code sent to your inbox.</p>
+                                      <p className="text-[10px] text-green-400 font-mono">
+                                        ✓ Code sent to your inbox.
+                                      </p>
                                       <input
                                         type="text"
                                         maxLength={6}
                                         placeholder="Enter 6-digit code"
                                         value={enteredCode}
-                                        onChange={e => { setEnteredCode(e.target.value.replace(/\D/g, '')); setCodeError(''); }}
+                                        onChange={(e) => {
+                                          setEnteredCode(
+                                            e.target.value.replace(/\D/g, ""),
+                                          );
+                                          setCodeError("");
+                                        }}
                                         className="w-full bg-[#18191D] border border-white/10 rounded-xl px-4 py-3 text-sm text-white text-center tracking-widest font-mono focus:outline-none focus:border-[#00C2BB] transition-all"
-                                        disabled={verifyStep === 'verifying'}
+                                        disabled={verifyStep === "verifying"}
                                       />
-                                      {codeError && <p className="text-red-400 text-[10px] font-mono">{codeError}</p>}
+                                      {codeError && (
+                                        <p className="text-red-400 text-[10px] font-mono">
+                                          {codeError}
+                                        </p>
+                                      )}
                                       <div className="flex gap-2">
                                         <button
                                           type="button"
                                           onClick={handleVerifyCode}
-                                          disabled={enteredCode.length !== 6 || verifyStep === 'verifying'}
+                                          disabled={
+                                            enteredCode.length !== 6 ||
+                                            verifyStep === "verifying"
+                                          }
                                           className="flex-1 py-3 rounded-xl text-xs font-mono font-bold bg-[#00C2BB] text-black hover:bg-[#00e5ff] disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                                         >
-                                          {verifyStep === 'verifying' ? (
-                                            <><Zap className="w-3.5 h-3.5 animate-spin" /> Verifying...</>
-                                          ) : "Verify Code"}
+                                          {verifyStep === "verifying" ? (
+                                            <>
+                                              <Zap className="w-3.5 h-3.5 animate-spin" />{" "}
+                                              Verifying...
+                                            </>
+                                          ) : (
+                                            "Verify Code"
+                                          )}
                                         </button>
                                         <button
                                           type="button"
-                                          onClick={() => { setVerifyStep('idle'); setEnteredCode(''); setCodeError(''); }}
+                                          onClick={() => {
+                                            setVerifyStep("idle");
+                                            setEnteredCode("");
+                                            setCodeError("");
+                                          }}
                                           className="px-5 py-3 rounded-xl text-xs font-mono text-gray-400 border border-white/10 hover:border-white/20 transition-all disabled:opacity-40"
-                                          disabled={verifyStep === 'verifying'}
+                                          disabled={verifyStep === "verifying"}
                                         >
                                           Resend
                                         </button>
@@ -1766,10 +2144,14 @@ export default function RedesignedApp() {
 
                             {/* Service */}
                             <div>
-                              <label className={labelClass}>Service Interested In</label>
+                              <label className={labelClass}>
+                                Service Interested In
+                              </label>
                               <select
                                 value={form.service}
-                                onChange={e => setForm({ ...form, service: e.target.value })}
+                                onChange={(e) =>
+                                  setForm({ ...form, service: e.target.value })
+                                }
                                 className={inputClass}
                               >
                                 <option>Website Development</option>
@@ -1787,32 +2169,56 @@ export default function RedesignedApp() {
                             <div>
                               <label className={labelClass}>Message</label>
                               <textarea
-                                rows={4} required
+                                rows={4}
+                                required
                                 placeholder="Tell us about your project..."
                                 value={form.message}
-                                onChange={e => setForm({ ...form, message: e.target.value })}
+                                onChange={(e) =>
+                                  setForm({ ...form, message: e.target.value })
+                                }
                                 className={inputClass}
                               />
                             </div>
 
-                            {codeError && !['code_sent', 'verifying', 'sending'].includes(verifyStep) && (
-                              <p className="text-red-400 text-[11px] font-mono text-center">{codeError}</p>
-                            )}
+                            {codeError &&
+                              !["code_sent", "verifying", "sending"].includes(
+                                verifyStep,
+                              ) && (
+                                <p className="text-red-400 text-[11px] font-mono text-center">
+                                  {codeError}
+                                </p>
+                              )}
 
                             {/* Submit */}
                             <motion.button
                               type="submit"
-                              disabled={verifyStep !== 'verified' || isSubmitting}
+                              disabled={
+                                verifyStep !== "verified" || isSubmitting
+                              }
                               className="w-full py-4 rounded-xl text-sm font-extrabold flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                               style={{
-                                background: verifyStep === 'verified' ? '#00C2BB' : '#1a1b1e',
-                                color: verifyStep === 'verified' ? '#000' : '#666',
-                                border: verifyStep !== 'verified' ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                                boxShadow: verifyStep === 'verified' ? '0 0 24px rgba(0,194,187,0.45)' : 'none',
+                                background:
+                                  verifyStep === "verified"
+                                    ? "#00C2BB"
+                                    : "#1a1b1e",
+                                color:
+                                  verifyStep === "verified" ? "#000" : "#666",
+                                border:
+                                  verifyStep !== "verified"
+                                    ? "1px solid rgba(255,255,255,0.1)"
+                                    : "none",
+                                boxShadow:
+                                  verifyStep === "verified"
+                                    ? "0 0 24px rgba(0,194,187,0.45)"
+                                    : "none",
                               }}
-                              whileHover={verifyStep === 'verified' && !isSubmitting ? { scale: 1.02 } : {}}
+                              whileHover={
+                                verifyStep === "verified" && !isSubmitting
+                                  ? { scale: 1.02 }
+                                  : {}
+                              }
                             >
-                              {verifyStep !== 'verified' ? (
+                              {verifyStep !== "verified" ? (
                                 <>
                                   <ShieldCheck className="w-4 h-4" />
                                   <span>Verify Email to Continue</span>
@@ -1833,7 +2239,6 @@ export default function RedesignedApp() {
                         )}
                       </AnimatePresence>
                     </motion.div>
-
                   </div>
                 </div>
               </section>
@@ -1846,22 +2251,58 @@ export default function RedesignedApp() {
         {(() => {
           const Footer = () => {
             const footerRef = useRef(null);
-            const isInView = useInView(footerRef, { once: true, margin: "-60px" });
+            const footerTapTimesRef = useRef([]);
+            const isInView = useInView(footerRef, {
+              once: true,
+              margin: "-60px",
+            });
+
+            const handleFooterTap = () => {
+              const now = Date.now();
+              const recentTaps = [...footerTapTimesRef.current, now].filter(
+                (tapTime) => now - tapTime <= 700,
+              );
+
+              if (recentTaps.length >= 3) {
+                footerTapTimesRef.current = [];
+                setAdminUser(null);
+                setIsAdminLoggedIn(false);
+                setShowAdminLogin(true);
+              } else {
+                footerTapTimesRef.current = recentTaps;
+              }
+            };
 
             const services = [
-              "Web Development", "App Development", "AI Solutions",
-              "UI/UX Design", "Cloud Solutions", "Video Production"
+              "Web Development",
+              "App Development",
+              "AI Solutions",
+              "UI/UX Design",
+              "Cloud Solutions",
+              "Video Production",
             ];
             const company = ["About Us", "Portfolio", "Services", "Why Us"];
             const trustBadges = [
-              { icon: <ShieldCheck className="w-4 h-4" />, label: "Secure & Reliable" },
+              {
+                icon: <ShieldCheck className="w-4 h-4" />,
+                label: "Secure & Reliable",
+              },
               { icon: <Zap className="w-4 h-4" />, label: "Fast Delivery" },
-              { icon: <Layers className="w-4 h-4" />, label: "Modern Technologies" },
-              { icon: <Headset className="w-4 h-4" />, label: "Long-Term Support" },
+              {
+                icon: <Layers className="w-4 h-4" />,
+                label: "Modern Technologies",
+              },
+              {
+                icon: <Headset className="w-4 h-4" />,
+                label: "Long-Term Support",
+              },
             ];
 
             return (
-              <footer ref={footerRef} className="bg-[#050607] border-t border-white/10 relative overflow-hidden">
+              <footer
+                ref={footerRef}
+                className="bg-[#050607] border-t border-white/10 relative overflow-hidden"
+              >
                 {/* Subtle background glow */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#00C2BB]/4 blur-[120px] pointer-events-none rounded-full" />
 
@@ -1874,16 +2315,18 @@ export default function RedesignedApp() {
                 />
 
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-10 relative z-10">
-
                   {/* ── Main 4-column grid ── */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 mb-14">
-
                     {/* Col 1 — Brand */}
                     <motion.div
                       className="lg:col-span-5 flex flex-col gap-6"
                       initial={{ opacity: 0, y: 30 }}
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{
+                        duration: 0.7,
+                        delay: 0.1,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
                     >
                       {/* Logo */}
                       <div className="flex items-center overflow-visible py-2">
@@ -1896,23 +2339,33 @@ export default function RedesignedApp() {
 
                       {/* Tagline */}
                       <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-                        Building modern websites, AI-powered solutions, mobile applications, and digital experiences that help businesses grow faster.
+                        Building modern websites, AI-powered solutions, mobile
+                        applications, and digital experiences that help
+                        businesses grow faster.
                       </p>
 
                       {/* Contact info */}
                       <div className="flex flex-col gap-3">
-                        <a href="https://maps.google.com/?q=Chennai,India" target="_blank" rel="noreferrer"
-                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group">
+                        <a
+                          href="https://maps.google.com/?q=Chennai,India"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group"
+                        >
                           <MapPin className="w-4 h-4 text-[#00C2BB] shrink-0 group-hover:scale-110 transition-transform" />
                           <span>Chennai, India</span>
                         </a>
-                        <a href="mailto:rhynoxtechnologies@gmail.com"
-                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group">
+                        <a
+                          href="mailto:contact@rhynoxtechnologies.dev"
+                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group"
+                        >
                           <Mail className="w-4 h-4 text-[#00C2BB] shrink-0 group-hover:scale-110 transition-transform" />
-                          <span>rhynoxtechnologies@gmail.com</span>
+                          <span>contact@rhynoxtechnologies.dev</span>
                         </a>
-                        <a href="tel:+918148311669"
-                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group">
+                        <a
+                          href="tel:+918148311669"
+                          className="flex items-center gap-2.5 text-gray-400 hover:text-[#00C2BB] transition-colors text-sm group"
+                        >
                           <Phone className="w-4 h-4 text-[#00C2BB] shrink-0 group-hover:scale-110 transition-transform" />
                           <span>+91 81483 11669</span>
                         </a>
@@ -1921,17 +2374,28 @@ export default function RedesignedApp() {
                       {/* Social icons */}
                       <div className="flex items-center gap-3 pt-1">
                         {[
-                          { icon: <Instagram className="w-4 h-4" />, href: "https://instagram.com", name: "Instagram" },
+                          {
+                            icon: <Instagram className="w-4 h-4" />,
+                            href: "https://instagram.com",
+                            name: "Instagram",
+                          },
                           {
                             icon: (
-                              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                              <svg
+                                className="w-4 h-4 fill-current"
+                                viewBox="0 0 24 24"
+                              >
                                 <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
                               </svg>
                             ),
                             href: "https://wa.me/918148311669",
-                            name: "WhatsApp"
+                            name: "WhatsApp",
                           },
-                          { icon: <Linkedin className="w-4 h-4" />, href: "https://linkedin.com", name: "LinkedIn" },
+                          {
+                            icon: <Linkedin className="w-4 h-4" />,
+                            href: "https://linkedin.com",
+                            name: "LinkedIn",
+                          },
                         ].map((s, i) => (
                           <motion.a
                             key={i}
@@ -1954,7 +2418,11 @@ export default function RedesignedApp() {
                       className="lg:col-span-3"
                       initial={{ opacity: 0, y: 30 }}
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{
+                        duration: 0.7,
+                        delay: 0.2,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
                     >
                       <h4 className="text-white font-mono font-bold text-sm uppercase tracking-widest mb-6 flex items-center gap-2">
                         <span className="h-px w-4 bg-[#00C2BB]" />
@@ -1966,10 +2434,13 @@ export default function RedesignedApp() {
                             key={s}
                             initial={{ opacity: 0, x: -12 }}
                             animate={isInView ? { opacity: 1, x: 0 } : {}}
-                            transition={{ duration: 0.4, delay: 0.3 + i * 0.07 }}
+                            transition={{
+                              duration: 0.4,
+                              delay: 0.3 + i * 0.07,
+                            }}
                           >
                             <button
-                              onClick={() => handleNavClick('solutions')}
+                              onClick={() => handleNavClick("solutions")}
                               className="text-gray-400 hover:text-[#00C2BB] text-sm transition-colors flex items-center gap-2 group"
                             >
                               <ChevronRight className="w-3 h-3 text-[#00C2BB]/50 group-hover:text-[#00C2BB] group-hover:translate-x-1 transition-all" />
@@ -1985,7 +2456,11 @@ export default function RedesignedApp() {
                       className="lg:col-span-2"
                       initial={{ opacity: 0, y: 30 }}
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{
+                        duration: 0.7,
+                        delay: 0.3,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
                     >
                       <h4 className="text-white font-mono font-bold text-sm uppercase tracking-widest mb-6 flex items-center gap-2">
                         <span className="h-px w-4 bg-[#00C2BB]" />
@@ -1997,10 +2472,21 @@ export default function RedesignedApp() {
                             key={c}
                             initial={{ opacity: 0, x: -12 }}
                             animate={isInView ? { opacity: 1, x: 0 } : {}}
-                            transition={{ duration: 0.4, delay: 0.4 + i * 0.07 }}
+                            transition={{
+                              duration: 0.4,
+                              delay: 0.4 + i * 0.07,
+                            }}
                           >
                             <button
-                              onClick={() => handleNavClick(c === "About Us" ? "vision" : c === "Services" ? "solutions" : "contact")}
+                              onClick={() =>
+                                handleNavClick(
+                                  c === "About Us"
+                                    ? "vision"
+                                    : c === "Services"
+                                      ? "solutions"
+                                      : "contact",
+                                )
+                              }
                               className="text-gray-400 hover:text-[#00C2BB] text-sm transition-colors flex items-center gap-2 group"
                             >
                               <ChevronRight className="w-3 h-3 text-[#00C2BB]/50 group-hover:text-[#00C2BB] group-hover:translate-x-1 transition-all" />
@@ -2016,17 +2502,24 @@ export default function RedesignedApp() {
                       className="lg:col-span-2 flex flex-col gap-4"
                       initial={{ opacity: 0, y: 30 }}
                       animate={isInView ? { opacity: 1, y: 0 } : {}}
-                      transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{
+                        duration: 0.7,
+                        delay: 0.4,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <span className="h-2 w-2 rounded-full bg-[#00C2BB] animate-pulse shadow-[0_0_8px_#00C2BB]" />
-                        <span className="text-[10px] font-mono text-[#00C2BB] uppercase tracking-widest">Live Support</span>
+                        <span className="text-[10px] font-mono text-[#00C2BB] uppercase tracking-widest">
+                          Live Support
+                        </span>
                       </div>
                       <p className="text-gray-400 text-xs leading-relaxed">
-                        Have a project in mind? Our team is ready to help you build it.
+                        Have a project in mind? Our team is ready to help you
+                        build it.
                       </p>
                       <motion.button
-                        onClick={() => handleNavClick('contact')}
+                        onClick={() => handleNavClick("contact")}
                         className="mt-2 bg-[#00C2BB] hover:bg-[#00e5ff] text-black font-extrabold text-xs px-5 py-3 rounded-xl shadow-[0_0_20px_rgba(0,194,187,0.35)] hover:shadow-[0_0_30px_rgba(0,194,187,0.55)] transition-all flex items-center gap-2 w-fit"
                         whileHover={{ scale: 1.05 }}
                       >
@@ -2052,8 +2545,12 @@ export default function RedesignedApp() {
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.4, delay: 0.6 + i * 0.08 }}
                       >
-                        <span className="text-[#00C2BB] group-hover:scale-110 transition-transform">{badge.icon}</span>
-                        <span className="text-gray-300 text-xs font-mono">{badge.label}</span>
+                        <span className="text-[#00C2BB] group-hover:scale-110 transition-transform">
+                          {badge.icon}
+                        </span>
+                        <span className="text-gray-300 text-xs font-mono">
+                          {badge.label}
+                        </span>
                       </motion.div>
                     ))}
                   </motion.div>
@@ -2065,17 +2562,22 @@ export default function RedesignedApp() {
                     animate={isInView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.6, delay: 0.7 }}
                   >
-                    <p>© 2026 Rhynox Technologies. All rights reserved.</p>
+                    <p onPointerUp={handleFooterTap} className="select-none">
+                      © 2026 Rhynox Technologies. All rights reserved.
+                    </p>
                     <div className="flex items-center gap-5 text-gray-600">
-                      <span className="hover:text-gray-400 cursor-pointer transition-colors">Privacy Policy</span>
-                      <span className="hover:text-gray-400 cursor-pointer transition-colors">Terms of Service</span>
+                      <span className="hover:text-gray-400 cursor-pointer transition-colors">
+                        Privacy Policy
+                      </span>
+                      <span className="hover:text-gray-400 cursor-pointer transition-colors">
+                        Terms of Service
+                      </span>
                       <span className="flex items-center gap-1.5 text-[#FF5A36]/70">
                         <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A36] animate-pulse" />
                         All systems operational
                       </span>
                     </div>
                   </motion.div>
-
                 </div>
               </footer>
             );
@@ -2118,10 +2620,15 @@ export default function RedesignedApp() {
                   {selectedServiceModal.desc}
                 </p>
 
-                <h4 className="text-xs font-mono uppercase text-[#FF5A36] tracking-widest mb-3">Key Deliverables:</h4>
+                <h4 className="text-xs font-mono uppercase text-[#FF5A36] tracking-widest mb-3">
+                  Key Deliverables:
+                </h4>
                 <ul className="space-y-2 mb-8">
                   {selectedServiceModal.features.map((feat, i) => (
-                    <li key={i} className="flex items-center gap-2 text-xs text-gray-300">
+                    <li
+                      key={i}
+                      className="flex items-center gap-2 text-xs text-gray-300"
+                    >
                       <Check className="w-4 h-4 text-[#FF5A36]" />
                       <span>{feat}</span>
                     </li>
@@ -2131,7 +2638,7 @@ export default function RedesignedApp() {
                 <button
                   onClick={() => {
                     setSelectedServiceModal(null);
-                    handleNavClick('contact');
+                    handleNavClick("contact");
                   }}
                   className="w-full bg-[#FF5A36] text-black font-extrabold py-3 rounded-xl text-center shadow-[0_0_20px_rgba(255,90,54,0.4)] hover:bg-[#ff7253] transition-all"
                 >
@@ -2145,7 +2652,7 @@ export default function RedesignedApp() {
         {/* ── 13. ADMIN LOGIN / DASHBOARD OVERLAY ───────────────────────── */}
         <AnimatePresence>
           {showAdminLogin && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg">
+            <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 bg-black/90 backdrop-blur-lg">
               {isAdminLoggedIn ? (
                 <div className="bg-[#121316] w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 border border-white/10 relative">
                   <button
@@ -2154,7 +2661,7 @@ export default function RedesignedApp() {
                   >
                     <X className="w-6 h-6" />
                   </button>
-                  <AdminDashboard onLogout={() => setIsAdminLoggedIn(false)} />
+                  <AdminDashboard user={adminUser} />
                 </div>
               ) : (
                 <div className="relative w-full max-w-md">
@@ -2164,7 +2671,12 @@ export default function RedesignedApp() {
                   >
                     <X className="w-6 h-6" />
                   </button>
-                  <AdminLogin onLoginSuccess={() => setIsAdminLoggedIn(true)} />
+                  <AdminLogin
+                    onSuccess={(loggedInUser) => {
+                      setAdminUser(loggedInUser);
+                      setIsAdminLoggedIn(true);
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -2173,7 +2685,6 @@ export default function RedesignedApp() {
 
         {/* ── 14. FLOATING AI CHATBOT INTEGRATION ───────────────────────── */}
         <Chatbot />
-
       </div>
     </ReactLenis>
   );

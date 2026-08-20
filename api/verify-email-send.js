@@ -1,17 +1,7 @@
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import connectDB from './db.js';
 import EmailVerification from './models/EmailVerification.js';
-
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_APP_PASSWORD
-    }
-  });
-};
+import { createTransporter } from './mail.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -49,11 +39,11 @@ export default async function handler(req, res) {
 
     const { email } = req.body;
     
-    // Validate Gmail format with regex
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    if (!gmailRegex.test(email)) {
+    // Validate a standard email address format.
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
       return res.status(400).json({ 
-        error: 'Invalid Gmail address. Please enter a valid @gmail.com email address.' 
+        error: 'Invalid email address. Please enter a valid email address.' 
       });
     }
 

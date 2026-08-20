@@ -6,6 +6,58 @@
   },
   "rewrites": [
     {
+      "source": "/api/internal-projects/:id",
+      "destination": "/api/admin.js?resource=internal-projects&id=:id"
+    },
+    {
+      "source": "/api/internal-projects",
+      "destination": "/api/admin.js?resource=internal-projects"
+    },
+    {
+      "source": "/api/analytics/click",
+      "destination": "/api/admin.js?resource=analytics-click"
+    },
+    {
+      "source": "/api/analytics/clicks",
+      "destination": "/api/admin.js?resource=analytics-clicks"
+    },
+    {
+      "source": "/api/analytics/events/export",
+      "destination": "/api/admin.js?resource=analytics-events-export"
+    },
+    {
+      "source": "/api/analytics/events",
+      "destination": "/api/admin.js?resource=analytics-events"
+    },
+    {
+      "source": "/api/analytics/overview",
+      "destination": "/api/admin.js?resource=analytics-overview"
+    },
+    {
+      "source": "/api/analytics/traffic",
+      "destination": "/api/admin.js?resource=analytics-traffic"
+    },
+    {
+      "source": "/api/analytics/sources",
+      "destination": "/api/admin.js?resource=analytics-sources"
+    },
+    {
+      "source": "/api/analytics/devices",
+      "destination": "/api/admin.js?resource=analytics-devices"
+    },
+    {
+      "source": "/api/leads/contacts/:id",
+      "destination": "/api/admin.js?resource=lead-contacts&id=:id"
+    },
+    {
+      "source": "/api/leads/contacts",
+      "destination": "/api/admin.js?resource=lead-contacts"
+    },
+    {
+      "source": "/api/leads/chatbot-sessions",
+      "destination": "/api/admin.js?resource=chatbot-sessions"
+    },
+    {
       "source": "/api/projects/:id",
       "destination": "/api/index.js?id=:id"
     },
