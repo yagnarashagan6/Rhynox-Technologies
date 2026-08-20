@@ -1,6 +1,6 @@
-import connectDB from "./db.js";
-import ChatbotSession from "./models/ChatbotSession.js";
-import { createTransporter } from "./mail.js";
+import connectDB from "../lib/server/db.js";
+import ChatbotSession from "../lib/server/models/ChatbotSession.js";
+import { createTransporter } from "../lib/server/mail.js";
 
 export default async function handler(req, res) {
   // Enable CORS

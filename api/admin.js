@@ -1,9 +1,9 @@
-import connectDB from "./db.js";
-import InternalProject from "./models/InternalProject.js";
-import EngagementEvent from "./models/EngagementEvent.js";
-import ContactSubmission from "./models/ContactSubmission.js";
-import ChatbotSession from "./models/ChatbotSession.js";
-import ClickAnalytics from "./models/ClickAnalytics.js";
+import connectDB from "../lib/server/db.js";
+import InternalProject from "../lib/server/models/InternalProject.js";
+import EngagementEvent from "../lib/server/models/EngagementEvent.js";
+import ContactSubmission from "../lib/server/models/ContactSubmission.js";
+import ChatbotSession from "../lib/server/models/ChatbotSession.js";
+import ClickAnalytics from "../lib/server/models/ClickAnalytics.js";
 
 const EVENT_TYPES = [
   "page_view",

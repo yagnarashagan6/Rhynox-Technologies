@@ -76,6 +76,10 @@
     {
       "source": "/api/chatbot-order",
       "destination": "/api/chatbot-order.js"
+    },
+    {
+      "source": "/admin-dashboard",
+      "destination": "/index.html"
     }
   ]
 }

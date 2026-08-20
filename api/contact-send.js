@@ -1,7 +1,7 @@
-import connectDB from "./db.js";
-import EmailVerification from "./models/EmailVerification.js";
-import ContactSubmission from "./models/ContactSubmission.js";
-import { createTransporter } from "./mail.js";
+import connectDB from "../lib/server/db.js";
+import EmailVerification from "../lib/server/models/EmailVerification.js";
+import ContactSubmission from "../lib/server/models/ContactSubmission.js";
+import { createTransporter } from "../lib/server/mail.js";
 
 export default async function handler(req, res) {
   // Enable CORS

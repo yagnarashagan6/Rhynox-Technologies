@@ -1,5 +1,5 @@
-import connectDB from './db.js';
-import Project from './models/Project.js';
+import connectDB from '../lib/server/db.js';
+import Project from '../lib/server/models/Project.js';
 import multiparty from 'multiparty';
 import { v2 as cloudinary } from 'cloudinary';
 
