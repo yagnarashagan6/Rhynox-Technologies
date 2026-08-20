@@ -449,7 +449,7 @@ const HeroSection = ({ handleNavClick }) => {
   return (
     <section
       ref={sectionRef}
-      className="relative pt-28 pb-12 px-6 lg:px-16 min-h-screen h-screen flex items-center justify-start overflow-hidden bg-black"
+      className="relative pt-20 pb-8 px-6 lg:px-16 min-h-screen h-screen flex items-center justify-start overflow-hidden bg-black"
     >
       <ConstellationCanvas />
 
@@ -699,7 +699,7 @@ const SolutionsSection = ({ handleNavClick, setSelectedServiceModal }) => {
   return (
     <section
       id="solutions"
-      className="py-16 lg:py-24 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden"
+      className="pt-3 lg:pt-4 pb-10 lg:pb-14 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden"
     >
       {/* Subtle background grid */}
       <div
@@ -803,7 +803,7 @@ export default function RedesignedApp() {
         const headerHeight = header?.getBoundingClientRect().height || 92;
         const targetTop = Math.max(
           0,
-          el.getBoundingClientRect().top + window.scrollY - headerHeight - 8,
+          el.getBoundingClientRect().top + window.scrollY - headerHeight + 2,
         );
         window.scrollTo({ top: targetTop, behavior: "smooth" });
       }
@@ -946,7 +946,7 @@ export default function RedesignedApp() {
         />
 
         {/* ── 4. METRICS / NUMBERS SECTION ("We Take Pride in Our Numbers") ────── */}
-        <section className="pt-12 pb-20 px-6 lg:px-12 bg-black border-t border-white/10 relative overflow-hidden">
+        <section className="pt-3 lg:pt-4 pb-10 lg:pb-14 px-6 lg:px-12 bg-black border-t border-white/10 relative overflow-hidden">
           {/* Subtle particle wave effect */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,194,187,0.06)_0,transparent_70%)] pointer-events-none" />
 
@@ -1001,7 +1001,7 @@ export default function RedesignedApp() {
               <section
                 id="vision"
                 ref={sectionRef}
-                className="py-24 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden"
+                className="pt-3 lg:pt-4 pb-10 lg:pb-14 px-6 lg:px-12 bg-[#0A0B0D] border-t border-white/10 relative overflow-hidden"
               >
                 {/* Ambient background glow */}
                 <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#00C2BB]/5 blur-[140px] pointer-events-none rounded-full -translate-x-1/3 -translate-y-1/3" />
@@ -1274,7 +1274,7 @@ export default function RedesignedApp() {
           };
 
           return (
-            <section className="py-16 bg-[#090A0C] border-t border-b border-white/10 overflow-hidden relative">
+            <section className="pt-3 lg:pt-4 pb-8 lg:pb-10 bg-[#090A0C] border-t border-b border-white/10 overflow-hidden relative">
               {/* Corner glows */}
               <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#090A0C] to-transparent pointer-events-none z-10" />
               <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#090A0C] to-transparent pointer-events-none z-10" />
@@ -1336,13 +1336,13 @@ export default function RedesignedApp() {
             const headerRef = useRef(null);
             const headerInView = useInView(headerRef, {
               once: true,
-              margin: "-80px",
+              margin: "-40px",
             });
 
             return (
               <section
                 id="blog"
-                className="py-24 px-6 lg:px-12 bg-[#0A0B0D] relative overflow-hidden"
+                className="pt-3 lg:pt-4 pb-10 lg:pb-14 px-6 lg:px-12 bg-[#0A0B0D] relative overflow-hidden"
               >
                 {/* Background texture */}
                 <div
@@ -1371,7 +1371,7 @@ export default function RedesignedApp() {
                           // LATEST INSIGHTS
                         </span>
                       </motion.div>
-                      <h2 className="text-3xl sm:text-5xl font-black text-white font-mono uppercase leading-tight overflow-hidden">
+                      <h2 className="text-3xl sm:text-[2.8rem] font-black text-white font-mono uppercase leading-[0.92] overflow-hidden">
                         {["Engineering &", "Design"].map((word, wi) => (
                           <span key={wi} className="block overflow-hidden">
                             <motion.span
@@ -1640,7 +1640,7 @@ export default function RedesignedApp() {
         })()}
 
         {/* ── 9. CTA BANNER ("Are You Ready to Accelerate Your Business?") ─── */}
-        <section className="py-20 px-6 lg:px-12 bg-black">
+        <section className="pt-3 lg:pt-4 pb-10 lg:pb-14 px-6 lg:px-12 bg-black">
           <div className="max-w-7xl mx-auto">
             <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#051A18] via-[#0E0F14] to-[#041D1F] border border-[#00C2BB]/40 p-10 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-[0_0_50px_rgba(0,194,187,0.15)]">
               <div className="max-w-2xl text-center lg:text-left">
@@ -1806,7 +1806,7 @@ export default function RedesignedApp() {
               <section
                 id="contact"
                 ref={sectionRef}
-                className="py-24 px-6 lg:px-12 bg-[#090A0C] border-t border-white/10 relative overflow-hidden"
+                className="pt-3 lg:pt-4 pb-10 lg:pb-14 px-6 lg:px-12 bg-[#090A0C] border-t border-white/10 relative overflow-hidden"
               >
                 {/* Background glows */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00C2BB]/4 blur-[140px] pointer-events-none rounded-full translate-x-1/3 -translate-y-1/3" />
@@ -2652,19 +2652,13 @@ export default function RedesignedApp() {
         {/* ── 13. ADMIN LOGIN / DASHBOARD OVERLAY ───────────────────────── */}
         <AnimatePresence>
           {showAdminLogin && (
-            <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 bg-black/90 backdrop-blur-lg">
+            <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg">
               {isAdminLoggedIn ? (
-                <div className="bg-[#121316] w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 border border-white/10 relative">
-                  <button
-                    onClick={() => setShowAdminLogin(false)}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-white"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
+                <div className="h-screen w-screen overflow-hidden bg-[#121316]" data-lenis-prevent>
                   <AdminDashboard user={adminUser} />
                 </div>
               ) : (
-                <div className="relative w-full max-w-md">
+                <div className="relative mx-auto mt-8 w-full max-w-md px-4">
                   <button
                     onClick={() => setShowAdminLogin(false)}
                     className="absolute -top-10 right-0 text-gray-400 hover:text-white"
@@ -2684,7 +2678,7 @@ export default function RedesignedApp() {
         </AnimatePresence>
 
         {/* ── 14. FLOATING AI CHATBOT INTEGRATION ───────────────────────── */}
-        <Chatbot />
+        {!showAdminLogin && <Chatbot />}
       </div>
     </ReactLenis>
   );

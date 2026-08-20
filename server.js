@@ -7,7 +7,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import crypto from "crypto";
-import { createTransporter } from "./api/mail.js";
+import { createTransporter } from "./lib/server/mail.js";
 
 // Load environment variables
 dotenv.config();
